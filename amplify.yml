@@ -1,0 +1,18 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        # Move into your React app directory and install dependencies
+        - cd tender-user-interface-react
+        - npm ci
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: tender-user-interface-react/build
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - 'tender-user-interface-react/node_modules/**/*'
