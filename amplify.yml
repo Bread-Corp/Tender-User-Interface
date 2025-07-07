@@ -12,7 +12,7 @@ frontend:
       commands:
         - npm run build
   artifacts:
-    baseDirectory: tender-user-interface-react/build
+    baseDirectory: tender-user-interface-react/dist
     files:
       - '**/*'
   cache:
