@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      NODE_VERSION: '22.16.0'  # Adjust if your React app uses a different Node.js version
+      NODE_VERSION: '22.16.0'
 
     steps:
       - name: Checkout code
@@ -24,10 +24,13 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: ./tender-user-interface-react
 
       - name: Build React app
         run: npm run build
+        working-directory: ./tender-user-interface-react
 
       # Uncomment below to run React tests
       # - name: Run React tests
       #   run: npm test -- --watchAll=false
+      #   working-directory: ./tender-user-interface-react
