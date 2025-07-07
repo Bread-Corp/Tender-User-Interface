@@ -3,8 +3,10 @@ frontend:
   phases:
     preBuild:
       commands:
-        # Move into your React app directory and install dependencies
         - cd tender-user-interface-react
+        - nvm install 22.16.0
+        - nvm use 22.16.0
+        - node -v   # Confirm Node version in logs
         - npm ci
     build:
       commands:
