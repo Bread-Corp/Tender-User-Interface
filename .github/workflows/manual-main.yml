@@ -1,0 +1,33 @@
+name: Build - React App
+
+on:
+  workflow_dispatch:           # Allow manual triggering from Actions tab
+  push:
+    branches:
+      - main                   # Also run automatically on merge to main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      NODE_VERSION: '22.16.0'  # Adjust if your React app uses a different Node.js version
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build React app
+        run: npm run build
+
+      # Uncomment below to run React tests
+      # - name: Run React tests
+      #   run: npm test -- --watchAll=false
