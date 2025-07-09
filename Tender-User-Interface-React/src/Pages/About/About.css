@@ -1,0 +1,151 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+html, body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    height: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.about-page {
+    font-family: 'Poppins', sans-serif;
+    color: #1F2B4A;
+    padding-top: 100px;
+    background-color: #f9fbff;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    line-height: 1.6;
+    overflow: visible;
+    position: relative;
+    z-index: 0; 
+}
+
+/* Hero Section */
+.about-hero {
+    background: linear-gradient(135deg, #d6e6f2, #eaf3fb);
+    padding: 4rem 2rem;
+    border-radius: 1rem;
+    text-align: center;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+    .about-hero h1 {
+        font-size: 2.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #2A3C64;
+    }
+
+    .about-hero p {
+        font-size: 1.2rem;
+        color: #4a5a78;
+    }
+
+/* Mission Section */
+.about-mission {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 2rem;
+    margin: 4rem 0;
+}
+
+    .about-mission .text {
+        flex: 1;
+    }
+
+        .about-mission .text h2 {
+            font-size: 2rem;
+            color: #2A3C64;
+            margin-bottom: 1rem;
+        }
+
+        .about-mission .text p {
+            font-size: 1.1rem;
+            color: #4a5a78;
+        }
+
+    .about-mission .image {
+        flex: 1;
+        text-align: center;
+    }
+
+        .about-mission .image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 1rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        }
+
+/* Values Section */
+.about-values {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin: 4rem 0;
+}
+
+.value-box {
+    flex: 1;
+    min-width: 250px;
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    text-align: center;
+}
+
+    .value-box h3 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        color: #2A3C64;
+    }
+
+    .value-box p {
+        font-size: 1rem;
+        color: #4a5a78;
+    }
+
+/* CTA Section */
+.about-cta {
+    margin: 4rem 0;
+    padding: 3rem 2rem;
+    text-align: center;
+    background-color: #d6e6f2;
+    border-radius: 1rem;
+}
+
+    .about-cta h2 {
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+        color: #2A3C64;
+    }
+
+    .about-cta button {
+        background-color: #33497d;
+        color: white;
+        border: none;
+        padding: 0.75rem 2rem;
+        font-size: 1rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+        .about-cta button:hover {
+            background-color: #1f325c;
+        }
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+    .about-mission {
+        flex-direction: column;
+    }
+
+    .about-values {
+        flex-direction: column;
+    }
+}
