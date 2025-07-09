@@ -3,6 +3,7 @@ import './App.css';
 import Login from "../login/Login";
 import Navbar from "../../components/navbar/Navbar";
 import About from "../about/About";
+import Discover from "../discover/Discover";
 
 function App() {
     return (
@@ -17,6 +18,7 @@ function App() {
                 } />
                 <Route path="/login" element={<Login />} />
                 <Route path="/about" element={<About />} />
+                <Route path="/discover" element={<Discover />} />
             </Routes>
         </Router>
     );
