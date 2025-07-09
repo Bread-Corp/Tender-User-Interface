@@ -1,0 +1,67 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.tender-container {
+    width: 100vw;
+    height: 100vh;
+    padding: 30px;
+    box-sizing: border-box;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 20px;
+    transform: rotate(-45deg);
+}
+
+.bar {
+    width: 300px;
+    height: 60px;
+    border-radius: 100px;
+    opacity: 0.95;
+}
+
+/* color classes */
+.red {
+    background: #c94f7c;
+}
+
+.blue {
+    background: #3e5fa4;
+}
+
+.yellow {
+    background: #d8df95;
+}
+
+@keyframes fadeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.tender-text {
+    left: 40px;
+    bottom: 40px;
+    z-index: 1000;
+    transform: rotate(0deg);
+    animation: fadeSlideIn 1.2s ease-out forwards;
+    opacity: 0; /* initial state before animation */
+}
+    .tender-text h1 {
+        color: white;
+        font-size: 40px;
+        font-weight: bold;
+        line-height: 1;
+        text-shadow: 3px 3px #2e3d72;
+        font-family: 'Segoe UI', sans-serif;
+    }

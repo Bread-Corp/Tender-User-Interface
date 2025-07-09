@@ -1,0 +1,14 @@
+﻿@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+#root {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+}
+
+th, td {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
