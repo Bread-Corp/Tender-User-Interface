@@ -2,7 +2,7 @@
 import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import './Login.css';
-import TenderToolGraphic from "../../components/TenderToolGraphic";
+import TenderToolGraphic from "../../Components/TenderToolGraphic";
 
 const Login = () => {
     const [activeForm, setActiveForm] = useState('login');
