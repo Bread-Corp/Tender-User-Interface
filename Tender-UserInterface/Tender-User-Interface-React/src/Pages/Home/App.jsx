@@ -11,7 +11,7 @@ function App() {
             <Navbar />
             <Routes>
                 <Route path="/" element={
-                    <div style={{ padding: '2rem' }}>
+                    <div style={{ padding: '2rem', paddingTop: 100 }}>
                         <h1>Tender Tool</h1>
                         <p>Backend is currently not running. This message is just a placeholder.</p>
                     </div>

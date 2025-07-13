@@ -24,13 +24,13 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        working-directory: ./tender-user-interface-react
+        working-directory: ./Tender-UserInterface/Tender-User-Interface-React
 
       - name: Build React app
         run: npm run build
-        working-directory: ./tender-user-interface-react
+        working-directory: ./Tender-UserInterface/Tender-User-Interface-React
 
       # Uncomment below to run React tests
       # - name: Run React tests
       #   run: npm test -- --watchAll=false
-      #   working-directory: ./tender-user-interface-react
+      #   working-directory: ./Tender-UserInterface/Tender-User-Interface-React
