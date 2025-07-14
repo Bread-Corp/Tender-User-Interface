@@ -9,10 +9,28 @@ import { useLocation, NavLink } from 'react-router-dom';
         const notificationRef = useRef(null);
         const location = useLocation();
         const [showNavbar, setShowNavbar] = useState(true);
+        const [showProfileDropdown, setShowProfileDropdown] = useState(false);
+        const profileRef = useRef(null);
 
-        // Watch route changes
+        // Close profile dropdown when clicking outside
         useEffect(() => {
-            // Hide navbar for login or any routes you want
+            const handleClickOutside = (event) => {
+                if (profileRef.current && !profileRef.current.contains(event.target)) {
+                    setShowProfileDropdown(false);
+                }
+            };
+
+            if (showProfileDropdown) {
+                document.addEventListener('mousedown', handleClickOutside);
+            }
+
+            return () => {
+                document.removeEventListener('mousedown', handleClickOutside);
+            };
+        }, [showProfileDropdown]);
+
+        // Hide navbar for login
+        useEffect(() => {
             const hideNavbarPaths = ['/login'];
             const shouldHide = hideNavbarPaths.some(path => location.pathname.startsWith(path));
             setShowNavbar(!shouldHide);
@@ -80,7 +98,17 @@ import { useLocation, NavLink } from 'react-router-dom';
                         <FaBell />
                         <div className="dot" />
                     </div>
-                    <FaUserCircle className="profile-icon" />
+                    <FaUserCircle
+                        className="profile-icon"
+                        onClick={() => setShowProfileDropdown(!showProfileDropdown)}
+                    />
+                    {showProfileDropdown && (
+                        <div className="profile-dropdown" ref={profileRef}>
+                            <NavLink to="/login">Login</NavLink>
+                            <NavLink to="/register">Register</NavLink>
+                            <NavLink to="/profile">View Profile</NavLink>
+                        </div>
+                    )}
 
                     <div className="menu-icon" onClick={() => setMenuOpen(!menuOpen)}>
                         {menuOpen ? <FaTimes /> : <FaBars />}
@@ -88,7 +116,7 @@ import { useLocation, NavLink } from 'react-router-dom';
                 </div>
             </div>
 
-            {/* Slide-in notification panel */}
+            {/* slide in notification panel */}
             <div
                 className={`notification-panel ${showNotifications ? 'open' : ''}`}
                 ref={notificationRef}

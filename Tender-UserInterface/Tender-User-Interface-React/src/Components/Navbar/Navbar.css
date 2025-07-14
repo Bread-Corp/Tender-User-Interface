@@ -1,5 +1,6 @@
 ﻿@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
 
+/* global */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -10,25 +11,26 @@ body {
     font-family: 'Poppins', sans-serif;
 }
 
+/* navbar container */
 .navbar {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
+    height: 70px;
     background: rgba(226, 239, 251, 0.85);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     backdrop-filter: saturate(180%) blur(10px);
     -webkit-backdrop-filter: saturate(180%) blur(10px);
-    z-index: 1000;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 40px;
-    height: 70px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
     transition: padding 0.3s ease;
 }
 
+    /* navbar links */
     .navbar a {
         color: #33497D;
         text-decoration: none;
@@ -42,12 +44,14 @@ body {
             color: #CD4F6E;
         }
 
+/* logo */
 .navbar-left .logo {
     font-size: 22px;
     color: #2c3e75;
     font-weight: 600;
 }
 
+/* navbar center (menu items) */
 .navbar-center {
     display: flex;
     list-style: none;
@@ -68,13 +72,27 @@ body {
         font-weight: 600;
     }
 
+    .navbar-center li a {
+        color: inherit;
+        text-decoration: none;
+        font-weight: 400;
+        font-size: 18px;
+        transition: color 0.3s ease;
+    }
+
+        .navbar-center li a.active {
+            font-weight: 600;
+            color: #2c3e75;
+        }
+
+/* navbar right section */
 .navbar-right {
     display: flex;
     align-items: center;
     gap: 30px;
 }
 
-/* Notification Icon */
+/* notification icon */
 .notification {
     position: relative;
     font-size: 23px;
@@ -98,7 +116,7 @@ body {
         border-radius: 50%;
     }
 
-/* Profile Icon */
+/* profile icon */
 .profile-icon {
     font-size: 28px;
     color: #2c3e75;
@@ -110,7 +128,33 @@ body {
         transform: scale(1.05);
     }
 
-/* Hamburger Menu Icon */
+/* profile dropdown menu */
+.profile-dropdown {
+    position: absolute;
+    top: 60px;
+    right: 50px;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+}
+
+    .profile-dropdown a {
+        padding: 10px 15px;
+        text-decoration: none;
+        color: #333;
+        transition: background 0.2s ease;
+    }
+
+        .profile-dropdown a:hover {
+            background-color: #f0f0f0;
+        }
+
+/* hamburger menu icon */
 .menu-icon {
     display: none;
     font-size: 26px;
@@ -126,20 +170,7 @@ body {
         transform: scale(1.1);
     }
 
-.navbar-center li a {
-    color: inherit;
-    text-decoration: none;
-    font-weight: 400;
-    font-size: 18px;
-    transition: color 0.3s ease;
-}
-
-    .navbar-center li a.active {
-        font-weight: 600;
-        color: #2c3e75;
-    }
-
-/* Responsive: Modern Mobile Nav */
+/* responsive: modern mobile nav */
 @media (max-width: 768px) {
     .navbar {
         flex-wrap: wrap;
@@ -147,10 +178,6 @@ body {
         height: auto;
         align-items: flex-start;
         border-radius: 0;
-        background: rgba(226, 239, 251, 0.85);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-        backdrop-filter: saturate(180%) blur(10px);
-        -webkit-backdrop-filter: saturate(180%) blur(10px);
     }
 
     .navbar-center {
@@ -190,7 +217,7 @@ body {
     }
 }
 
-/* === Notification Panel Base (Desktop) === */
+/* notification panel (desktop) */
 .notification-panel {
     position: fixed;
     top: 80px;
@@ -215,7 +242,7 @@ body {
         right: 0;
     }
 
-    /* Fancy arrow (desktop only) */
+    /* arrow above panel */
     .notification-panel::before {
         content: "";
         position: absolute;
@@ -227,7 +254,7 @@ body {
         filter: drop-shadow(0 -2px 3px rgba(0,0,0,0.05));
     }
 
-/* === Header === */
+/* notification header */
 .notification-header {
     display: flex;
     align-items: center;
@@ -252,7 +279,7 @@ body {
             color: #2c3e75;
         }
 
-/* === Content Area === */
+/* notification content */
 .notification-content {
     flex: 1;
     padding: 18px 20px;
@@ -261,7 +288,7 @@ body {
     color: #2e3b55;
 }
 
-/* === Notification Card === */
+/* notification card */
 .notification-item {
     background: #f9fbfd;
     padding: 12px 14px;
@@ -287,14 +314,14 @@ body {
     color: #5c6b85;
 }
 
-/* === Mobile Override: Slide from Top === */
+/* notification panel on mobile */
 @media (max-width: 768px) {
     .notification-panel {
         width: 100vw;
         height: 100vh;
         right: auto;
         left: 0;
-        top: -100vh; /* Hide off screen initially */
+        top: -100vh;
         border-radius: 0;
         border-left: none;
         border-top: none;
@@ -304,11 +331,11 @@ body {
     }
 
         .notification-panel.open {
-            top: 70px; /* Slide in just below the navbar */
+            top: 70px;
         }
 
         .notification-panel::before {
-            display: none; /* Hide arrow for mobile */
+            display: none;
         }
 
     .notification-header {
@@ -333,38 +360,3 @@ body {
         font-size: 12px;
     }
 }
-
-.notification-content {
-    flex: 1;
-    padding: 18px 20px;
-    overflow-y: auto;
-    font-size: 15px;
-    color: #2e3b55;
-}
-
-/* Notification card styling */
-.notification-item {
-    background: #f9fbfd;
-    padding: 12px 14px;
-    border-radius: 8px;
-    margin-bottom: 12px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
-    transition: background-color 0.2s ease;
-}
-
-    .notification-item:hover {
-        background-color: #eef5fc;
-    }
-
-.notification-item-title {
-    font-weight: 600;
-    font-size: 14px;
-    color: #2c3e75;
-    margin-bottom: 4px;
-}
-
-.notification-item-message {
-    font-size: 13px;
-    color: #5c6b85;
-}
-
