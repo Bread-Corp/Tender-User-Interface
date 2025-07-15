@@ -3,7 +3,7 @@ frontend:
   phases:
     preBuild:
       commands:
-        - cd tender-user-interface-react
+        - cd Tender-User-Interface-React
         - nvm install 20.19.0
         - nvm use 20.19.0
         - node -v
@@ -12,9 +12,9 @@ frontend:
       commands:
         - npm run build
   artifacts:
-    baseDirectory: tender-user-interface-react/dist
+    baseDirectory: Tender-User-Interface-React/dist
     files:
       - '**/*'
   cache:
     paths:
-      - 'tender-user-interface-react/node_modules/**/*'
+      - 'Tender-User-Interface-React/node_modules/**/*'
