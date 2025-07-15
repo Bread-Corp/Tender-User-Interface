@@ -1,0 +1,20 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - cd Tender-UserInterface
+        - nvm install 20.19.0
+        - nvm use 20.19.0
+        - node -v
+        - npm ci
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: Tender-UserInterface/dist
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - 'Tender-UserInterface/node_modules/**/*'
