@@ -4,6 +4,7 @@ import Login from "../Login/Login";
 import Navbar from "../../Components/Navbar/Navbar";
 import About from "../About/About";
 import Discover from "../Discover/Discover";
+import Tracking from "../Tracking/Tracking";
 
 function App() {
     return (
@@ -19,6 +20,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/discover" element={<Discover />} />
+                <Route path="/tracking" element={<Tracking />} />
             </Routes>
         </Router>
     );
