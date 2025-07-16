@@ -52,7 +52,7 @@ const Tracking = () => {
 
     return (
         <div className="saved-tenders-container">
-            <h2 className="page-title">Your Saved Tenders</h2>
+            <h2 className="page-title">Saved Tenders</h2>
 
             <div className="filter-container">
                 <label htmlFor="statusFilter">Filter by Status:</label>
@@ -73,10 +73,9 @@ const Tracking = () => {
                     <div
                         className="tender-card"
                         key={tender.id}
-                        onClick={() => toggleExpand(tender.id)}
                     >
                         {/* card header displays title status + expand icon */}
-                        <div className="card-header" onClick={() => toggleExpand(tender.id)}>
+                        <div className="card-header">
                             <h3>{tender.title}</h3>
                             <div className="card-header-right">
                                 <span className={`status-badge ${tender.status.toLowerCase()}`}>
@@ -85,11 +84,14 @@ const Tracking = () => {
                                 {/* rotate aroow when expanded */}
                                 <FaChevronDown
                                     className={`expand-icon ${expanded.includes(tender.id) ? "rotated" : ""}`}
+                                    onClick={(e) => {
+                                        e.stopPropagation(); // prevent triggering any parent clicks
+                                        toggleExpand(tender.id);
+                                    }}
                                 />
                             </div>
                         </div>
 
-                        {/* shows details only if expanded */}
                         {expanded.includes(tender.id) && (
                             <>
                                 <p className="location">

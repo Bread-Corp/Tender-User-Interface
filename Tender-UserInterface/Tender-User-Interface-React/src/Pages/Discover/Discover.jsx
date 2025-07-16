@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Discover.css';
-import { FaSearch, FaBookmark, FaBinoculars, FaFilter } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaRegClock, FaSearch, FaBookmark, FaBinoculars, FaFilter } from 'react-icons/fa';
 
 // base tender
 const baseTender = {
@@ -72,8 +72,8 @@ const Discover = () => {
                 {mockTenders.map((tender) => (
                     <div className="tender-card" key={tender.id}>
                         <h2 className="tender-title">{tender.title}</h2>
-                        <p className="tender-location">{tender.location}</p>
-                        <p className="tender-closing">Closing Info: {tender.closing}</p>
+                        <p className="tender-location"> <FaMapMarkerAlt />{tender.location}</p>
+                        <p className="tender-closing"> <FaRegClock /> Closing Info: {tender.closing}</p>
                         <div className="tender-tags">
                             {tender.tags.map((tag, idx) => (
                                 <span
