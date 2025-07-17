@@ -5,6 +5,7 @@ import Navbar from "../../Components/Navbar/Navbar";
 import About from "../About/About";
 import Discover from "../Discover/Discover";
 import Tracking from "../Tracking/Tracking";
+import Profile from "../Profile/Profile";
 
 function App() {
     return (
@@ -21,6 +22,7 @@ function App() {
                 <Route path="/about" element={<About />} />
                 <Route path="/discover" element={<Discover />} />
                 <Route path="/tracking" element={<Tracking />} />
+                <Route path="/profile" element={<Profile />} />
             </Routes>
         </Router>
     );

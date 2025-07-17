@@ -136,7 +136,7 @@ body {
 /* profile dropdown menu */
 .profile-dropdown {
     position: absolute;
-    top: 60px;
+    top: 90px;
     right: -2rem;
     background-color: #fff;
     border: 1px solid #ddd;
