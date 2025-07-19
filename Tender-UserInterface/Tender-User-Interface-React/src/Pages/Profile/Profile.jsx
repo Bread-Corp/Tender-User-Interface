@@ -9,22 +9,39 @@ const Profile = () => {
     });
 
     const [profileImage, setProfileImage] = useState(null);
-    const [formData, setFormData] = useState({
+    const [initialFormData, setInitialFormData] = useState({
         name: "John Doe",
         email: "JohnDoe@gmail.com",
         phone: "123 456 789",
     });
+
+    const [formData, setFormData] = useState({ ...initialFormData });
+    const [hasChanges, setHasChanges] = useState(false);
 
     useEffect(() => {
         document.body.classList.toggle("dark-mode", darkMode);
         localStorage.setItem("darkMode", darkMode);
     }, [darkMode]);
 
+    // Warn when leaving page with unsaved changes
+    useEffect(() => {
+        const handleBeforeUnload = (e) => {
+            if (hasChanges) {
+                e.preventDefault();
+                e.returnValue = ""; // Required for Chrome
+            }
+        };
+        window.addEventListener("beforeunload", handleBeforeUnload);
+        return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+    }, [hasChanges]);
+
     const toggleDarkMode = () => setDarkMode(prev => !prev);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        const updatedForm = { ...formData, [name]: value };
+        setFormData(updatedForm);
+        setHasChanges(JSON.stringify(updatedForm) !== JSON.stringify(initialFormData));
     };
 
     const handleImageUpload = (e) => {
@@ -33,9 +50,22 @@ const Profile = () => {
             const reader = new FileReader();
             reader.onloadend = () => {
                 setProfileImage(reader.result);
+                setHasChanges(true);
             };
             reader.readAsDataURL(file);
         }
+    };
+
+    const handleSave = () => {
+        setInitialFormData({ ...formData });
+        setHasChanges(false);
+        // You can add backend update logic here
+    };
+
+    const handleCancel = () => {
+        setFormData({ ...initialFormData });
+        setProfileImage(null); // Optionally reset image
+        setHasChanges(false);
     };
 
     return (
@@ -87,6 +117,23 @@ const Profile = () => {
                             />
                         </div>
                     </div>
+
+                    <div className="button-group">
+                        <button
+                            className="save-btn"
+                            onClick={handleSave}
+                            disabled={!hasChanges}
+                        >
+                            Save
+                        </button>
+                        <button
+                            className="cancel-btn"
+                            onClick={handleCancel}
+                            disabled={!hasChanges}
+                        >
+                            Cancel
+                        </button>
+                    </div>
                 </div>
             </section>
 
@@ -111,9 +158,9 @@ const Profile = () => {
                     </div>
                     <div className="setting-row">
                         <label>Theme</label>
-                        <button className="dark-toggle" onClick={toggleDarkMode}>
-                            {darkMode ? <FaSun /> : <FaMoon />}
-                            {darkMode ? " Light Mode" : " Dark Mode"}
+                        <button className={`dark-toggle ${darkMode ? "light" : "dark"}`} onClick={toggleDarkMode}>
+                            {darkMode ? <FaMoon /> : <FaSun />}
+                            <span className="mode-text">{darkMode ? "Dark Mode" : "Light Mode"}</span>
                         </button>
                     </div>
                     <div className="setting-row delete-row">

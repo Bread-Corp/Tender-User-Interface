@@ -1,51 +1,38 @@
 :root {
-    --primary-color: #2a4c98;
-    --primary-hover: #1f3b7a;
-    --background-card: #ffffff;
+    --color-primary: #2a4c98;
+    --color-primary-hover: #1f3b7a;
+    --color-danger: #c0392b;
+    --color-danger-hover: #a93226;
     --text-primary: #1a2b4c;
     --text-secondary: #6b7a90;
     --text-light: #999;
+    --bg-page: #f7f9fc;
+    --bg-card: #ffffff;
     --shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
     --border-radius: 12px;
-    --transition-speed: 0.3s;
+    --transition: 0.3s ease;
+    --font-family: 'Poppins', sans-serif;
 }
 
 /* Dark Mode Overrides */
 body.dark-mode {
-    --background-card: #2c2f38;
+    --bg-page: #1c1e25;
+    --bg-card: #2c2f38;
     --text-primary: #f5f5f5;
     --text-secondary: #cccccc;
     --text-light: #888;
-    background-color: #1c1e25;
-    color: var(--text-primary);
 }
 
 body {
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-family);
+    background-color: var(--bg-page);
+    color: var(--text-primary);
     margin: 0;
     padding: 0;
-    background-color: #f7f9fc;
-    transition: background-color var(--transition-speed), color var(--transition-speed);
+    transition: background-color var(--transition), color var(--transition);
 }
 
-/* Dark/Light toggle button */
-.dark-toggle {
-    background: none;
-    border: none;
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--primary-color);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    transition: color var(--transition-speed);
-}
-
-.dark-toggle:hover {
-    color: var(--primary-hover);
-}
-
+/* Container Layout */
 .profile-container {
     display: flex;
     flex-wrap: nowrap;
@@ -53,6 +40,7 @@ body {
     gap: 2rem;
     max-width: 1600px;
     margin: auto;
+    margin-top: 70px;
     justify-content: space-between;
 }
 
@@ -61,21 +49,22 @@ body {
     min-width: 400px;
 }
 
-.profile-section h2 {
-    font-size: 2rem;
-    color: var(--text-primary);
-    margin-bottom: 1.5rem;
-}
+    .profile-section h2 {
+        font-size: 2rem;
+        color: var(--text-primary);
+        margin-bottom: 1.5rem;
+    }
 
+/* Card Styling */
 .card {
-    max-width: 800px;
-    background: var(--background-card);
+    background: var(--bg-card);
     border-radius: var(--border-radius);
     padding: 2rem;
     box-shadow: var(--shadow);
-    transition: background-color var(--transition-speed), box-shadow var(--transition-speed);
+    transition: background-color var(--transition), box-shadow var(--transition);
 }
 
+/* Avatar */
 .avatar-wrapper {
     display: flex;
     flex-direction: column;
@@ -97,19 +86,19 @@ body {
 }
 
 .upload-text {
-    margin-top: 0.5rem;
     font-size: 14px;
     color: var(--text-light);
     cursor: pointer;
     text-decoration: underline;
+    margin-top: 0.5rem;
 }
 
+/* Info Input Fields */
 .info-group {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    margin-top: 1rem;
 }
 
 .info-row {
@@ -118,134 +107,157 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 0;
     gap: 1rem;
+    padding: 0.5rem 0;
 }
 
-.info-row label {
-    flex: 1;
-    text-align: left;
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--text-primary);
-}
+    .info-row label {
+        flex: 1;
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--text-primary);
+    }
 
-.info-row input {
-    flex: 2;
-    padding: 10px 12px;
-    font-size: 15px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    transition: border-color var(--transition-speed);
-}
+    .info-row input {
+        flex: 2;
+        padding: 10px 12px;
+        font-size: 15px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        transition: border-color var(--transition);
+    }
 
-.info-row input:focus {
-    border-color: var(--primary-color);
-    outline: none;
-}
+        .info-row input:focus {
+            border-color: var(--color-primary);
+            outline: none;
+        }
 
-/* Dark mode input overrides */
 body.dark-mode input {
     background-color: #3a3d46;
     color: var(--text-primary);
     border: 1px solid #555;
 }
 
-body.dark-mode input:focus {
-    border-color: var(--primary-hover);
-}
+    body.dark-mode input:focus {
+        border-color: var(--color-primary-hover);
+    }
 
-.info-value {
-    flex: 2;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--text-secondary);
-    font-size: 15px;
-    word-break: break-word;
-}
-
-.edit-icon {
-    font-size: 14px;
-    color: var(--text-light);
-    cursor: pointer;
-    transition: color var(--transition-speed);
-}
-
-.edit-icon:hover {
-    color: var(--primary-color);
-}
-
+/* Settings */
 .setting-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.75rem 0;
     flex-wrap: wrap;
     gap: 0.75rem;
+    padding: 0.75rem 0;
     border-bottom: 1px solid rgba(200, 200, 200, 0.3);
 }
 
-.setting-row label {
+    .setting-row label {
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--text-primary);
+    }
+
+/* Buttons */
+.view-btn,
+.delete-btn,
+.save-btn,
+.cancel-btn {
     font-size: 15px;
     font-weight: 500;
-    color: var(--text-primary);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color var(--transition);
 }
 
 .view-btn {
-    background-color: var(--primary-color);
-    color: white;
-    padding: 12px 24px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-size: 15px;
-    font-weight: 500;
-    transition: background-color var(--transition-speed);
+    background-color: var(--color-primary);
+    color: #fff;
 }
 
-.view-btn:hover {
-    background-color: var(--primary-hover);
+    .view-btn:hover {
+        background-color: var(--color-primary-hover);
+    }
+
+.delete-btn {
+    background-color: var(--color-danger);
+    color: #fff;
 }
 
-/* Notification toggle styling */
+    .delete-btn:hover {
+        background-color: var(--color-danger-hover);
+    }
+
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 1.5rem;
+}
+
+.save-btn {
+    background-color: var(--color-primary);
+    color: #fff;
+}
+
+    .save-btn:disabled {
+        background-color: #a0aec0;
+        cursor: not-allowed;
+    }
+
+.cancel-btn {
+    background-color: #ccc;
+    color: #333;
+}
+
+    .cancel-btn:disabled {
+        background-color: #eee;
+        color: #999;
+        cursor: not-allowed;
+    }
+
+/* Toggle Group */
 .toggle-group {
     display: flex;
+    align-items: center;
     gap: 1rem;
-    align-items: center;
 }
 
-.toggle-group label {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-size: 14px;
-    color: var(--text-secondary);
-}
+    .toggle-group label {
+        font-size: 14px;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
 
-/* Delete button styling */
-.delete-btn {
-    background-color: #c0392b;
-    color: white;
-    padding: 12px 24px;
-    border-radius: 8px;
+/* Dark Mode Toggle */
+.dark-toggle {
+    background: none;
     border: none;
     font-size: 15px;
     font-weight: 500;
+    color: var(--color-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     cursor: pointer;
-    transition: background-color var(--transition-speed);
+    transition: color var(--transition);
 }
 
-.delete-btn:hover {
-    background-color: #a93226;
-}
+    .dark-toggle:hover {
+        color: var(--color-primary-hover);
+    }
 
+/* Delete Section Spacing */
 .delete-row {
     padding-top: 1rem;
 }
 
-/* Responsive layout */
+/* Responsive */
 @media (max-width: 768px) {
     .profile-container {
         flex-direction: column;
@@ -253,24 +265,12 @@ body.dark-mode input:focus {
     }
 
     .profile-section {
-        max-width: 100%;
         min-width: 0;
-    }
-
-    .card {
-        width: 100%;
-        transform: none;
-        padding: 1.5rem;
     }
 
     .info-row {
         flex-direction: column;
         align-items: flex-start;
-        gap: 0.5rem;
-    }
-
-    .info-row input {
-        width: 100%;
     }
 
     .toggle-group {

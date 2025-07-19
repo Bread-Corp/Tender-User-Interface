@@ -23,7 +23,7 @@ const ProfilePanel = ({ show, toggle, close }) => {
     }, [show, close]);
 
     return (
-        <div className="profile-container">
+        <div className="profile-nav-container">
             <FaUserCircle className="profile-icon" onClick={toggle} />
             <div
                 className={`profile-dropdown ${show ? 'show' : ''}`}
@@ -31,7 +31,7 @@ const ProfilePanel = ({ show, toggle, close }) => {
             >
                 <NavLink to="/login">Login</NavLink>
                 <NavLink to="/register">Register</NavLink>
-                <NavLink to="/profile">View Profile</NavLink>
+                <NavLink to="/profile">Settings</NavLink>
             </div>
         </div>
     );
