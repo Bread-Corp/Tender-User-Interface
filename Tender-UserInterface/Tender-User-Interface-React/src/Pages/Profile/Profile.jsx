@@ -23,12 +23,11 @@ const Profile = () => {
         localStorage.setItem("darkMode", darkMode);
     }, [darkMode]);
 
-    // Warn when leaving page with unsaved changes
     useEffect(() => {
         const handleBeforeUnload = (e) => {
             if (hasChanges) {
                 e.preventDefault();
-                e.returnValue = ""; // Required for Chrome
+                e.returnValue = "";
             }
         };
         window.addEventListener("beforeunload", handleBeforeUnload);
@@ -59,116 +58,118 @@ const Profile = () => {
     const handleSave = () => {
         setInitialFormData({ ...formData });
         setHasChanges(false);
-        // You can add backend update logic here
+        // backend update logic could go here (?)
     };
 
     const handleCancel = () => {
         setFormData({ ...initialFormData });
-        setProfileImage(null); // Optionally reset image
+        setProfileImage(null);
         setHasChanges(false);
     };
 
     return (
-        <div className="profile-container">
-            {/* Left Section - Edit Profile */}
-            <section className="profile-section">
-                <h2>Edit Profile</h2>
-                <div className="card">
-                    <div className="avatar-wrapper">
-                        {profileImage ? (
-                            <img src={profileImage} alt="Profile" className="avatar-img" />
-                        ) : (
-                            <FaUserCircle className="avatar-icon" />
-                        )}
-                        <input
-                            type="file"
-                            id="upload"
-                            accept="image/*"
-                            onChange={handleImageUpload}
-                            hidden
-                        />
-                        <label htmlFor="upload" className="upload-text">Upload Image</label>
-                    </div>
-
-                    <div className="info-group">
-                        <div className="info-row">
-                            <label>Name</label>
+        <div className="layout-wrapper">
+            <div className="profile-container">
+                {/* left section - edit profile */}
+                <section className="profile-section">
+                    <h2>Edit Profile</h2>
+                    <div className="card">
+                        <div className="avatar-wrapper">
+                            {profileImage ? (
+                                <img src={profileImage} alt="Profile" className="avatar-img" />
+                            ) : (
+                                <FaUserCircle className="avatar-icon" />
+                            )}
                             <input
-                                name="name"
-                                value={formData.name}
-                                onChange={handleInputChange}
+                                type="file"
+                                id="upload"
+                                accept="image/*"
+                                onChange={handleImageUpload}
+                                hidden
                             />
+                            <label htmlFor="upload" className="upload-text">Upload Image</label>
                         </div>
-                        <div className="info-row">
-                            <label>Email</label>
-                            <input
-                                name="email"
-                                type="email"
-                                value={formData.email}
-                                onChange={handleInputChange}
-                            />
-                        </div>
-                        <div className="info-row">
-                            <label>Phone</label>
-                            <input
-                                name="phone"
-                                value={formData.phone}
-                                onChange={handleInputChange}
-                            />
-                        </div>
-                    </div>
 
-                    <div className="button-group">
-                        <button
-                            className="save-btn"
-                            onClick={handleSave}
-                            disabled={!hasChanges}
-                        >
-                            Save
-                        </button>
-                        <button
-                            className="cancel-btn"
-                            onClick={handleCancel}
-                            disabled={!hasChanges}
-                        >
-                            Cancel
-                        </button>
-                    </div>
-                </div>
-            </section>
+                        <div className="info-group">
+                            <div className="info-row">
+                                <label>Name</label>
+                                <input
+                                    name="name"
+                                    value={formData.name}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                            <div className="info-row">
+                                <label>Email</label>
+                                <input
+                                    name="email"
+                                    type="email"
+                                    value={formData.email}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                            <div className="info-row">
+                                <label>Phone</label>
+                                <input
+                                    name="phone"
+                                    value={formData.phone}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+                        </div>
 
-            {/* Right Section - Settings */}
-            <section className="profile-section">
-                <h2>Profile Settings</h2>
-                <div className="card">
-                    <div className="setting-row">
-                        <label>Categories</label>
-                        <button className="view-btn">View</button>
-                    </div>
-                    <div className="setting-row">
-                        <label>Change Password</label>
-                        <button className="view-btn">Update</button>
-                    </div>
-                    <div className="setting-row">
-                        <label>Notifications</label>
-                        <div className="toggle-group">
-                            <label><input type="checkbox" /> Email</label>
-                            <label><input type="checkbox" /> SMS</label>
+                        <div className="button-group">
+                            <button
+                                className="save-btn"
+                                onClick={handleSave}
+                                disabled={!hasChanges}
+                            >
+                                Save
+                            </button>
+                            <button
+                                className="cancel-btn"
+                                onClick={handleCancel}
+                                disabled={!hasChanges}
+                            >
+                                Cancel
+                            </button>
                         </div>
                     </div>
-                    <div className="setting-row">
-                        <label>Theme</label>
-                        <button className={`dark-toggle ${darkMode ? "light" : "dark"}`} onClick={toggleDarkMode}>
-                            {darkMode ? <FaMoon /> : <FaSun />}
-                            <span className="mode-text">{darkMode ? "Dark Mode" : "Light Mode"}</span>
-                        </button>
+                </section>
+
+                {/* right section - settings */}
+                <section className="profile-section">
+                    <h2>Profile Settings</h2>
+                    <div className="card">
+                        <div className="setting-row">
+                            <label>Categories</label>
+                            <button className="view-btn">View</button>
+                        </div>
+                        <div className="setting-row">
+                            <label>Change Password</label>
+                            <button className="view-btn">Update</button>
+                        </div>
+                        <div className="setting-row">
+                            <label>Notifications</label>
+                            <div className="toggle-group">
+                                <label><input type="checkbox" /> Email</label>
+                                <label><input type="checkbox" /> SMS</label>
+                            </div>
+                        </div>
+                        <div className="setting-row">
+                            <label>Theme</label>
+                            <button className={`dark-toggle ${darkMode ? "light" : "dark"}`} onClick={toggleDarkMode}>
+                                {darkMode ? <FaMoon /> : <FaSun />}
+                                <span className="mode-text">{darkMode ? "Dark Mode" : "Light Mode"}</span>
+                            </button>
+                        </div>
+                        <div className="setting-row delete-row">
+                            <label>Delete Account</label>
+                            <button className="delete-btn">Delete</button>
+                        </div>
                     </div>
-                    <div className="setting-row delete-row">
-                        <label>Delete Account</label>
-                        <button className="delete-btn">Delete</button>
-                    </div>
-                </div>
-            </section>
+                </section>
+            </div>
         </div>
     );
 };

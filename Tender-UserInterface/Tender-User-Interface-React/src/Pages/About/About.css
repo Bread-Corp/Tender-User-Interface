@@ -21,7 +21,7 @@ html, body {
     z-index: 0;
 }
 
-/* Hero Section */
+/* hero */
 .about-hero {
     background: var(--hero-bg);
     padding: 4rem 2rem;
@@ -42,7 +42,7 @@ html, body {
         color: var(--text-sub);
     }
 
-/* Mission Section */
+/* mission */
 .about-mission {
     display: flex;
     flex-wrap: wrap;
@@ -78,7 +78,7 @@ html, body {
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
         }
 
-/* Values Section */
+/* values */
 .about-values {
     display: flex;
     flex-wrap: wrap;
@@ -108,7 +108,7 @@ html, body {
         color: var(--text-sub);
     }
 
-/* CTA Section */
+/* CTA */
 .about-cta {
     margin: 4rem 0;
     padding: 3rem 2rem;
@@ -138,7 +138,7 @@ html, body {
             background-color: var(--btn-hover);
         }
 
-/* Responsive tweaks */
+/* responsive tweaks */
 @media (max-width: 768px) {
     .about-mission {
         flex-direction: column;

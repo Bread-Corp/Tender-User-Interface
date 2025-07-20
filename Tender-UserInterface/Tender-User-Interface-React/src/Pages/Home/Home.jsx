@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaSearch, FaBell, FaChartBar, FaGavel } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import './Home.css'; // Optional: for custom styling
+import './Home.css'; 
 
 const Home = () => {
     return (
