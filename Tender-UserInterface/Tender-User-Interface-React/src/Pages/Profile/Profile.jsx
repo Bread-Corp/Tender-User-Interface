@@ -70,9 +70,9 @@ const Profile = () => {
     return (
         <div className="layout-wrapper">
             <div className="profile-container">
-                {/* left section - edit profile */}
-                <section className="profile-section">
-                    <h2>Edit Profile</h2>
+                {/* left section - smaller profile card */}
+                <section className="profile-section profile-card">
+                    <h2>Profile</h2>
                     <div className="card">
                         <div className="avatar-wrapper">
                             {profileImage ? (
@@ -137,9 +137,9 @@ const Profile = () => {
                     </div>
                 </section>
 
-                {/* right section - settings */}
-                <section className="profile-section">
-                    <h2>Profile Settings</h2>
+                {/* right section - bigger settings card */}
+                <section className="profile-section settings-card">
+                    <h2>Settings</h2>
                     <div className="card">
                         <div className="setting-row">
                             <label>Categories</label>

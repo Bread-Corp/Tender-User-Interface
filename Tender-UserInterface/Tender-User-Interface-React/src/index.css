@@ -14,6 +14,7 @@
     --button-hover: #1f325c;
     --button-text: white;
     --icon-color: #33497D;
+    --profile-button-hover-bg: #d7e3fc;
     --tender-card-bg: #f0f6fc;
     --tender-card-border: #dbe7f4;
     --tender-card-header: #2d4d7a;
@@ -37,6 +38,7 @@ body.dark-mode {
     --button-hover: #3c5d8a;
     --button-text: white;
     --icon-color: white;
+    --profile-button-hover-bg: rgba(255, 255, 255, 0.1);
     --tender-card-bg: #2c3444;
     --tender-card-border: #2e3c4f;
     --tender-card-header: #e6ecf2;

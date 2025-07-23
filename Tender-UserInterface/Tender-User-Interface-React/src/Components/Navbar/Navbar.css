@@ -32,22 +32,39 @@ body {
 
     /* navbar links */
     .navbar a {
+        position: relative;
         color: #33497D;
         text-decoration: none;
         padding: 8px 12px;
         border-radius: 6px;
-        transition: background-color 0.3s ease, color 0.3s ease;
+        transition: color 0.3s ease;
     }
 
         .navbar a:hover {
-            background-color: rgba(205, 79, 110, 0.15);
-            color: #CD4F6E;
+            color: #1f2e5a; 
+        }
+
+        .navbar a::after {
+            content: "";
+            position: absolute;
+            left: 50%; 
+            bottom: -2px;
+            width: 0;
+            height: 1.5px;
+            background-color: var(--icon-color); 
+            transition: width 0.3s ease, left 0.3s ease;
+            transform-origin: center;
+        }
+
+        .navbar a:hover::after {
+            width: 100%;
+            left: 0; 
         }
 
 /* logo */
 .navbar-left .logo {
     font-size: 22px;
-    color: #2c3e75;
+    color: var(--heading-color);
     font-weight: 600;
 }
 
@@ -133,7 +150,39 @@ body {
     display: inline-block;
 }
 
-/* profile dropdown menu */
+.profile-nav-container {
+    position: relative;
+    display: inline-block;
+}
+
+/* Profile button with icon + chevron */
+.profile-button {
+    display: flex;
+    align-items: center;
+    padding: 6px 12px;
+    background-color: var(--card-bg);
+    border: 1px solid #ddd;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+    .profile-button:hover {
+        background-color: var(--profile-button-hover-bg);
+    }
+
+.profile-icon {
+    font-size: 24px;
+    color: var(--icon-color);
+    margin-right: 6px;
+}
+
+.chevron-icon {
+    font-size: 16px;
+    color: var(--icon-color);
+}
+
+/* Profile dropdown menu */
 .profile-dropdown {
     position: absolute;
     top: 62px;
@@ -148,9 +197,9 @@ body {
     min-width: 180px;
     font-size: 1rem;
     overflow: hidden;
+    align-items: center;
     opacity: 0;
     transform: translateY(-8px);
-    pointer-events: none;
     transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
@@ -162,6 +211,8 @@ body {
 
     .profile-dropdown a {
         padding: 12px 20px;
+        width: 100%;
+        text-align: center;
         color: #33497d;
         text-decoration: none;
         font-weight: 500;
@@ -173,21 +224,22 @@ body {
             color: #1a2a55;
         }
 
+        .profile-dropdown a::after {
+            content: none !important;
+            width: 0 !important;
+            display: none !important;
+        }
+
 /* hamburger menu icon */
 .menu-icon {
     display: none;
     font-size: 26px;
-    color: rgba(44, 62, 117, 0.85);
+    color: var(--icon-color);
     cursor: pointer;
     padding: 5px;
     transition: color 0.3s ease, transform 0.3s ease;
     user-select: none;
 }
-
-    .menu-icon:hover {
-        color: rgba(44, 62, 117, 1);
-        transform: scale(1.1);
-    }
 
 /* responsive */
 @media (max-width: 768px) {
@@ -299,12 +351,12 @@ body {
     width: 340px;
     height: calc(100vh - 70px);
     /* Frosted Glass Background */
-    background: rgba(226, 239, 251, 0.9); /* slightly less opaque for better blend */
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); /* softer shadow for depth */
-    backdrop-filter: saturate(180%) blur(80px);
+    background: rgba(226, 239, 251, 0.9); 
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); 
+    backdrop-filter: saturate(180%) blur(100px);
     -webkit-backdrop-filter: saturate(180%) blur(80px);
     /* Edge Definition */
-    border: 1px solid rgba(255, 255, 255, 0.3); /* subtle reflective edge */
+    border: 1px solid rgba(255, 255, 255, 0.3); 
     border-radius: 16px;
     display: flex;
     flex-direction: column;
@@ -465,8 +517,6 @@ body {
 }
 
 /* dark mode */
-
-/* === Dark Mode Support === */
 body.dark-mode {
     background-color: #121212;
     color: #e0e0e0;
@@ -484,8 +534,7 @@ body.dark-mode {
         }
 
             body.dark-mode .navbar a:hover {
-                background-color: rgba(255, 255, 255, 0.1);
-                color: #ff7b9a;
+                color: #cbd5f1; 
             }
 
     body.dark-mode .navbar-center li a.active {

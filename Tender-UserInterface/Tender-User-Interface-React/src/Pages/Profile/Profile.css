@@ -23,16 +23,7 @@ body.dark-mode {
     --text-light: #888;
 }
 
-body {
-    font-family: var(--font-family);
-    background-color: var(--bg-page);
-    color: var(--text-primary);
-    margin: 0;
-    padding: 0;
-    transition: background-color var(--transition), color var(--transition);
-}
-
-/* Container Layout */
+/* container layout */
 .profile-container {
     display: flex;
     flex-wrap: nowrap;
@@ -44,27 +35,37 @@ body {
     justify-content: space-between;
 }
 
-.profile-section {
-    flex: 1 1 50%;
+/* profile card smaller */
+.profile-section.profile-card {
+    flex: 0 1 35%; /* smaller width, no grow, can shrink */
+    min-width: 320px;
+}
+
+/* settings card bigger */
+.profile-section.settings-card {
+    flex: 1 1 60%; 
     min-width: 400px;
 }
 
-    .profile-section h2 {
-        font-size: 2rem;
-        color: var(--text-primary);
-        margin-bottom: 1.5rem;
-    }
+.profile-section h2 {
+    font-size: 2rem;
+    color: var(--text-primary);
+    margin-bottom: 1.5rem;
+}
 
-/* Card Styling */
+/* card styling */
 .card {
     background: var(--bg-card);
     border-radius: var(--border-radius);
-    padding: 2rem;
+    padding: 2.5rem; 
     box-shadow: var(--shadow);
     transition: background-color var(--transition), box-shadow var(--transition);
+    display: flex;
+    flex-direction: column;
+    height: 87%; /* fill parent for equal height */
 }
 
-/* Avatar */
+/* avatar section */
 .avatar-wrapper {
     display: flex;
     flex-direction: column;
@@ -93,7 +94,7 @@ body {
     margin-top: 0.5rem;
 }
 
-/* Info Input Fields */
+/* info inputs */
 .info-group {
     display: flex;
     flex-direction: column;
@@ -142,7 +143,7 @@ body.dark-mode input {
         border-color: var(--color-primary-hover);
     }
 
-/* Settings */
+/* settings */
 .setting-row {
     display: flex;
     justify-content: space-between;
@@ -159,7 +160,7 @@ body.dark-mode input {
         color: var(--text-primary);
     }
 
-/* Buttons */
+/* buttons */
 .view-btn,
 .delete-btn,
 .save-btn,
@@ -219,7 +220,7 @@ body.dark-mode input {
         cursor: not-allowed;
     }
 
-/* Toggle Group */
+/* toggle group */
 .toggle-group {
     display: flex;
     align-items: center;
@@ -234,7 +235,7 @@ body.dark-mode input {
         gap: 0.5rem;
     }
 
-/* Dark Mode Toggle */
+/* dark mode toggle */
 .dark-toggle {
     background: none;
     border: none;
@@ -252,12 +253,12 @@ body.dark-mode input {
         color: var(--color-primary-hover);
     }
 
-/* Delete Section Spacing */
+/* delete section spacing */
 .delete-row {
     padding-top: 1rem;
 }
 
-/* Responsive */
+/* responsive */
 @media (max-width: 768px) {
     .profile-container {
         flex-direction: column;
@@ -266,6 +267,7 @@ body.dark-mode input {
 
     .profile-section {
         min-width: 0;
+        flex: 1 1 100% !important; /* override flex on mobile for full width */
     }
 
     .info-row {

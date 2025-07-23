@@ -1,10 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-}
+
 
 html, body {
     margin: 0;
@@ -53,7 +49,7 @@ html, body {
 
 /* right panel */
 .login-right {
-    flex: 0.7;
+    flex: 1;
     background-color: #33497D;
     padding: 4rem;
     color: white;
@@ -200,25 +196,71 @@ html, body {
         transform: translateY(0);
     }
 
-/* responsive tweaks */
 @media (max-width: 768px) {
     .login-container {
         flex-direction: column;
+        height: auto;
     }
 
-    .login-left,
-    .login-right {
-        height: 100%;
-        overflow: hidden;
+    .login-left {
+        width: 100%;
+        max-height: 300px;
+        padding: 1rem 1.5rem;
+        text-align: center;
     }
 
-    .login-right {
-        padding: 2.5rem;
+    .tender-tool-logo {
+        max-width: 45%;
+        margin: 0 auto;
     }
 
     .tender-text {
-        font-size: 2rem;
-        bottom: 1.5rem;
-        left: 1.5rem;
+        font-size: 1.3rem;
+        margin-top: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .login-right {
+        min-height: 70vh;
+        width: 100%;
+        padding: 2rem 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .form-toggle {
+        width: 100%;
+        max-width: 320px;
+    }
+
+    .login-form {
+        width: 100%;
+        max-width: 320px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+        .login-form label {
+            width: 100%;
+            text-align: left;
+            margin-bottom: 0.3rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .login-form input,
+        .login-form button {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+
+    .form-options {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.85rem;
+        margin-bottom: 1rem;
     }
 }
