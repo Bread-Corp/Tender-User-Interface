@@ -1,6 +1,6 @@
 ﻿@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
 
-#root {
+.layout-wrapper {
     max-width: 1280px;
     margin: 0 auto;
     padding: 2rem;

@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
+import { FaChevronDown } from 'react-icons/fa';
 import { NavLink } from 'react-router-dom';
 
 const ProfilePanel = ({ show, toggle, close }) => {
     const profileRef = useRef(null);
 
-    // close dropdown when clicking outside
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (profileRef.current && !profileRef.current.contains(event.target)) {
@@ -23,15 +23,15 @@ const ProfilePanel = ({ show, toggle, close }) => {
     }, [show, close]);
 
     return (
-        <div className="profile-container">
-            <FaUserCircle className="profile-icon" onClick={toggle} />
-            <div
-                className={`profile-dropdown ${show ? 'show' : ''}`}
-                ref={profileRef}
-            >
+        <div className="profile-nav-container" ref={profileRef}>
+            <div className="profile-button" onClick={toggle}>
+                <FaUserCircle className="profile-icon" />
+                <FaChevronDown className="chevron-icon" />
+            </div>
+            <div className={`profile-dropdown ${show ? 'show' : ''}`}>
                 <NavLink to="/login">Login</NavLink>
                 <NavLink to="/register">Register</NavLink>
-                <NavLink to="/profile">View Profile</NavLink>
+                <NavLink to="/profile">Settings</NavLink>
             </div>
         </div>
     );

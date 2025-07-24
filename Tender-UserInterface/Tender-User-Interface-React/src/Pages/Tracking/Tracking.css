@@ -14,14 +14,15 @@
 }
 
 .tender-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+    display: flex;
+    flex-direction: column;
     gap: 1.5rem;
 }
 
+/* Tweak the card for smaller screens */
 .tender-card {
-    background: #f0f6fc;
-    border: 1px solid #dbe7f4;
+    background: var(--tender-card-bg);
+    border: 1px solid var(--tender-card-border);
     transition: background 0.2s ease;
     border-radius: 16px;
     padding: 1.5rem;
@@ -47,7 +48,7 @@
 
 .expand-icon {
     font-size: 14px;
-    color: #33497D;
+    color: var(--icon-color);
     transition: transform 0.3s ease;
 }
 
@@ -55,12 +56,12 @@
         transform: rotate(180deg);
     }
 
-    .card-header h3 {
-        font-size: 16px;
-        font-weight: 600;
-        color: #1f3b7a;
-        flex: 1;
-    }
+.card-header h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--tender-card-header);
+    flex: 1;
+}
 
 .status-badge {
     font-size: 12px;
@@ -73,21 +74,21 @@
 }
 
     .status-badge.open {
-        background-color: #c7f5d2;
-        color: #256029;
+        background-color: var(--open-badge-bg);
+        color: var(--open-badge-txt);
     }
 
     .status-badge.closed {
-        background-color: #f9d7d5;
-        color: #8a1c1c;
+        background-color: var(--closed-badge-bg);
+        color: var(--closed-badge-txt);
     }
 
 .location,
 .closing-date {
     display: flex;
     align-items: center;
-    font-size: 14px;
-    color: #3f4c61;
+    font-size: 0.9rem;
+    color: var(--tender-secondary-txt);
     margin-top: 10px;
 }
 
@@ -102,6 +103,8 @@
     justify-content: space-between;
     align-items: center;
     margin-top: 16px;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
 .remove-btn,
@@ -142,8 +145,9 @@
     align-items: center;
     gap: 0.75rem;
     font-size: 14px;
-    color: #33497D;
+    color: var(--tender-secondary-txt);
     justify-content: flex-end;
+    flex-wrap: wrap;
 }
 
     .filter-container select {
@@ -155,4 +159,29 @@
         font-size: 14px;
     }
 
+/*  Extra responsiveness for smaller screens */
+@media (max-width: 480px) {
+    .page-title {
+        font-size: 1.75rem;
+        margin-top: 60px;
+    }
 
+    .card-header h3 {
+        font-size: 0.95rem;
+    }
+
+    .card-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .remove-btn,
+    .view-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .filter-container {
+        justify-content: center;
+    }
+}
