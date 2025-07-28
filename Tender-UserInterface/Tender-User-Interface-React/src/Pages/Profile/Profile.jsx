@@ -3,6 +3,8 @@ import "./Profile.css";
 import { FaPen, FaUserCircle, FaMoon, FaSun } from "react-icons/fa";
 
 const Profile = () => {
+    //Declares the dark mode constant with a method to change it.
+    //Checks localstorage for previous stores.
     const [darkMode, setDarkMode] = useState(() => {
         const storedMode = localStorage.getItem("darkMode");
         return storedMode === "true";
@@ -18,6 +20,8 @@ const Profile = () => {
     const [formData, setFormData] = useState({ ...initialFormData });
     const [hasChanges, setHasChanges] = useState(false);
 
+    //triggered on initialisation and whenever the constant darkMode is changed.
+    //toggles the attribute on the body class and saves new setting to localStorage.
     useEffect(() => {
         document.body.classList.toggle("dark-mode", darkMode);
         localStorage.setItem("darkMode", darkMode);
