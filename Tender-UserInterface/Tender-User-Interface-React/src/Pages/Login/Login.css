@@ -196,6 +196,7 @@ html, body {
         transform: translateY(0);
     }
 
+/* responsive */
 @media (max-width: 768px) {
     .login-container {
         flex-direction: column;

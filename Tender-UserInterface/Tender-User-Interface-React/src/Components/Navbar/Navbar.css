@@ -133,14 +133,6 @@ body {
         border-radius: 50%;
     }
 
-/* profile icon */
-.profile-icon {
-    font-size: 28px;
-    color: #2c3e75;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-}
-
     .profile-icon:hover {
         transform: scale(1.05);
     }
@@ -150,12 +142,7 @@ body {
     display: inline-block;
 }
 
-.profile-nav-container {
-    position: relative;
-    display: inline-block;
-}
-
-/* Profile button with icon + chevron */
+/* profile button with icon + chevron */
 .profile-button {
     display: flex;
     align-items: center;
@@ -182,7 +169,7 @@ body {
     color: var(--icon-color);
 }
 
-/* Profile dropdown menu */
+/* profile dropdown menu */
 .profile-dropdown {
     position: absolute;
     top: 62px;
@@ -350,12 +337,11 @@ body {
     right: 0.5rem;
     width: 340px;
     height: calc(100vh - 70px);
-    /* Frosted Glass Background */
+    /* background */
     background: rgba(226, 239, 251, 0.9); 
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); 
     backdrop-filter: saturate(180%) blur(100px);
     -webkit-backdrop-filter: saturate(180%) blur(80px);
-    /* Edge Definition */
     border: 1px solid rgba(255, 255, 255, 0.3); 
     border-radius: 16px;
     display: flex;
@@ -363,7 +349,7 @@ body {
     overflow: hidden;
     font-family: 'Poppins', sans-serif;
     z-index: 999;
-    /* Animation Defaults */
+    /* animation */
     opacity: 0;
     transform: translateY(-12px);
     pointer-events: none;

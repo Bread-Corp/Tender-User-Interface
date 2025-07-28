@@ -19,7 +19,7 @@
     gap: 1.5rem;
 }
 
-/* Tweak the card for smaller screens */
+/* tender card */
 .tender-card {
     background: var(--tender-card-bg);
     border: 1px solid var(--tender-card-border);
@@ -159,7 +159,7 @@
         font-size: 14px;
     }
 
-/*  Extra responsiveness for smaller screens */
+/*  responsive */
 @media (max-width: 480px) {
     .page-title {
         font-size: 1.75rem;

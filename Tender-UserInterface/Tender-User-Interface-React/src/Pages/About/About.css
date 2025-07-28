@@ -138,7 +138,7 @@ html, body {
             background-color: var(--btn-hover);
         }
 
-/* responsive tweaks */
+/* responsive */
 @media (max-width: 768px) {
     .about-mission {
         flex-direction: column;

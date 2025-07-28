@@ -2,6 +2,7 @@
 import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import './Login.css';
+import { useLocation } from 'react-router-dom';
 import TenderToolGraphic from "../../Components/TenderToolGraphic";
 
 const Login = () => {
@@ -10,7 +11,18 @@ const Login = () => {
     const registerTabRef = useRef(null);
     const [underlineStyle, setUnderlineStyle] = useState({ left: 0, width: 0 });
     const navigate = useNavigate();
+    const location = useLocation();
 
+// checking for the ?tab=register in the URL on the first load
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const tabParam = params.get('tab');
+        if (tabParam === 'register') {
+            setActiveForm('register');
+        }
+    }, [location.search]);
+
+// update underline position when the tab changes
     useEffect(() => {
         const currentRef = activeForm === 'login' ? loginTabRef : registerTabRef;
         if (currentRef.current) {
