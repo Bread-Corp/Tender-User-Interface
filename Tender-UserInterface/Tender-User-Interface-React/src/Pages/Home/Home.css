@@ -1,61 +1,216 @@
-.home-page {
-    padding-top: 100px;
-    background: #f5f7fa;
+.home-container {
+    font-family: var(--font-family);
+    color: var(--home-heading);
+    background: var(--home-bg); 
+    padding-top: 4rem; 
+}
+
+.hero-home {
+    background: var(--home-bg);
     text-align: center;
-    min-height: 100vh;
+    padding: 6rem 2rem;
+    box-shadow: var(--hero-shadow);
 }
 
-.hero {
-    background: linear-gradient(to right, #2a4c98, #1f3b7a);
-    padding: 4rem 1rem;
-    color: white;
-}
-
-.hero-title {
+.hero-content-home h1 {
     font-size: 3rem;
+    margin-bottom: 1rem;
+    color: var(--home-heading);
+}
+
+.hero-content-home p {
+    font-size: 1.2rem;
+    color: var(--home-heading);
+    margin-bottom: 2rem;
+}
+
+.hero-buttons .btn-primary,
+.hero-buttons .btn-secondary {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 25px;
+    margin: 0 0.5rem;
     font-weight: bold;
-    margin: 0;
+    cursor: pointer;
+    font-family: var(--font-family);
+}
+
+.btn-primary {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+}
+
+    .btn-primary:hover {
+        background-color: var(--button-hover);
+    }
+
+.btn-secondary {
+    background-color: transparent;
+    border: 2px solid var(--button-text);
+    color: var(--button-text);
 }
 
 .features {
+    background-color: var(--card-bg);
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--text-color);
+}
+
+    .features h2 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        color: var(--heading-color);
+    }
+
+    .features .subtext {
+        font-size: 1rem;
+        color: var(--subtext-color);
+        margin-bottom: 3rem;
+    }
+
+.feature-icon {
+    color: var(--icon-color);
+    margin-bottom: 1.2rem;
+}
+
+.feature-cards {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 2rem;
-    padding: 3rem 1rem;
-    background: #fff;
+    gap: 3rem 4rem;
 }
 
-.home-card {
-    background: #eaf2ff;
-    border-radius: 1rem;
+.feature-card {
+    background-color: var(--tender-card-bg);
     padding: 2rem;
-    width: 240px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-radius: 15px;
+    width: 250px;
     text-align: center;
-    transition: transform 0.3s ease;
+    box-shadow: var(--card-shadow);
+    color: var(--text-color);
 }
 
-   .home-card:hover {
-    transform: translateY(-5px);
-}
-
-.icon {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    color: #2a4c98;
-}
-
-.card-btn {
-    margin-top: 1rem;
-    padding: 0.5rem 1.2rem;
-    background: #2a4c98;
-    color: white;
-    border: none;
-    border-radius: 0.5rem;
-    cursor: pointer;
-}
-
-    .card-btn:hover {
-        background: #1f3b7a;
+    .feature-card img {
+        width: 40px;
+        margin-bottom: 1rem;
+        filter: brightness(0) saturate(100%) invert(20%) sepia(6%) saturate(1300%) hue-rotate(190deg) brightness(95%) contrast(90%);
     }
+
+.cta-section {
+    background-color: var(--cta-bg);
+    color: var(--text-color);
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+    .cta-section h2 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        color: var(--heading-color);
+    }
+
+    .cta-section p {
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        color: var(--subtext-color);
+    }
+
+.contact-section {
+    background-color: var(--card-bg);
+    padding: 4rem 2rem;
+    text-align: center;
+    color: var(--text-color);
+}
+
+    .contact-section h2 {
+        margin-bottom: 0.5rem;
+        color: var(--heading-color);
+    }
+
+    .contact-section p {
+        margin-bottom: 2rem;
+        color: var(--subtext-color);
+    }
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    max-width: 500px;
+    margin: auto;
+}
+
+    .contact-form input,
+    .contact-form textarea {
+        width: 100%;
+        padding: 1rem;
+        border: none;
+        border-radius: 10px;
+        font-size: 1rem;
+        background-color: var(--card-bg);
+        color: var(--text-color);
+        box-shadow: var(--card-shadow);
+    }
+
+.input-icon-group {
+    position: relative;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+    .input-icon-group input,
+    .input-icon-group textarea {
+        width: 100%;
+        padding-left: 2.5rem;
+        box-sizing: border-box;
+    }
+
+    .input-icon-group textarea {
+        padding-top: 1rem;
+        line-height: 1.5;
+    }
+
+    /* icon positioning for both input and textarea */
+    .input-icon-group .input-icon {
+        position: absolute;
+        left: 1rem;
+        top: 1.2rem; /* adjustments for textarea */
+        color: var(--icon-color, #666);
+        pointer-events: none;
+    }
+
+.footer {
+    background-color: var(--card-bg);
+    text-align: center;
+    padding: 1.5rem 1rem;
+    font-size: 0.9rem;
+    color: var(--subtext-color);
+}
+
+/* Responsive Tweaks */
+@media screen and (max-width: 768px) {
+    .feature-cards {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .hero-content-home h1 {
+        font-size: 2.2rem;
+    }
+
+    .hero-content-home p {
+        font-size: 1rem;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        margin: 0.5rem 0;
+        width: 80%;
+    }
+
+    .feature-card {
+        width: 90%;
+    }
+}

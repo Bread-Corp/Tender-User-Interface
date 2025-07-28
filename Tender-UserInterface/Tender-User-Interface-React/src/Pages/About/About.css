@@ -10,7 +10,7 @@ html, body {
 }
 
 .about-page {
-    font-family: var(--font-primary);
+    font-family: var(--font-family);
     color: var(--text-main);
     padding-top: 100px;
     padding-left: 2rem;
@@ -138,7 +138,7 @@ html, body {
             background-color: var(--btn-hover);
         }
 
-/* responsive tweaks */
+/* responsive */
 @media (max-width: 768px) {
     .about-mission {
         flex-direction: column;
