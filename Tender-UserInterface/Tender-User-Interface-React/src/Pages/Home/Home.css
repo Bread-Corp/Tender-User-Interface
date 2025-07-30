@@ -117,7 +117,7 @@
     }
 
 .contact-section {
-    background-color: var(--card-bg);
+    background-color: var(--contact-us-bg);
     padding: 4rem 2rem;
     text-align: center;
     color: var(--text-color);
@@ -125,12 +125,12 @@
 
     .contact-section h2 {
         margin-bottom: 0.5rem;
-        color: var(--heading-color);
+        color: var(--home-heading);
     }
 
     .contact-section p {
         margin-bottom: 2rem;
-        color: var(--subtext-color);
+        color: var(--home-heading);
     }
 
 .contact-form {
@@ -191,6 +191,7 @@
 
 /* Responsive Tweaks */
 @media screen and (max-width: 768px) {
+
     .feature-cards {
         flex-direction: column;
         align-items: center;

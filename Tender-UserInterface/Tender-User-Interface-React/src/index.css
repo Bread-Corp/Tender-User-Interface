@@ -44,6 +44,9 @@
 
     /* Hero Text */
     --home-heading: #e0e6f1;
+
+    /* Contact us*/
+    --contact-us-bg: #33497D;
 }
 
 body.dark-mode {
@@ -87,6 +90,20 @@ body.dark-mode {
 
     /* Hero Text */
     --home-heading: #e0e6f1;
+
+    /* Contact us*/
+    --contact-us-bg: #33497D;
+}
+
+/* switch gradient from horizontal to vertical on smaller screens */
+@media screen and (max-width: 768px) {
+    :root {
+        --home-bg: linear-gradient(180deg, rgba(51, 73, 125, 1) 0%, rgba(85, 113, 166, 1) 50%, rgba(252, 248, 174, 1) 100%);
+    }
+
+    body.dark-mode {
+        --home-bg: linear-gradient(180deg, #1f2735, #141a23);
+    }
 }
 
 html, body {
