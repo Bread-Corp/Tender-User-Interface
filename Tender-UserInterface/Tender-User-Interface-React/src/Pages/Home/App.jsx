@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import Navbar from "../../Components/Navbar/Navbar";
 import Home from "../Home/Home";
@@ -8,21 +8,27 @@ import Dashboard from "../Dashboard/Dashboard";
 import Discover from "../Discover/Discover";
 import Tracking from "../Tracking/Tracking";
 import Profile from "../Profile/Profile";
+import ProtectedRoute from '../../Components/ProtectedRoute';
+import ConfirmSignUp from '../Login/ConfirmSignUp';
 
 function App() {
     return (
-        <Router>
+        <>
             <Navbar />
             <Routes>
+                {/* Public Routes */ }
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/confirm-signup" element={<ConfirmSignUp />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/discover" element={<Discover />} />
-                <Route path="/tracking" element={<Tracking />} />
-                <Route path="/profile" element={<Profile />} />
                 <Route path="/dashboard" element={<Dashboard />} />
+
+                {/* Protected Routes */ }          
+                <Route path="/tracking" element={<ProtectedRoute><Tracking /></ProtectedRoute>} />
+                <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             </Routes>
-        </Router>
+        </>
     );
 }
 
