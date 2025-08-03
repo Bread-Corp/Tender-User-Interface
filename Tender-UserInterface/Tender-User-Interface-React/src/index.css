@@ -3,38 +3,48 @@
 :root {
     /* Typography */
     --font-family: 'Poppins', sans-serif;
+
     /* Text Colors */
     --text-color: #1F2B4A;
     --heading-color: #2A3C64;
     --subtext-color: #4a5a78;
+
     /* Backgrounds */
     --hero-bg: linear-gradient(135deg, #d6e6f2, #eaf3fb);
     --home-bg: linear-gradient(90deg,rgba(51, 73, 125, 1) 0%, rgba(85, 113, 166, 1) 50%, rgba(205, 79, 110, 1) 100%);
     --card-bg: #ffffff;
     --cta-bg: #d6e6f2;
     --tender-card-bg: #f0f6fc;
+
     /* Shadows */
     --hero-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
     --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
     /* Buttons */
     --button-bg: #33497d;
     --button-hover: #1f325c;
     --button-text: white;
+
     /* Icons */
     --icon-color: #33497D;
+
     /* Profile Button Hover */
     --profile-button-hover-bg: #d7e3fc;
+
     /* Tender Card Details */
     --tender-card-border: #dbe7f4;
     --tender-card-header: #2d4d7a;
     --tender-secondary-txt: #3f4c61;
+
     /* Status Badges */
     --open-badge-bg: #c7f5d2;
     --open-badge-txt: #256029;
     --closed-badge-bg: #f9d7d5;
     --closed-badge-txt: #8a1c1c;
+
     /* Hero Text */
     --home-heading: #e0e6f1;
+
     /* Contact us*/
     --contact-us-bg: #33497D;
 }

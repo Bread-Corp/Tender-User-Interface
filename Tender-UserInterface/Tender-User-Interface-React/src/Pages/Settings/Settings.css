@@ -1,0 +1,170 @@
+/* Layout wrapper to center content vertically and horizontally */
+.layout-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4rem 1rem;
+    min-height: 100vh;
+    background-color: var(--home-bg);
+}
+
+/* Shared button styles */
+button,
+select {
+    font-family: inherit;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1.2rem;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    font-weight: 500;
+}
+
+/* Primary action buttons (view/update) */
+.view-btn,
+.update-btn {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+    .view-btn:hover,
+    .update-btn:hover {
+        background-color: var(--primary-hover);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    }
+
+/*  action button */
+.delete-btn {
+    background-color: #ff4d4d;
+    color: #fff;
+}
+
+    .delete-btn:hover {
+        background-color: #e60000;
+        box-shadow: 0 2px 6px rgba(255, 77, 77, 0.4);
+    }
+
+/* Dropdowns */
+.settings-dropdown {
+    background-color: #f9f9f9;
+    color: #333;
+    border: 1px solid #ccc;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 250px;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg width='14' height='10' viewBox='0 0 14 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill='%23999' d='M7 10L0 0h14z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 10px;
+}
+
+    .settings-dropdown:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    }
+
+
+/* Container that holds the settings section */
+.settings-container {
+    max-width: 600px;
+    width: 100%;
+}
+
+/* Card-style section for settings */
+.settings-section {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+    /* Section heading */
+    .settings-section h2 {
+        margin-bottom: 1.5rem;
+        font-size: 1.8rem;
+        text-align: center;
+        color: var(--heading-color);
+    }
+
+/* Inner card for each setting row */
+.settings-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Individual row inside settings */
+.setting-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Row for dangerous action */
+.delete-row {
+    border-top: 1px solid #ddd;
+    padding-top: 1rem;
+}
+
+/* View and Update buttons */
+.view-btn,
+.delete-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s ease-in-out;
+}
+
+    .view-btn:hover {
+        background-color: var(--primary-hover);
+    }
+
+.delete-btn {
+    background-color: #ff4d4d;
+}
+
+    .delete-btn:hover {
+        background-color: #e60000;
+    }
+
+/* Toggle group for notification checkboxes */
+.toggle-group {
+    display: flex;
+    gap: 1rem;
+}
+
+/* Dark mode toggle button */
+.dark-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+    .dark-toggle.dark {
+        background-color: #1f2b4a;
+        color: white;
+    }
+
+    .dark-toggle.light {
+        background-color: #ffe680;
+        color: #333;
+    }
+
+.mode-text {
+    font-weight: 500;
+}

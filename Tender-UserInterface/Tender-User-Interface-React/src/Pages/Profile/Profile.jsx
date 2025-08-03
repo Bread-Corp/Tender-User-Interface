@@ -1,28 +1,25 @@
 import React, { useState, useEffect } from "react";
 import "./Profile.css";
-import { FaPen, FaUserCircle, FaMoon, FaSun } from "react-icons/fa";
+import { FaUserCircle } from "react-icons/fa";
 
 const Profile = () => {
-    const [darkMode, setDarkMode] = useState(() => {
-        const storedMode = localStorage.getItem("darkMode");
-        return storedMode === "true";
-    });
-
+    // state for profile image preview
     const [profileImage, setProfileImage] = useState(null);
+
+    // initial form data for profile info
     const [initialFormData, setInitialFormData] = useState({
         name: "John Doe",
         email: "JohnDoe@gmail.com",
         phone: "123 456 789",
     });
 
+    // form data that can be edited
     const [formData, setFormData] = useState({ ...initialFormData });
+
+    // flag to track if form has unsaved changes
     const [hasChanges, setHasChanges] = useState(false);
 
-    useEffect(() => {
-        document.body.classList.toggle("dark-mode", darkMode);
-        localStorage.setItem("darkMode", darkMode);
-    }, [darkMode]);
-
+    // warn user if they try to leave page with unsaved changes
     useEffect(() => {
         const handleBeforeUnload = (e) => {
             if (hasChanges) {
@@ -34,8 +31,7 @@ const Profile = () => {
         return () => window.removeEventListener("beforeunload", handleBeforeUnload);
     }, [hasChanges]);
 
-    const toggleDarkMode = () => setDarkMode(prev => !prev);
-
+    // update form data and track changes when input changes
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         const updatedForm = { ...formData, [name]: value };
@@ -43,6 +39,7 @@ const Profile = () => {
         setHasChanges(JSON.stringify(updatedForm) !== JSON.stringify(initialFormData));
     };
 
+    // read and preview uploaded profile image, mark changes
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -55,12 +52,13 @@ const Profile = () => {
         }
     };
 
+    // save changes and reset change flag
     const handleSave = () => {
         setInitialFormData({ ...formData });
         setHasChanges(false);
-        // backend update logic could go here (?)
     };
 
+    // cancel edits and reset form and image preview
     const handleCancel = () => {
         setFormData({ ...initialFormData });
         setProfileImage(null);
@@ -70,16 +68,17 @@ const Profile = () => {
     return (
         <div className="layout-wrapper">
             <div className="profile-container">
-                {/* left section - smaller profile card */}
                 <section className="profile-section profile-card">
-                    <h2>Profile</h2>
+                    <h2>profile</h2>
                     <div className="card">
                         <div className="avatar-wrapper">
+                            {/* show image preview or default icon */}
                             {profileImage ? (
-                                <img src={profileImage} alt="Profile" className="avatar-img" />
+                                <img src={profileImage} alt="profile" className="avatar-img" />
                             ) : (
                                 <FaUserCircle className="avatar-icon" />
                             )}
+                            {/* hidden file input for image upload */}
                             <input
                                 type="file"
                                 id="upload"
@@ -87,12 +86,13 @@ const Profile = () => {
                                 onChange={handleImageUpload}
                                 hidden
                             />
-                            <label htmlFor="upload" className="upload-text">Upload Image</label>
+                            <label htmlFor="upload" className="upload-text">upload image</label>
                         </div>
 
+                        {/* input fields for user info */}
                         <div className="info-group">
                             <div className="info-row">
-                                <label>Name</label>
+                                <label>name</label>
                                 <input
                                     name="name"
                                     value={formData.name}
@@ -100,7 +100,7 @@ const Profile = () => {
                                 />
                             </div>
                             <div className="info-row">
-                                <label>Email</label>
+                                <label>email</label>
                                 <input
                                     name="email"
                                     type="email"
@@ -109,7 +109,7 @@ const Profile = () => {
                                 />
                             </div>
                             <div className="info-row">
-                                <label>Phone</label>
+                                <label>phone</label>
                                 <input
                                     name="phone"
                                     value={formData.phone}
@@ -118,54 +118,22 @@ const Profile = () => {
                             </div>
                         </div>
 
+                        {/* save and cancel buttons */}
                         <div className="button-group">
                             <button
                                 className="save-btn"
                                 onClick={handleSave}
                                 disabled={!hasChanges}
                             >
-                                Save
+                                save
                             </button>
                             <button
                                 className="cancel-btn"
                                 onClick={handleCancel}
                                 disabled={!hasChanges}
                             >
-                                Cancel
+                                cancel
                             </button>
-                        </div>
-                    </div>
-                </section>
-
-                {/* right section - bigger settings card */}
-                <section className="profile-section settings-card">
-                    <h2>Settings</h2>
-                    <div className="card">
-                        <div className="setting-row">
-                            <label>Categories</label>
-                            <button className="view-btn">View</button>
-                        </div>
-                        <div className="setting-row">
-                            <label>Change Password</label>
-                            <button className="view-btn">Update</button>
-                        </div>
-                        <div className="setting-row">
-                            <label>Notifications</label>
-                            <div className="toggle-group">
-                                <label><input type="checkbox" /> Email</label>
-                                <label><input type="checkbox" /> SMS</label>
-                            </div>
-                        </div>
-                        <div className="setting-row">
-                            <label>Theme</label>
-                            <button className={`dark-toggle ${darkMode ? "light" : "dark"}`} onClick={toggleDarkMode}>
-                                {darkMode ? <FaMoon /> : <FaSun />}
-                                <span className="mode-text">{darkMode ? "Dark Mode" : "Light Mode"}</span>
-                            </button>
-                        </div>
-                        <div className="setting-row delete-row">
-                            <label>Delete Account</label>
-                            <button className="delete-btn">Delete</button>
                         </div>
                     </div>
                 </section>

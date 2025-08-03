@@ -8,6 +8,7 @@ import Dashboard from "../Dashboard/Dashboard";
 import Discover from "../Discover/Discover";
 import Tracking from "../Tracking/Tracking";
 import Profile from "../Profile/Profile";
+import Settings from "../Settings/Settings";
 
 function App() {
     return (
@@ -21,6 +22,7 @@ function App() {
                 <Route path="/tracking" element={<Tracking />} />
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/settings" element={<Settings />} />
             </Routes>
         </Router>
     );
