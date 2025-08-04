@@ -3,23 +3,20 @@ import "./Profile.css";
 import { FaUserCircle } from "react-icons/fa";
 
 const Profile = () => {
-    // state for profile image preview
     const [profileImage, setProfileImage] = useState(null);
 
-    // initial form data for profile info
     const [initialFormData, setInitialFormData] = useState({
         name: "John Doe",
         email: "JohnDoe@gmail.com",
         phone: "123 456 789",
     });
 
-    // form data that can be edited
     const [formData, setFormData] = useState({ ...initialFormData });
-
-    // flag to track if form has unsaved changes
     const [hasChanges, setHasChanges] = useState(false);
 
-    // warn user if they try to leave page with unsaved changes
+    // Keep track of which field is currently being edited
+    const [editingField, setEditingField] = useState(null);
+
     useEffect(() => {
         const handleBeforeUnload = (e) => {
             if (hasChanges) {
@@ -31,7 +28,6 @@ const Profile = () => {
         return () => window.removeEventListener("beforeunload", handleBeforeUnload);
     }, [hasChanges]);
 
-    // update form data and track changes when input changes
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         const updatedForm = { ...formData, [name]: value };
@@ -39,7 +35,6 @@ const Profile = () => {
         setHasChanges(JSON.stringify(updatedForm) !== JSON.stringify(initialFormData));
     };
 
-    // read and preview uploaded profile image, mark changes
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -52,33 +47,31 @@ const Profile = () => {
         }
     };
 
-    // save changes and reset change flag
     const handleSave = () => {
         setInitialFormData({ ...formData });
         setHasChanges(false);
+        setEditingField(null);
     };
 
-    // cancel edits and reset form and image preview
     const handleCancel = () => {
         setFormData({ ...initialFormData });
         setProfileImage(null);
         setHasChanges(false);
+        setEditingField(null);
     };
 
     return (
         <div className="layout-wrapper">
             <div className="profile-container">
                 <section className="profile-section profile-card">
-                    <h2>profile</h2>
                     <div className="card">
+                        <h2>Profile</h2>
                         <div className="avatar-wrapper">
-                            {/* show image preview or default icon */}
                             {profileImage ? (
                                 <img src={profileImage} alt="profile" className="avatar-img" />
                             ) : (
                                 <FaUserCircle className="avatar-icon" />
                             )}
-                            {/* hidden file input for image upload */}
                             <input
                                 type="file"
                                 id="upload"
@@ -86,56 +79,48 @@ const Profile = () => {
                                 onChange={handleImageUpload}
                                 hidden
                             />
-                            <label htmlFor="upload" className="upload-text">upload image</label>
+                            <label htmlFor="upload" className="upload-text">Upload Image</label>
                         </div>
 
-                        {/* input fields for user info */}
                         <div className="info-group">
-                            <div className="info-row">
-                                <label>Name</label>
-                                <input
-                                    name="name"
-                                    value={formData.name}
-                                    onChange={handleInputChange}
-                                />
-                                <button className="info-edit-btn">Edit</button>
-                            </div>
-                            <div className="info-row">
-                                <label>Email</label>
-                                <input
-                                    name="email"
-                                    type="email"
-                                    value={formData.email}
-                                    onChange={handleInputChange}
-                                />
-                                <button className="info-edit-btn">Edit</button>
-                            </div>
-                            <div className="info-row">
-                                <label>Phone</label>
-                                <input
-                                    name="phone"
-                                    value={formData.phone}
-                                    onChange={handleInputChange}
-                                />
-                                <button className="info-edit-btn">Edit</button>
-                            </div>
+                            {["name", "email", "phone"].map((field) => (
+                                <div className="info-row" key={field}>
+                                    <label>{field.charAt(0).toUpperCase() + field.slice(1)}</label>
+                                    <input
+                                        name={field}
+                                        type={field === "email" ? "email" : "text"}
+                                        value={formData[field]}
+                                        onChange={handleInputChange}
+                                        readOnly={editingField !== field}
+                                    />
+                                    {editingField !== field ? (
+                                        <button
+                                            className="info-edit-btn"
+                                            onClick={() => setEditingField(field)}
+                                        >
+                                            Edit
+                                        </button>
+                                    ) : (
+                                        <span className="editing-label">Editing</span>
+                                    )}
+                                </div>
+                            ))}
                         </div>
 
-                        {/* save and cancel buttons */}
                         <div className="button-group">
                             <button
                                 className="save-btn"
                                 onClick={handleSave}
                                 disabled={!hasChanges}
                             >
-                                save
+                                Save
                             </button>
                             <button
                                 className="cancel-btn"
                                 onClick={handleCancel}
                                 disabled={!hasChanges}
                             >
-                                cancel
+                                Cancel
                             </button>
                         </div>
                     </div>
