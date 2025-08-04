@@ -92,29 +92,32 @@ const Profile = () => {
                         {/* input fields for user info */}
                         <div className="info-group">
                             <div className="info-row">
-                                <label>name</label>
+                                <label>Name</label>
                                 <input
                                     name="name"
                                     value={formData.name}
                                     onChange={handleInputChange}
                                 />
+                                <button className="info-edit-btn">Edit</button>
                             </div>
                             <div className="info-row">
-                                <label>email</label>
+                                <label>Email</label>
                                 <input
                                     name="email"
                                     type="email"
                                     value={formData.email}
                                     onChange={handleInputChange}
                                 />
+                                <button className="info-edit-btn">Edit</button>
                             </div>
                             <div className="info-row">
-                                <label>phone</label>
+                                <label>Phone</label>
                                 <input
                                     name="phone"
                                     value={formData.phone}
                                     onChange={handleInputChange}
                                 />
+                                <button className="info-edit-btn">Edit</button>
                             </div>
                         </div>
 
