@@ -24,8 +24,9 @@
     margin-bottom: 2rem;
 }
 
-.hero-buttons .btn-primary,
-.hero-buttons .btn-secondary {
+.btn-primary {
+    background-color: var(--button-bg);
+    color: var(--button-text);
     padding: 0.8rem 1.5rem;
     border: none;
     border-radius: 25px;
@@ -35,20 +36,10 @@
     font-family: var(--font-family);
 }
 
-.btn-primary {
-    background-color: var(--button-bg);
-    color: var(--button-text);
-}
-
     .btn-primary:hover {
         background-color: var(--button-hover);
     }
 
-.btn-secondary {
-    background-color: transparent;
-    border: 2px solid var(--button-text);
-    color: var(--button-text);
-}
 
 .features {
     background-color: var(--card-bg);
@@ -120,7 +111,7 @@
     background-color: var(--contact-us-bg);
     padding: 4rem 2rem;
     text-align: center;
-    color: var(--text-color);
+    background-color: var(--contact-us-bg);
 }
 
     .contact-section h2 {

@@ -50,7 +50,7 @@ const About = () => {
 
                 <section className="about-cta">
                     <h2>Ready to explore tenders smarter?</h2>
-                    <button onClick={handleRedirect}>Get Started</button>
+                    <button className="btn-secondary-dark" onClick={handleRedirect}>Get Started</button>
                 </section>
             </div>
         </div>

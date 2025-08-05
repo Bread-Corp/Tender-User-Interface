@@ -1,6 +1,5 @@
 import React from 'react';
 import { FaCalendarCheck, FaSearch, FaRegBookmark, FaUser, FaEnvelope, FaCommentDots } from 'react-icons/fa';
-import { MdConnectWithoutContact } from 'react-icons/md';
 import './Home.css';
 
 const Home = () => {
@@ -41,7 +40,7 @@ const Home = () => {
             <section className="cta-section">
                 <h2>Ready to Get Started?</h2>
                 <p>Create your free account and streamline your tender search today.</p>
-                <button className="btn-primary">Create Account</button>
+                <button className="btn-secondary-dark">Create Account</button>
             </section>
 
             <section className="contact-section">
@@ -60,7 +59,7 @@ const Home = () => {
                         <FaCommentDots className="input-icon" />
                         <textarea placeholder="Your Message" rows="4" required></textarea>
                     </div>
-                    <button className="btn-primary" type="submit">Send Message</button>
+                    <button className="btn-secondary-light" type="submit">Send Message</button>
                 </form>
             </section>
 

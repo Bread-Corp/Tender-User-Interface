@@ -52,7 +52,7 @@ const Tracking = () => {
 
     return (
         <div className="saved-tenders-container">
-            <h2 className="page-title">Saved Tenders</h2>
+            <h2 className="page-title">Tracked Tenders</h2>
 
             <div className="filter-container">
                 <label htmlFor="statusFilter">Filter by Status:</label>
