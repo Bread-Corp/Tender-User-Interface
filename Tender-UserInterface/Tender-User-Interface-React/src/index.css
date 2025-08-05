@@ -99,6 +99,7 @@ body.dark-mode {
 /* switch gradient from horizontal to vertical on smaller screens */
 @media screen and (max-width: 768px) {
     :root {
+
         --home-bg: radial-gradient( circle at top center, rgba(205, 79, 110, 0.9) 0%, rgba(100, 125, 170, 0.9) 50%, rgba(51, 73, 125, 1) 100% );
     }
 
