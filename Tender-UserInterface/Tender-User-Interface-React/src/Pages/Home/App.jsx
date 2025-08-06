@@ -7,9 +7,11 @@ import Navbar from "../../Components/Navbar/Navbar";
 import Home from "../Home/Home";
 import Login from "../Login/Login";
 import About from "../About/About";
+import Dashboard from "../Dashboard/Dashboard";
 import Discover from "../Discover/Discover";
 import Tracking from "../Tracking/Tracking";
 import Profile from "../Profile/Profile";
+import Settings from "../Settings/Settings";
 
 function App() {
     const [currentUser, setCurrentUser] = useState(null);
@@ -64,6 +66,11 @@ function App() {
                     path="/tracking"
                     element={currentUser ? <Tracking /> : <Login onSignIn={setCurrentUser} />}
                 />
+// Routing done without the Cognito implementation. [Legacy]
+//                 <Route path="/tracking" element={<Tracking />} />
+//                 <Route path="/profile" element={<Profile />} />
+//                 <Route path="/dashboard" element={<Dashboard />} />
+//                 <Route path="/settings" element={<Settings />} />
             </Routes>
         </Router>
     );

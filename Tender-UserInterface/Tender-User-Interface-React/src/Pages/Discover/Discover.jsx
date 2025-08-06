@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './Discover.css';
 import { FaMapMarkerAlt, FaRegClock, FaSearch, FaBookmark, FaBinoculars, FaFilter } from 'react-icons/fa';
 
@@ -17,16 +18,65 @@ const mockTenders = [
     { id: 3, ...baseTender }
 ];
 
+
 const Discover = () => {
-    const [filters, setFilters] = useState(["x", "x", "x", "x", "x"]);
+
+    //triggered on initialisation.
+    //Checks localstorage for previous stores and toggles the attribute on the body class then saves the setting to localStorage.
+    useEffect(() => {
+        const storedMode = localStorage.getItem("darkMode");
+        if (storedMode === "true") {
+            document.body.classList.toggle("dark-mode", true);
+        }
+        else {
+            document.body.classList.toggle("dark-mode", false);
+        }
+    }, []);
+
+    const [filters, setFilters] = useState(["New", "Programming", "Construction", "Emergency", "Green Energy", "x", "x", "x", "x", "x"]);
     const [searchTerm, setSearchTerm] = useState('');
     const [sortOption, setSortOption] = useState('Popularity');
+    const [tenders, setTenders] = useState([]);
+
+    //Tender Logic (maybe nest in seperate classes?)
+    useEffect(() => {
+        const fetchTenders = async () => {
+            try {
+                //get tenders from lambda-test api
+                const response = await axios.get('https://ktomenjalj.execute-api.us-east-1.amazonaws.com/Prod/api/mocktender/getalltenders');
+                console.log("response:", response.headers, response, response.data); //log for testing :/
+                const tenderData = response.data.map((item, index) => ({
+                    index: index + 1,
+                    id: item.tenderID,
+                    title: item.title,
+                    location: item.location,
+                    closing: item.closingDate,
+                    tags: item.tags.map(tag => tag.tagValue),
+                }));
+                //cache the data here -- it would likely be best to hold the full list of tags and tender info in the cache
+                //we can query and filter based on all the tenders in the cache! we set a timer to refresh db query every 5-10min
+
+                ///set tender to list/array? of tenders stored in [data]
+                setTenders(tenderData);
+            } catch (err) {
+                console.error("Failed to fetch tenders:", err);
+            }
+        };
+        //invoke
+        fetchTenders();
+    }, [/*implement refresh variable to reinitialise this function*/]);
 
     const removeFilter = (index) => {
         const updated = [...filters];
         updated.splice(index, 1);
         setFilters(updated);
     };
+
+    const filteredTenders = tenders.filter(tender => {
+        const titleMatch = tender.title.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesFilter = filters.length === 0 || tender.tags.some(tag => filters.includes(tag));
+        return titleMatch && matchesFilter
+    });
 
     return (
         <div className="discovery-container">
@@ -69,7 +119,7 @@ const Discover = () => {
             </div>
 
             <div className="tender-list">
-                {mockTenders.map((tender) => (
+                {filteredTenders.map((tender) => (
                     <div className="tender-card" key={tender.id}>
                         <h2 className="tender-title">{tender.title}</h2>
                         <p className="tender-location"> <FaMapMarkerAlt />{tender.location}</p>
