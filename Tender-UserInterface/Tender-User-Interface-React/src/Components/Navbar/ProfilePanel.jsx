@@ -31,7 +31,8 @@ const ProfilePanel = ({ show, toggle, close }) => {
             <div className={`profile-dropdown ${show ? 'show' : ''}`}>
                 <NavLink to="/login">Login</NavLink>
                 <NavLink to={{ pathname:'/login', search: '?tab=register'} }>Register</NavLink>
-                <NavLink to="/profile">Settings</NavLink>
+                <NavLink to="/settings">Settings</NavLink>
+                <NavLink to="/profile">Profile</NavLink>
             </div>
         </div>
     );

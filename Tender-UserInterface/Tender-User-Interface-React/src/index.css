@@ -11,7 +11,7 @@
 
     /* Backgrounds */
     --hero-bg: linear-gradient(135deg, #d6e6f2, #eaf3fb);
-    --home-bg: linear-gradient(90deg, rgba(51, 73, 125, 1) 0%, rgba(85, 113, 166, 1) 50%, rgba(252, 248, 174, 1) 100%);
+    --home-bg: linear-gradient(90deg,rgba(51, 73, 125, 1) 0%, rgba(85, 113, 166, 1) 50%, rgba(205, 79, 110, 1) 100%);
     --card-bg: #ffffff;
     --cta-bg: #d6e6f2;
     --tender-card-bg: #f0f6fc;
@@ -27,6 +27,7 @@
 
     /* Icons */
     --icon-color: #33497D;
+    --nav-icon: #fff;
 
     /* Profile Button Hover */
     --profile-button-hover-bg: #d7e3fc;
@@ -44,49 +45,74 @@
 
     /* Hero Text */
     --home-heading: #e0e6f1;
+
+    /* Contact us*/
+    --contact-us-bg: #2A3C64;;
 }
 
 body.dark-mode {
     /* Text Colors */
-    --text-color: #e0e6f1;
-    --heading-color: #e8efff;
-    --subtext-color: #b0bdd4;
+    --text-color: #dce3ed;
+    --heading-color: #f0f4ff;
+    --subtext-color: #a6b2c5;
 
     /* Backgrounds */
-    --hero-bg: linear-gradient(135deg, #1f2735, #141a23);
-    --home-bg: linear-gradient(135deg, #1f2735, #141a23);
-    --card-bg: #2c2f38;
-    --cta-bg: #2a3448;
-    --tender-card-bg: #2c3444;
+    --hero-bg: linear-gradient(135deg, #1b2431, #10151c);
+    --home-bg: linear-gradient(135deg, #202b3a, #141a23);
+    --card-bg: #252c36;
+    --cta-bg: #1e2735;
+    --tender-card-bg: #27303b;
 
     /* Shadows */
-    --hero-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-    --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --hero-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+    --card-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
 
     /* Buttons */
-    --button-bg: #4a6fa1;
-    --button-hover: #3c5d8a;
-    --button-text: white;
+    --button-bg: #5a8bdc;
+    --button-hover: #4676c2;
+    --button-text: #ffffff;
 
     /* Icons */
-    --icon-color: white;
+    --icon-color: #ced6e0;
 
     /* Profile Button Hover */
-    --profile-button-hover-bg: rgba(255, 255, 255, 0.1);
+    --profile-button-hover-bg: rgba(255, 255, 255, 0.08);
 
     /* Tender Card Details */
-    --tender-card-border: #2e3c4f;
-    --tender-card-header: #e6ecf2;
-    --tender-secondary-txt: #b5c0cd;
+    --tender-card-border: #374558;
+    --tender-card-header: #dce5f3;
+    --tender-secondary-txt: #95a4b8;
 
     /* Status Badges */
-    --open-badge-bg: #234c36;
-    --open-badge-txt: #9de6b6;
-    --closed-badge-bg: #4b2321;
-    --closed-badge-txt: #ef9999;
+    --open-badge-bg: #2b6046;
+    --open-badge-txt: #9ee7b7;
+    --closed-badge-bg: #522c2a;
+    --closed-badge-txt: #f5a7a7;
 
     /* Hero Text */
-    --home-heading: #e0e6f1;
+    --home-heading: #f0f6ff;
+
+    /* Contact us */
+    --contact-us-bg: #1c2636;
+}
+
+/* switch gradient from horizontal to vertical on smaller screens */
+@media screen and (max-width: 768px) {
+    :root {
+
+        --home-bg: radial-gradient( circle at top center, rgba(205, 79, 110, 0.9) 0%, rgba(100, 125, 170, 0.9) 50%, rgba(51, 73, 125, 1) 100% );
+    }
+
+    .btn-primary,
+    .btn-secondary-light,
+    .btn-secondary-dark {
+        margin: 0.5rem 0;
+        width: 80%;
+    }
+}
+
+body.dark-mode {
+    --home-bg: linear-gradient(180deg, #1f2735, #141a23);
 }
 
 html, body {
@@ -108,17 +134,38 @@ a:hover {
     color: var(--link-hover);
 }
 
-button {
-    background-color: var(--button-bg);
-    color: var(--text-color);
-    border: 1px solid transparent;
-    border-radius: 8px;
-    padding: 0.6em 1.2em;
-    font-size: 1em;
+/* For light backgrounds */
+.btn-secondary-dark {
+    background-color: rgba(60, 90, 150, 0.08); 
+    color: var(--heading-color);
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 500;
+    font-family: var(--font-family);
     cursor: pointer;
-    transition: border-color 0.25s, background-color 0.25s;
+    border: 0.5px solid rgba(60, 90, 150, 0.12); 
+    transition: background-color 0.25s ease, border-color 0.25s ease;
 }
 
-button:hover {
-    border-color: var(--link-color);
+    .btn-secondary-dark:hover {
+        background-color: rgba(60, 90, 150, 0.12);
+        border-color: rgba(60, 90, 150, 0.2);
+    }
+
+/* For dark backgrounds */
+.btn-secondary-light {
+    background-color: rgba(255, 255, 255, 0.08); 
+    color: #fff;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 500;
+    font-family: var(--font-family);
+    cursor: pointer;
+    border: 0.5px solid rgba(255, 255, 255, 0.12);
+    transition: background-color 0.25s ease, border-color 0.25s ease;
 }
+
+    .btn-secondary-light:hover {
+        background-color: rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 255, 255, 0.2);
+    }

@@ -10,6 +10,8 @@ import Tracking from "../Tracking/Tracking";
 import Profile from "../Profile/Profile";
 import ProtectedRoute from '../../Components/ProtectedRoute';
 import ConfirmSignUp from '../Login/ConfirmSignUp';
+import Settings from "../Settings/Settings";
+
 
 function App() {
     return (
@@ -23,10 +25,10 @@ function App() {
                 <Route path="/about" element={<About />} />
                 <Route path="/discover" element={<Discover />} />
                 <Route path="/dashboard" element={<Dashboard />} />
-
                 {/* Protected Routes */ }          
                 <Route path="/tracking" element={<ProtectedRoute><Tracking /></ProtectedRoute>} />
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                <Route path="/settings" element={<Settings />} />/*Fix protection*/
             </Routes>
         </>
     );
