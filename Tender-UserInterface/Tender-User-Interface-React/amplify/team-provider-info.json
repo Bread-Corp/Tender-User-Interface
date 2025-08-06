@@ -1,0 +1,20 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-tenderuserinterfacer-dev-10dbf-authRole",
+      "UnauthRoleArn": "arn:aws:iam::211635102441:role/amplify-tenderuserinterfacer-dev-10dbf-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::211635102441:role/amplify-tenderuserinterfacer-dev-10dbf-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-tenderuserinterfacer-dev-10dbf-deployment",
+      "UnauthRoleName": "amplify-tenderuserinterfacer-dev-10dbf-unauthRole",
+      "StackName": "amplify-tenderuserinterfacer-dev-10dbf",
+      "StackId": "arn:aws:cloudformation:us-east-1:211635102441:stack/amplify-tenderuserinterfacer-dev-10dbf/e3bce020-67f5-11f0-b8a0-0affd78f91f3",
+      "AmplifyAppId": "d3v50hqnygq80h"
+    },
+    "categories": {
+      "auth": {
+        "tenderuserinterfacer1285667e": {}
+      }
+    }
+  }
+}
