@@ -6,8 +6,5 @@ export default defineConfig({
     plugins: [plugin()],
     server: {
         port: 64005,
-    },
-    define: {
-        global: 'window',
-    },
+    }
 })
