@@ -170,47 +170,6 @@ html, body {
     gap: 1.5rem;
 }
 
-/* Tender cards */
-.tender-card {
-    background: var(--bg-card);
-    border: 1px solid var(--card-border);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    transition: box-shadow var(--transition), border-color var(--transition);
-}
-
-    .tender-card:hover {
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        /*border-color: var(--color-primary);*/
-    }
-
-/* Tender info */
-.tender-title {
-    font-weight: 600;
-    font-size: 1.1rem;
-    color: var(--color-primary);
-    margin-bottom: 0.4rem;
-}
-
-.tender-location,
-.tender-closing {
-    display: flex;
-    align-items: center;
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    margin-top: 6px;
-}
-
-    .tender-location svg,
-    .tender-closing svg {
-        margin-right: 6px;
-        color: var(--icon-color);
-    }
-
 /* Tags */
 .tender-tags {
     display: flex;
