@@ -49,7 +49,7 @@ const Discover = () => {
         };
         //invoke
         fetchTenders();
-    }, []);/*implement refresh variable to reinitialise this function*/]);
+    }, []);/*implement refresh variable to reinitialise this function*/
 
     const removeFilter = (index) => {
         setFilters(prev => prev.filter((_, i) => i !== index));
