@@ -3,6 +3,9 @@ import axios from 'axios';
 import './Discover.css';
 import { FaMapMarkerAlt, FaRegClock, FaSearch, FaBookmark, FaBinoculars, FaFilter } from 'react-icons/fa';
 
+const apiURL = import.meta.env.VITE_API_URL; //process.env.REACT_APP_API_URL;
+console.log('API URL:', apiURL);
+
 // base tender
 const baseTender = {
     title: "SUPPLY AND DELIVERY OF (162) BULK LAPTOPS FOR EXTENSION AND ADVISORY SERVICES",
@@ -18,6 +21,7 @@ const mockTenders = [
     { id: 3, ...baseTender }
 ];
 
+//^^ LEGACY ^^
 
 const Discover = () => {
 
@@ -43,15 +47,16 @@ const Discover = () => {
         const fetchTenders = async () => {
             try {
                 //get tenders from lambda-test api
-                const response = await axios.get('https://ktomenjalj.execute-api.us-east-1.amazonaws.com/Prod/api/mocktender/getalltenders');
+                const response = await axios.get(`${apiURL}/tender/fetch`); //await axios.get('https://ktomenjalj.execute-api.us-east-1.amazonaws.com/Prod/api/mocktender/getalltenders');
+                const data = Array.isArray(response.data) ? response.data : [response.data]; //data can either be an array or initalises array for single object for flexibility.
                 console.log("response:", response.headers, response, response.data); //log for testing :/
-                const tenderData = response.data.map((item, index) => ({
+                const tenderData = data.map((item, index) => ({
                     index: index + 1,
                     id: item.tenderID,
                     title: item.title,
-                    location: item.location,
+                    location: item.officeLocation,
                     closing: item.closingDate,
-                    tags: item.tags.map(tag => tag.tagValue),
+                    tags: item.tags ? item.tags.map(tag => tag.tagName) : [],
                 }));
                 //cache the data here -- it would likely be best to hold the full list of tags and tender info in the cache
                 //we can query and filter based on all the tenders in the cache! we set a timer to refresh db query every 5-10min
