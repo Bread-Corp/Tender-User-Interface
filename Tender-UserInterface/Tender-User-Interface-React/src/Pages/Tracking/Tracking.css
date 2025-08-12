@@ -1,0 +1,187 @@
+.saved-tenders-container {
+    padding: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.page-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--heading-home);
+    margin-bottom: 1.5rem;
+    text-align: center;
+    margin-top: 80px;
+}
+
+.tender-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* tender card */
+.tender-card {
+    background: var(--tender-card-bg);
+    border: 1px solid var(--tender-card-border);
+    transition: background 0.2s ease;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    gap: 1rem;
+}
+
+.card-header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.expand-icon {
+    font-size: 14px;
+    color: var(--icon-color);
+    transition: transform 0.3s ease;
+}
+
+    .expand-icon.rotated {
+        transform: rotate(180deg);
+    }
+
+.card-header h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--tender-card-header);
+    flex: 1;
+}
+
+.status-badge {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background-color: #cde3f9;
+    color: #1f3b7a;
+    white-space: nowrap;
+}
+
+    .status-badge.open {
+        background-color: var(--open-badge-bg);
+        color: var(--open-badge-txt);
+    }
+
+    .status-badge.closed {
+        background-color: var(--closed-badge-bg);
+        color: var(--closed-badge-txt);
+    }
+
+.location,
+.closing-date {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: var(--tender-secondary-txt);
+    margin-top: 10px;
+}
+
+    .location svg,
+    .closing-date svg {
+        margin-right: 6px;
+        color: #7187a6;
+    }
+
+.card-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.remove-btn,
+.view-btn {
+    background: none;
+    border: none;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 6px 10px;
+    border-radius: 8px;
+    transition: background 0.2s ease;
+}
+
+.remove-btn {
+    color: #d43c3c;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+    .remove-btn:hover {
+        background: rgba(212, 60, 60, 0.05);
+    }
+
+.view-btn {
+    background-color: #1f3b7a;
+    color: white;
+}
+
+    .view-btn:hover {
+        background-color: #2a4c98;
+    }
+
+.filter-container {
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 14px;
+    color: var(--tender-secondary-txt);
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+    .filter-container select {
+        padding: 6px 10px;
+        border-radius: 8px;
+        border: 1px solid #b8c9dc;
+        background: #e8f1fb;
+        color: #1a2b4c;
+        font-size: 14px;
+    }
+
+/*  responsive */
+@media (max-width: 480px) {
+    .page-title {
+        font-size: 1.75rem;
+        margin-top: 60px;
+    }
+
+    .card-header h3 {
+        font-size: 0.95rem;
+    }
+
+    .card-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .remove-btn,
+    .view-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .filter-container {
+        justify-content: center;
+    }
+}

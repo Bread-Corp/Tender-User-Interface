@@ -1,6 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './Discover.css';
-import { FaSearch, FaBookmark, FaBinoculars, FaFilter } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaRegClock, FaSearch, FaBookmark, FaBinoculars, FaFilter } from 'react-icons/fa';
+
+const apiURL = import.meta.env.VITE_API_URL; //process.env.REACT_APP_API_URL;
+console.log('API URL:', apiURL);
 
 // base tender
 const baseTender = {
@@ -17,16 +21,67 @@ const mockTenders = [
     { id: 3, ...baseTender }
 ];
 
+//^^ LEGACY ^^
+
 const Discover = () => {
-    const [filters, setFilters] = useState(["x", "x", "x", "x", "x"]);
+
+    //triggered on initialisation.
+    //Checks localstorage for previous stores and toggles the attribute on the body class then saves the setting to localStorage.
+    useEffect(() => {
+        const storedMode = localStorage.getItem("darkMode");
+        if (storedMode === "true") {
+            document.body.classList.toggle("dark-mode", true);
+        }
+        else {
+            document.body.classList.toggle("dark-mode", false);
+        }
+    }, []);
+
+    const [filters, setFilters] = useState(["New", "Programming", "Construction", "Emergency", "Green Energy", "x", "x", "x", "x", "x"]);
     const [searchTerm, setSearchTerm] = useState('');
     const [sortOption, setSortOption] = useState('Popularity');
+    const [tenders, setTenders] = useState([]);
+
+    //Tender Logic (maybe nest in seperate classes?)
+    useEffect(() => {
+        const fetchTenders = async () => {
+            try {
+                //get tenders from lambda-test api
+                const response = await axios.get(`${apiURL}/tender/fetch`); //await axios.get('https://ktomenjalj.execute-api.us-east-1.amazonaws.com/Prod/api/mocktender/getalltenders');
+                const data = Array.isArray(response.data) ? response.data : [response.data]; //data can either be an array or initalises array for single object for flexibility.
+                console.log("response:", response.headers, response, response.data); //log for testing :/
+                const tenderData = data.map((item, index) => ({
+                    index: index + 1,
+                    id: item.tenderID,
+                    title: item.title,
+                    location: item.officeLocation,
+                    closing: item.closingDate,
+                    tags: item.tags ? item.tags.map(tag => tag.tagName) : [],
+                }));
+                //cache the data here -- it would likely be best to hold the full list of tags and tender info in the cache
+                //we can query and filter based on all the tenders in the cache! we set a timer to refresh db query every 5-10min
+
+                ///set tender to list/array? of tenders stored in [data]
+                setTenders(tenderData);
+            } catch (err) {
+                console.error("Failed to fetch tenders:", err);
+            }
+        };
+        //invoke
+        fetchTenders();
+    }, [/*implement refresh variable to reinitialise this function*/]);
 
     const removeFilter = (index) => {
         const updated = [...filters];
         updated.splice(index, 1);
         setFilters(updated);
     };
+
+    const filteredTenders = tenders.filter(tender => {
+        const titleMatch = tender.title.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesFilter = filters.length === 0 || tender.tags.some(tag => filters.includes(tag));
+        return titleMatch && matchesFilter
+    });
 
     return (
         <div className="discovery-container">
@@ -69,11 +124,11 @@ const Discover = () => {
             </div>
 
             <div className="tender-list">
-                {mockTenders.map((tender) => (
+                {filteredTenders.map((tender) => (
                     <div className="tender-card" key={tender.id}>
                         <h2 className="tender-title">{tender.title}</h2>
-                        <p className="tender-location">{tender.location}</p>
-                        <p className="tender-closing">Closing Info: {tender.closing}</p>
+                        <p className="tender-location"> <FaMapMarkerAlt />{tender.location}</p>
+                        <p className="tender-closing"> <FaRegClock /> Closing Info: {tender.closing}</p>
                         <div className="tender-tags">
                             {tender.tags.map((tag, idx) => (
                                 <span

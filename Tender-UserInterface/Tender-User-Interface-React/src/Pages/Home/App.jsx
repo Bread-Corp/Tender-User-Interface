@@ -1,26 +1,36 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import './App.css';
-import Login from "../Login/Login";
 import Navbar from "../../Components/Navbar/Navbar";
+import Home from "../Home/Home";
+import Login from "../Login/Login";
 import About from "../About/About";
+import Dashboard from "../Dashboard/Dashboard";
 import Discover from "../Discover/Discover";
+import Tracking from "../Tracking/Tracking";
+import Profile from "../Profile/Profile";
+import ProtectedRoute from '../../Components/ProtectedRoute';
+import ConfirmSignUp from '../Login/ConfirmSignUp';
+import Settings from "../Settings/Settings";
+
 
 function App() {
     return (
-        <Router>
+        <>
             <Navbar />
             <Routes>
-                <Route path="/" element={
-                    <div style={{ padding: '2rem', paddingTop: 100 }}>
-                        <h1>Tender Tool</h1>
-                        <p>Backend is currently not running. This message is just a placeholder.</p>
-                    </div>
-                } />
+                {/* Public Routes */ }
+                <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
+                <Route path="/confirm-signup" element={<ConfirmSignUp />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/discover" element={<Discover />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                {/* Protected Routes */ }          
+                <Route path="/tracking" element={<ProtectedRoute><Tracking /></ProtectedRoute>} />
+                <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+                <Route path="/settings" element={<Settings />} />/*Fix protection*/
             </Routes>
-        </Router>
+        </>
     );
 }
 
