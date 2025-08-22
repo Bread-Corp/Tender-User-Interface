@@ -66,14 +66,16 @@ const Discover = () => {
             <h1 className="discovery-title">Discover</h1>
             <p className="discovery-subtitle">Search for public sector tenders in South Africa</p>
 
+            {/* filters and search bar */}
+
             <div className="filter-tags">
                 {filters.map((filter, index) => (
                     <button key={index} className="filter-tag" onClick={() => removeFilter(index)}>
-                        × {filter}
+                        &times; {filter}
                     </button>
                 ))}
             </div>
-
+            <div className= "search-filter-container">
             <div className="search-bar">
                 <FaSearch className="search-icon" />
                 <input
@@ -82,7 +84,8 @@ const Discover = () => {
                     placeholder="Search..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                />
+                    />
+                </div>
                 <button className="filter-button">
                     <FaFilter />
                 </button>
