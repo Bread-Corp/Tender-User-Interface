@@ -1,16 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
-
-
-html, body {
+/* gradient animation for body background */
+body {
     margin: 0;
     padding: 0;
-    height: 100vh; 
-    overflow: hidden; /* disable scroll */
+    height: 100vh;
+    overflow: hidden;
     font-family: 'Poppins', sans-serif;
-    background-color: #f8f9fb;
 }
-
 /* containers */
 #root, .login-container {
     font-family: 'Poppins', sans-serif;
@@ -21,6 +18,131 @@ html, body {
     height: 100vh; 
     width: 100%;
     overflow: hidden;
+}
+
+/* multi-step reg buttons */
+.form-navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+}
+
+    .form-navigation button {
+        flex: 1;
+        padding: 0.65rem 1rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 0.5rem;
+        border: 2px solid rgba(241, 232, 90, 0.7); /* yellow accent border */
+        background-color: transparent; /* fully transparent */
+        color: white;
+        cursor: pointer;
+        margin: 0 0.25rem;
+        transition: all 0.3s ease;
+    }
+
+        .form-navigation button:hover {
+            background-color: rgba(241, 232, 90, 0.2); /* highlight on hover */
+            border-color: #f1e85a;
+        }
+
+        .form-navigation button[type="submit"] {
+            background-color: #f1e85a;
+            color: #33497D;
+            border-color: #f1e85a;
+        }
+
+            .form-navigation button[type="submit"]:hover {
+                background-color: #d4c648;
+            }
+
+.auth-message {
+  margin-bottom: 1.5rem;
+  text-align: left;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 400;
+}
+
+    .auth-message .highlight-text {
+        display: block; 
+        font-size: 1.2rem; /* bigger */
+        font-weight: 700; /* bold */
+        margin-bottom: 0.3rem;
+    }
+
+/* Step Indicator – circles */
+.step-indicator {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+
+.step-circle {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.3); /* dim white for inactive */
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+    .step-circle.active {
+        background-color: rgba(255, 255, 255, 0.9); /* bright white for active */
+        transform: scale(1.2); /* make the active step pop a little */
+    }
+
+/* Registration Form Headings */
+.reg-form-heading {
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 2rem;
+}
+
+/* autofill fix for chrome, edge, safari */
+.login-right .login-form input:-webkit-autofill,
+.login-right .login-form input:-webkit-autofill:hover,
+.login-right .login-form input:-webkit-autofill:focus,
+.login-right .login-form input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0px 1000px rgba(255, 255, 255, 0.15) inset; 
+    -webkit-text-fill-color: white; 
+    transition: background-color 5000s ease-in-out 0s; /* keeps bg color applied */
+}
+
+/* custom input fields */
+.login-right .login-form input{
+    margin-bottom: 1.25rem;
+    border: 0.5px solid rgba(255,255,255,0.3) !important;
+    padding: 0.85rem 1.2rem;
+    font-size: 1.05rem;
+    border-radius: 0.6rem;
+    border: 1.5px solid rgba(255,255,255,0.5);
+    outline: none;
+    background-color: rgba(255,255,255,0.15);
+    color: white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.04); 
+    transition: all 0.3s ease;
+}
+
+    .login-right .login-form input::placeholder {
+        color: rgba(255,255,255,0.85); /* brighter placeholder */
+        font-weight: 500;
+    }
+
+    .login-right .login-form input:focus {
+        border-color: #f1e85a; /* yellow accent on focus */
+        background-color: rgba(255,255,255,0.25); /* slightly brighter focus bg */
+    }
+
+/* Adjust buttons for smaller screens */
+@media (max-width: 768px) {
+    .form-navigation button {
+        font-size: 0.95rem;
+        padding: 0.55rem;
+    }
 }
 
 
@@ -50,12 +172,12 @@ html, body {
 /* right panel */
 .login-right {
     flex: 1;
-    background-color: #33497D;
     padding: 4rem;
     color: white;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    background-color: rgba(51, 73, 125, 1);
 }
 
 /* navigation */
@@ -67,7 +189,7 @@ html, body {
     align-items: center;
     gap: 0.5rem;
     font-size: 1rem;
-    color: #4e6baf;
+    color: white;
     font-weight: 500;
     cursor: pointer;
     z-index: 10;
@@ -196,6 +318,31 @@ html, body {
         transform: translateY(0);
     }
 
+.password-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+    .password-wrapper input {
+        width: 100%;
+        padding-right: 3rem; /* space for the eye icon */
+    }
+
+.toggle-password {
+    position: absolute;
+    right: 0.8rem;
+    top: 20%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1.1rem;
+    transition: color 0.2s ease;
+}
+
+    .toggle-password:hover {
+        color: #f1e85a;
+    }
+
 /* responsive */
 @media (max-width: 768px) {
     .login-container {
@@ -264,4 +411,5 @@ html, body {
         font-size: 0.85rem;
         margin-bottom: 1rem;
     }
+
 }
