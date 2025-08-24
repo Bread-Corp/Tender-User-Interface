@@ -75,28 +75,54 @@ const Login = () => {
         }
     };
 
-    // handle reg form submit
+    // --- REPLACE THE ENTIRE handleRegisterSubmit FUNCTION WITH THIS ---
     const handleRegisterSubmit = async (e) => {
         e.preventDefault();
         setError('');
 
         if (password !== confirmPassword) {
             setError("Passwords do not match");
-            return
+            return;
         }
 
-        const fullName = `${name} ${surname}`; // combine first name + surname
+        // Format the phone number
+        let formattedPhone = phone;
+        if (phone && !phone.startsWith('+')) {
+            formattedPhone = `+1${phone.replace(/\D/g, '')}`;
+        }
+
+        // --- THIS IS THE MOST IMPORTANT STEP ---
+        // Log the exact object we are about to send.
+        const submissionData = {
+            email,
+            password,
+            name,
+            surname,
+            formattedPhone,
+            address
+        };
+        console.log("Submitting this data to AuthContext:", submissionData);
+        // ------------------------------------
 
         try {
-            // Sign up with collected data
-            await signUp(email, password, email, fullName); // adjust if needed to accept extra info in the backend
+            // We are using the variables from the object above
+            await signUp(
+                submissionData.email,
+                submissionData.password,
+                submissionData.name,
+                submissionData.surname,
+                submissionData.formattedPhone,
+                submissionData.address
+            );
+
             navigate(`/confirm-signup?username=${email}`);
+
         } catch (err) {
             setError(err.message);
+            console.error("Registration failed with error:", err);
         }
     };
 
-    // render form for the current registration step
     const renderRegisterPage = () => {
         switch (registerPage) {
             case 1:
@@ -106,7 +132,7 @@ const Login = () => {
                         <input type="text" placeholder="Enter name" value={name} onChange={(e) => setName(e.target.value)} required />
 
                         <label className="form-label">Surname</label>
-                        <input tyle="text" placeholder="Enter surname" value={surname} onChange={(e) => setSurname(e.target.value)} required />
+                        <input type="text" placeholder="Enter surname" value={surname} onChange={(e) => setSurname(e.target.value)} required />
                                              
                     </>
                 );
@@ -115,7 +141,7 @@ const Login = () => {
                 return (
                     <>
                         <label className="form-label">Phone Number</label>
-                        <input type="text" placeholder="Enter phone number" value={phone} onChange={(e) => setPhone(e.target.value)} />
+                        <input type="tel" placeholder="Enter phone number" value={phone} onChange={(e) => setPhone(e.target.value)} />
 
                         <label className="form-label">Address</label>
                         <input type="text" placeholder="Enter address" value={address} onChange={(e) => setAddress(e.target.value)} />
@@ -231,7 +257,7 @@ const Login = () => {
                                     <button type="button" onClick={() => setRegisterPage(registerPage - 1)}>Back</button>
                                 )}
 
-                                {registerPage < 3 ? (
+                                    {registerPage < totalRegisterPages ? (
                                     <button type="button" onClick={() => setRegisterPage(registerPage + 1)}>Continue</button>
                                 ) : (
                                     <button type="submit">Complete</button>
