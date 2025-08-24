@@ -228,6 +228,15 @@ body {
             display: none !important;
         }
 
+        .profile-dropdown a.logout-link {
+            color: #CD4F6E; /* red text */
+        }
+
+            .profile-dropdown a.logout-link:hover {
+                background-color: #ffe6eb; /* light red hover */
+                color: #a9324d; 
+            }
+
 /* ===== Notification Panel ===== */
 .notification-panel {
     position: fixed;

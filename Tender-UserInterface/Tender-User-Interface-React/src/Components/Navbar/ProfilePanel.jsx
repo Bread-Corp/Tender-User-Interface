@@ -33,6 +33,7 @@ const ProfilePanel = ({ show, toggle, close }) => {
                 <NavLink to={{ pathname:'/login', search: '?tab=register'} }>Register</NavLink>
                 <NavLink to="/settings">Settings</NavLink>
                 <NavLink to="/profile">Profile</NavLink>
+                <NavLink to="/logout" className="logout-link">Logout</NavLink>
             </div>
         </div>
     );

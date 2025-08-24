@@ -20,40 +20,49 @@ body {
     overflow: hidden;
 }
 
-/* multi-step reg buttons */
+/* form buttons */
 .form-navigation {
     display: flex;
     justify-content: space-between;
+    gap: 1rem;
     margin-top: 1.5rem;
 }
 
     .form-navigation button {
         flex: 1;
-        padding: 0.65rem 1rem;
+        padding: 0.75rem 1.25rem;
         font-size: 1rem;
         font-weight: 600;
-        border-radius: 0.5rem;
-        border: 2px solid rgba(241, 232, 90, 0.7); /* yellow accent border */
-        background-color: transparent; /* fully transparent */
-        color: white;
+        border-radius: 0.75rem;
+        border: 1px solid rgba(255, 255, 255, 0.2); /* subtle glass border */
+        background: rgba(42, 58, 109, 0.4); /* translucent version of your primary colour */
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+        color: #fff;
         cursor: pointer;
-        margin: 0 0.25rem;
+        flex: 1;
         transition: all 0.3s ease;
+        backdrop-filter: blur(10px); /* frosted glass effect */
+        -webkit-backdrop-filter: blur(10px); /* Safari support */
     }
 
         .form-navigation button:hover {
-            background-color: rgba(241, 232, 90, 0.2); /* highlight on hover */
-            border-color: #f1e85a;
+            background: rgba(31, 47, 87, 0.5); /* slightly darker glass on hover */
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.0.2);
         }
 
         .form-navigation button[type="submit"] {
-            background-color: #f1e85a;
-            color: #33497D;
-            border-color: #f1e85a;
+            background-color: #5571A6; /* medium blue, subtle but distinct from dark background */
+            color: #fff; /* ensures readable text */
+
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* subtle depth */
+            transition: all 0.2s ease;
         }
 
             .form-navigation button[type="submit"]:hover {
-                background-color: #d4c648;
+                background-color: #4e6a95;
+                transform: translateY(-1px); /* gentle lift on hover */
+                box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
             }
 
 .auth-message {

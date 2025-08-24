@@ -1,13 +1,11 @@
 ﻿import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaArrowLeft, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaArrowLeft, } from 'react-icons/fa';
 import './Login.css';
 import { useLocation } from 'react-router-dom';
 import TenderToolGraphic from "../../Components/TenderToolGraphic";
 import { useAuth } from '../../context/AuthContext';
-
-// * for required fields 
-// cirlces for the step indicators
+import PasswordInput from '../../Components/PasswordInput';
 
 const Login = () => {
     const [activeForm, setActiveForm] = useState('login');
@@ -19,7 +17,7 @@ const Login = () => {
     const location = useLocation();
     const [showPassword, setShowPassword] = useState(false); // toggle the password to text feature
 
-    // State for form inputs and errors
+    // state for form inputs and errors
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -32,6 +30,7 @@ const Login = () => {
     const { signIn, signUp } = useAuth();
     const totalRegisterPages = 3;
 
+    // switch between login and register tabs and reset form state
     const switchTab = (tab) => {
         setError('');
         setEmail('');
@@ -45,6 +44,7 @@ const Login = () => {
         setActiveForm(tab);
     };
 
+    // check URL to open register tab if it was specified
     useEffect(() => {
         const params = new URLSearchParams(location.search);
         if (params.get('tab') === 'register') {
@@ -52,6 +52,7 @@ const Login = () => {
         }
     }, [location.search]);
 
+    // update underline position whenever tab changes
     useEffect(() => {
         const currentRef = activeForm === 'login' ? loginTabRef : registerTabRef;
         if (currentRef.current) {
@@ -62,6 +63,7 @@ const Login = () => {
         }
     }, [activeForm]);
 
+    // handle login form submit
     const handleLoginSubmit = async (e) => {
         e.preventDefault();
         setError('');
@@ -73,6 +75,7 @@ const Login = () => {
         }
     };
 
+    // handle reg form submit
     const handleRegisterSubmit = async (e) => {
         e.preventDefault();
         setError('');
@@ -93,6 +96,7 @@ const Login = () => {
         }
     };
 
+    // render form for the current registration step
     const renderRegisterPage = () => {
         switch (registerPage) {
             case 1:
@@ -126,10 +130,8 @@ const Login = () => {
                         <input type="email" placeholder="Enter email" value={email} onChange={(e) => setEmail(e.target.value)} required />
 
                         <label className="form-label">Password</label>
-                        <input type="password" placeholder="Create password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-
-                        <label className="form-label">Confirm Password</label>
-                        <input type="password" placeholder="Enter password again" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+                        <PasswordInput label="Password" placeholder="Create password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                        <PasswordInput label="Confirm Password" placeholder="Confirm password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
 
                     </>
                 );
@@ -159,7 +161,7 @@ const Login = () => {
                     </div>
 
 
-                    {/* user friendly messages */}
+                    {/* user guidance messages */}
                     <div className="auth-message">
                         {activeForm === "login" ? ( // message for login page - rest are for the registration steps
                             <p>
@@ -195,30 +197,7 @@ const Login = () => {
                             <label className="form-label">Password</label>
 
                            {/* toggle to show the text that was entered in the password field*/}
-                            <div className="password-wrapper" style={{ position: 'relative' }}>
-                                <input
-                                    type={showPassword ? "text" : "password"}
-                                    placeholder="Enter password"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    autoComplete="new-password"
-                                    style={{ paddingRight: "35px" }}
-                                />
-                                <span
-                                    onClick={() => setShowPassword(!showPassword)}
-                                    style={{
-                                        position: "absolute",
-                                        right: "20px",
-                                        top: "50%",
-                                        transform: "translateY(-70%)",
-                                        cursor: "pointer",
-                                        fontSize: "18px",
-                                        userSelect: "none"
-                                    }}
-                                >
-                                    {showPassword ? <FaEyeSlash /> : <FaEye />}
-                                </span>
-                            </div>
+                            <PasswordInput value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter password" required/>
 
                             {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
 
@@ -227,7 +206,10 @@ const Login = () => {
                                 <a href="#">Forgot password?</a>
                             </div>
 
-                            <button type="submit" className="login-button">Login</button>
+                            <div class="form-navigation">
+                                <button type="submit">Login</button>
+                            </div>
+
                         </form>
                     ) : (
                         /* REGISTER FORM with multiple steps */
