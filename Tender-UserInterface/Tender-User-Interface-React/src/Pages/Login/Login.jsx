@@ -128,10 +128,10 @@ const Login = () => {
             case 1:
                 return (
                     <>
-                        <label className="form-label">Name</label>
+                        <label className="form-label">Name*</label>
                         <input type="text" placeholder="Enter name" value={name} onChange={(e) => setName(e.target.value)} required />
 
-                        <label className="form-label">Surname</label>
+                        <label className="form-label">Surname*</label>
                         <input type="text" placeholder="Enter surname" value={surname} onChange={(e) => setSurname(e.target.value)} required />
                                              
                     </>
@@ -152,12 +152,17 @@ const Login = () => {
             case 3:
                 return (
                     <>
-                        <label className="form-label">Email</label>
+                        <label className="form-label">Email*</label>
                         <input type="email" placeholder="Enter email" value={email} onChange={(e) => setEmail(e.target.value)} required />
 
-                        <label className="form-label">Password</label>
+                        <label className="form-label">Password*</label>
                         <PasswordInput label="Password" placeholder="Create password" value={password} onChange={(e) => setPassword(e.target.value)} />
                         <PasswordInput label="Confirm Password" placeholder="Confirm password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+
+                        {/* Password requirements message */}
+                        <span style={{ fontSize: "13px", color: "#6F89BA", display: "block", marginTop: "2px" }}>
+                            Password must be at least 8 characters and include an uppercase letter, a lowercase letter, a number and a special character.
+                        </span>
 
                     </>
                 );

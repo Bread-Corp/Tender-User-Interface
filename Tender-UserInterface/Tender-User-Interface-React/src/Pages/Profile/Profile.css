@@ -1,14 +1,15 @@
-
 .profile-container {
     display: flex;
     justify-content: center;
     padding: 2rem;
-    margin-top: 70px;
+    margin-top: 30px;
 }
 
 .profile-section.profile-card {
     width: 100%;
-    max-width: 700px;
+    min-width: 420px; /* mobile minimum */
+    max-width: 800px;
+    position: relative;
 }
 
 .profile-section h2 {
@@ -25,6 +26,8 @@
     transition: background-color var(--transition), box-shadow var(--transition);
     display: flex;
     flex-direction: column;
+    position: relative;
+    border: 1px solid rgba(51, 73, 125, 0.2);
 }
 
 .avatar-wrapper {
@@ -49,39 +52,43 @@
 
 .upload-text {
     font-size: 14px;
-    color: var(--text-light);
+    font-weight: 500;
+    color: var(--color-primary);
     cursor: pointer;
-    text-decoration: underline;
     margin-top: 0.5rem;
+    transition: color var(--transition);
 }
 
+    .upload-text:hover {
+        color: var(--color-primary-hover);
+    }
 
 .info-group {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
 }
 
 .info-row {
     width: 100%;
-    max-width: 600px;
+    max-width: 800px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
     gap: 1rem;
     padding: 0.5rem 0;
 }
 
     .info-row label {
-        flex: 1;
+        width: 140px;
         font-size: 15px;
         font-weight: 500;
         color: var(--text-primary);
+        text-align: left;
     }
 
     .info-row input {
-        flex: 2;
+        flex: 1;
         padding: 10px 12px;
         font-size: 15px;
         border: 1px solid #ccc;
@@ -104,26 +111,51 @@ body.dark-mode input {
         border-color: var(--color-primary-hover);
     }
 
+/* Edit button */
+.info-edit-btn {
+    font-size: 13px;
+    padding: 10px 12px;
+    background-color: var(--button-bg);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color var(--transition);
+}
+
+    .info-edit-btn:hover {
+        background-color: var(--color-primary-hover);
+    }
+
+.editing-label {
+    font-size: 13px;
+    color: var(--color-primary);
+    font-weight: bold;
+}
+
+/* Save / Cancel buttons */
 .button-group {
     display: flex;
-    justify-content: flex-end;
-    gap: 10px;
+    justify-content: space-between;
+    gap: 1rem;
     margin-top: 1.5rem;
 }
 
 .save-btn,
 .cancel-btn {
-    font-size: 15px;
-    font-weight: 500;
-    padding: 10px 20px;
+    padding: 0.6rem 2rem; /* more horizontal padding */
+    min-width: 160px; /* ensures a baseline width */
     border: none;
-    border-radius: 8px;
+    border-radius: 0.75rem;
+    margin: 0 0.5rem;
+    font-weight: bold;
     cursor: pointer;
-    transition: background-color var(--transition);
+    font-family: var(--font-family);
+    text-align: center; /* centers text if button expands */
 }
 
 .save-btn {
-    background-color: var(--color-primary);
+    background-color: var(--button-bg);
     color: #fff;
 }
 
@@ -132,34 +164,46 @@ body.dark-mode input {
         cursor: not-allowed;
     }
 
+        .save-btn:hover {
+            background-color: var(--color-primary-hover);
+            color: var(--button-text);
+        }
+
 .cancel-btn {
-    background-color: #ccc;
-    color: #333;
+    background-color: #CD4F6E;
+    color: #fff;
 }
 
     .cancel-btn:disabled {
         background-color: #eee;
         color: #999;
-        cursor: not-allowed;
     }
 
-@media (max-width: 768px) {
-    .info-row {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-}
+        .cancel-btn:hover {
+            background-color: #AE435D;
+            color: var(--button-text);
+        }
 
 /* responsive */
 @media (max-width: 768px) {
     .profile-container {
+        max-width: 100%;
         flex-direction: column;
         padding: 1rem;
     }
 
     .profile-section {
         min-width: 0;
-        flex: 1 1 100% !important; /* override flex on mobile for full width */
+        flex: 1 1 100% !important;
+    }
+
+    .info-row label {
+        width: 100%; /* full width for label */
+        margin-bottom: 4px;
+    }
+
+    .info-row input {
+        width: 100%; /* full width inputs on mobile */
     }
 
     .info-row {

@@ -133,9 +133,6 @@ const Profile = () => {
                         {/* START: DARK MODE TOGGLE FIX */}
                         <div className="profile-header">
                             <h2>Profile</h2>
-                            <button className="dark-mode-toggle" onClick={() => setDarkMode(!darkMode)}>
-                                {darkMode ? <FaSun /> : <FaMoon />}
-                            </button>
                         </div>
                         {/* END: DARK MODE TOGGLE FIX */}
 
@@ -157,9 +154,9 @@ const Profile = () => {
 
                         <div className="info-group">
                             {[
+                                { key: "email", label: "Email", type: "email" },
                                 { key: "name", label: "Name", type: "text" },
                                 { key: "surname", label: "Surname", type: "text" },
-                                { key: "email", label: "Email", type: "email" },
                                 { key: "phone_number", label: "Phone Number", type: "tel" },
                                 { key: "address", label: "Address", type: "text" }
                             ].map(({ key, label, type }) => (
@@ -189,26 +186,10 @@ const Profile = () => {
                         </div>
 
                         <div className="button-group">
-                            <button
-                                className="save-btn"
-                                onClick={handleSave}
-                                disabled={!hasChanges}
-                            >
-                                Save
-                            </button>
-                            <button
-                                className="cancel-btn"
-                                onClick={handleCancel}
-                                disabled={!hasChanges}
-                            >
-                                Cancel
-                            </button>
-                        </div>
 
-                        <div className="logout-section">
-                            <button className="logout-btn" onClick={handleLogout}>
-                                Logout
-                            </button>
+                            <button className="cancel-btn" onClick={handleCancel} disabled={!hasChanges}>Cancel</button>
+                            <button className="save-btn" onClick={handleSave} disabled={!hasChanges}>Save</button>
+
                         </div>
                     </div>
                 </section>

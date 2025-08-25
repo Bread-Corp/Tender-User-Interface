@@ -1,10 +1,14 @@
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
-// componenet for toggling password visiblity
+// componenet for password input: includes visibility toggling and regex for security
 
 const PasswordInput = ({ value, onChange, placeholder, required = false }) => {
     const [show, setShow] = useState(false);
+    const [error, setError] = useState(""); // validation message
+
+    // regex - at least 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special character
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
     return (
         <div className="password-wrapper" style={{ position: "relative" }}>
@@ -17,6 +21,9 @@ const PasswordInput = ({ value, onChange, placeholder, required = false }) => {
                 required={required} // must fill in fields if required = true. false by default 
                 style={{ paddingRight: "35px" }}
             />
+
+
+
             <span
                 onClick={() => setShow(!show)} // flips show between true and false when clicked
                 style={{
@@ -30,6 +37,7 @@ const PasswordInput = ({ value, onChange, placeholder, required = false }) => {
             >
                 {show ? <FaEyeSlash /> : <FaEye />} {/*show eye if false , eye with slash if true*/}
             </span>
+
         </div>
     );
 };

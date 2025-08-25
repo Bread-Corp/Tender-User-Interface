@@ -34,34 +34,34 @@ body {
         font-size: 1rem;
         font-weight: 600;
         border-radius: 0.75rem;
-        border: 1px solid rgba(255, 255, 255, 0.2); /* subtle glass border */
-        background: rgba(42, 58, 109, 0.4); /* translucent version of your primary colour */
+        border: 1px solid rgba(255, 255, 255, 0.2); /* glass border */
+        background: rgba(42, 58, 109, 0.4); 
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
         color: #fff;
         cursor: pointer;
         flex: 1;
         transition: all 0.3s ease;
-        backdrop-filter: blur(10px); /* frosted glass effect */
+        backdrop-filter: blur(10px); /* glass effect */
         -webkit-backdrop-filter: blur(10px); /* Safari support */
     }
 
         .form-navigation button:hover {
-            background: rgba(31, 47, 87, 0.5); /* slightly darker glass on hover */
+            background: rgba(31, 47, 87, 0.5); /* slightly darker on hover */
             transform: translateY(-2px);
             box-shadow: 0 6px 14px rgba(0, 0, 0, 0.0.2);
         }
 
         .form-navigation button[type="submit"] {
-            background-color: #5571A6; /* medium blue, subtle but distinct from dark background */
-            color: #fff; /* ensures readable text */
+            background-color: #5571A6; /* medium blue- distinct from dark background */
+            color: #fff; 
 
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* subtle depth */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* depth */
             transition: all 0.2s ease;
         }
 
             .form-navigation button[type="submit"]:hover {
                 background-color: #4e6a95;
-                transform: translateY(-1px); /* gentle lift on hover */
+                transform: translateY(-1px); /* lift on hover */
                 box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
             }
 
@@ -153,7 +153,6 @@ body {
         padding: 0.55rem;
     }
 }
-
 
 /* left panel */
 .login-left {
@@ -296,23 +295,6 @@ body {
         .form-options a:hover {
             color: #f1e85a;
         }
-
-/* login button */
-.login-button {
-    background-color: #4e6baf;
-    color: white;
-    padding: 0.75rem;
-    border: none;
-    border-radius: 0.625rem;
-    font-size: 1.125rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-    .login-button:hover {
-        background-color: #2a3a6d;
-    }
 
 /* animation */
 .form-slide {
