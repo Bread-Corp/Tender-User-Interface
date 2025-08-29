@@ -26,18 +26,14 @@ const Discover = () => {
     useEffect(() => {
         const fetchTenders = async () => {
             try {
-
-                const response = await axios.get(
-                    "https://ktomenjalj.execute-api.us-east-1.amazonaws.com/Prod/api/mocktender/getalltenders"
-                );
-                const oldData = (response.data || []).map((item, index) => ({
-                    index: index + 1,
-                    // fallbacks if the information is missing
-                    id: item.tenderID || `tender-${index}`,
-                    title: item.title || "No Title",
-                    location: item.location || "Unknown Location",
-                    closing: item.closingDate || "Not Provided",
-                    tags: Array.isArray(item.tags) ? item.tags.map(tag => tag.tagValue) : [], // changed to safely handle tags
+                // const oldData = (response.data || []).map((item, index) => ({
+                //     index: index + 1,
+                //     // fallbacks if the information is missing
+                //     id: item.tenderID || `tender-${index}`,
+                //     title: item.title || "No Title",
+                //     location: item.location || "Unknown Location",
+                //     closing: item.closingDate || "Not Provided",
+                //     tags: Array.isArray(item.tags) ? item.tags.map(tag => tag.tagValue) : [], // changed to safely handle tags
 
                 //get tenders from lambda-test api
                 const response = await axios.get(`${apiURL}/tender/fetch`); //await axios.get('https://ktomenjalj.execute-api.us-east-1.amazonaws.com/Prod/api/mocktender/getalltenders');
