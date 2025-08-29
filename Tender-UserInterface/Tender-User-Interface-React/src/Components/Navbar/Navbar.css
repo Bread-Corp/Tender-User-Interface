@@ -18,7 +18,8 @@ body {
     left: 0;
     width: 100%;
     height: 70px;
-    background: rgba(15, 30, 50, 0.65); 
+    /* gradient background w transparency */
+    background: linear-gradient( 90deg, rgba(15, 30, 50, 0.9) 0%, rgba(30, 60, 100, 0.8) 50%, rgba(15, 30, 50, 0.9) 100% );
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     backdrop-filter: saturate(180%) blur(10px);
     -webkit-backdrop-filter: saturate(180%) blur(10px);
@@ -30,14 +31,15 @@ body {
     transition: padding 0.3s ease;
 }
 
-/* Navbar Left - Logo */
+
+/* navbar left - logo */
 .navbar-left .logo {
     font-size: 22px;
     color: var(--home-heading);
     font-weight: 600;
 }
 
-/* Navbar Center - Menu Items */
+/* navbar center - menu items */
 .navbar-center {
     display: flex;
     list-style: none;
@@ -68,7 +70,7 @@ body {
                 color: #e0e6f1;
             }
 
-/* Navbar Right Section */
+/* navbar right - sections */
 .navbar-right {
     display: flex;
     align-items: center;
@@ -225,6 +227,16 @@ body {
             width: 0 !important;
             display: none !important;
         }
+
+        .profile-dropdown a.logout-link {
+            color: #CD4F6E; /* red text */
+        }
+
+            .profile-dropdown a.logout-link:hover {
+                background-color: #ffe6eb; /* light red hover */
+                color: #a9324d; 
+            }
+
 
 /* ===== Notification Panel ===== */
 .notification-panel {
@@ -503,7 +515,7 @@ body {
         z-index: 999;
         overflow-y: auto;
         touch-action: pan-y;
-        background-clip: padding-box; 
+        background-clip: padding-box;
     }
 
         .notification-panel.open {
@@ -536,7 +548,6 @@ body {
         padding: 16px;
         font-size: 14px;
         color: #dce4f0;
-
     }
 
     .notification-item {

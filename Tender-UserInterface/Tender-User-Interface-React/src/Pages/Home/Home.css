@@ -24,22 +24,6 @@
     margin-bottom: 2rem;
 }
 
-.btn-primary {
-    background-color: var(--button-bg);
-    color: var(--button-text);
-    padding: 0.8rem 1.5rem;
-    border: none;
-    border-radius: 25px;
-    margin: 0 0.5rem;
-    font-weight: bold;
-    cursor: pointer;
-    font-family: var(--font-family);
-}
-
-    .btn-primary:hover {
-        background-color: var(--button-hover);
-    }
-
 
 .features {
     background-color: var(--card-bg);

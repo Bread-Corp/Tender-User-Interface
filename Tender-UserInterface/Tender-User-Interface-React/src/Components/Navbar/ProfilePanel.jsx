@@ -1,11 +1,23 @@
 import React, { useEffect, useRef } from 'react';
-import { FaUserCircle } from 'react-icons/fa';
-import { FaChevronDown } from 'react-icons/fa';
-import { NavLink } from 'react-router-dom';
+import { FaUserCircle, FaChevronDown } from 'react-icons/fa';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { signOut } from '@aws-amplify/auth';
 
 const ProfilePanel = ({ show, toggle, close }) => {
     const profileRef = useRef(null);
+    const navigate = useNavigate();
 
+    // logout handler
+    const handleLogout = async () => {
+        try {
+            await signOut();
+            navigate('/login');
+        } catch (error) {
+            console.error('Error signing out: ', error);
+        }
+    };
+
+    // close dropdown when clicking outside
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (profileRef.current && !profileRef.current.contains(event.target)) {
@@ -28,11 +40,23 @@ const ProfilePanel = ({ show, toggle, close }) => {
                 <FaUserCircle className="profile-icon" />
                 <FaChevronDown className="chevron-icon" />
             </div>
+
             <div className={`profile-dropdown ${show ? 'show' : ''}`}>
-                <NavLink to="/login">Login</NavLink>
-                <NavLink to={{ pathname:'/login', search: '?tab=register'} }>Register</NavLink>
-                <NavLink to="/settings">Settings</NavLink>
-                <NavLink to="/profile">Profile</NavLink>
+                <NavLink to="/login" className="dropdown-link">Login</NavLink>
+                <NavLink to={{ pathname: '/login', search: '?tab=register' }} className="dropdown-link">Register</NavLink>
+                <NavLink to="/settings" className="dropdown-link">Settings</NavLink>
+                <NavLink to="/profile" className="dropdown-link">Profile</NavLink>
+                {/* logout as NavLink but calls handleLogout */}
+                <NavLink
+                    to="/login"
+                    className="dropdown-link logout-link"
+                    onClick={(e) => {
+                        e.preventDefault(); // stop default navigation
+                        handleLogout();
+                    }}
+                >
+                    Logout
+                </NavLink>
             </div>
         </div>
     );

@@ -29,7 +29,7 @@ html, body {
 .discovery-container {
     max-width: 1000px;
     margin: 80px auto 3rem auto;
-    padding: 0 2rem;
+    padding-top: 2rem;
     color: var(--text-primary);
 }
 
@@ -50,25 +50,25 @@ html, body {
     margin-bottom: 2rem;
 }
 
-/* Filter tags */
 .filter-tags {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 0.75rem;
-    margin-bottom: 1.25rem;
+    margin-bottom: 1.5rem;
 }
 
 .filter-tag {
-    padding: 6px 14px;
-    font-weight: 500;
-    font-size: 0.9rem;
+    padding: 8px 18px;
+    font-weight: 600;
+    font-size: 1rem;
     color: var(--text-secondary);
-    background-color: #f0f0f0;
-    border-radius: 9999px;
-    border: 1px solid #ccc;
+    background-color: #f5f7fa; /* softer background */
+    border-radius: 12px;
+    border: 1.5px solid #d1d9e6; /* subtle border */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     cursor: pointer;
-    transition: background-color var(--transition), color var(--transition);
+    transition: background-color var(--transition), color var(--transition), box-shadow var(--transition), border-color var(--transition);
     user-select: none;
 }
 
@@ -77,59 +77,89 @@ html, body {
         background-color: var(--color-primary);
         border-color: var(--color-primary-hover);
         color: white;
+        box-shadow: 0 4px 12px rgba(42, 76, 152, 0.3);
     }
 
-/* Search bar */
-.search-bar {
-    position: relative;
-    max-width: 500px;
-    margin: 0 auto 1.5rem auto;
+/* Container holding both search and filter */
+.search-filter-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 700px;
+    margin: 0 auto 2rem auto;
 }
 
+/* Search bar wrapper (input + icon) */
+.search-bar {
+    flex: 1;
+    position: relative;
+}
+
+/* Search input */
 .search-input {
     width: 100%;
-    padding: 0.6rem 3rem 0.6rem 2.5rem;
+    padding: 0.75rem 1rem 0.75rem 2.5rem; /* space for icon */
     font-size: 1rem;
-    border-radius: 9999px;
-    border: 1px solid #ccc;
-    transition: border-color var(--transition);
+    border: 1.5px solid #d1d9e6;
+    border-right: none; /* remove right border to connect with button */
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    background-color: #f9fbfd;
+    color: var(--text-primary);
+    transition: border-color var(--transition), box-shadow var(--transition);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
 }
 
     .search-input:focus {
         outline: none;
         border-color: var(--color-primary);
-        box-shadow: 0 0 8px rgba(42, 76, 152, 0.25);
+        box-shadow: 0 0 8px rgba(42, 76, 152, 0.2);
+        background-color: white;
     }
 
+/* Search icon */
 .search-icon {
     position: absolute;
-    left: 1rem;
+    left: 0.75rem;
     top: 50%;
     transform: translateY(-50%);
     font-size: 1.2rem;
-    color: var(--icon-color);
+    color: #7187a6;
     pointer-events: none;
 }
 
+/* Filter button */
 .filter-button {
-    position: absolute;
-    right: 0.4rem;
-    top: 50%;
-    transform: translateY(-50%);
     background-color: var(--color-primary);
-    border: none;
+    border: 1.5px solid var(--color-primary);
+    border-left: none; /* connect to input */
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
     color: white;
-    border-radius: 50%;
-    width: 2.6rem;
-    height: 2.6rem;
+    font-size: 1.1rem;
     cursor: pointer;
-    font-size: 1.3rem;
-    transition: background-color var(--transition);
+    transition: background-color var(--transition), box-shadow var(--transition), transform var(--transition);
 }
 
     .filter-button:hover {
         background-color: var(--color-primary-hover);
     }
+
+/* Responsive */
+@media (max-width: 500px) {
+    .search-input {
+        font-size: 0.9rem;
+    }
+
+    .filter-button {
+        font-size: 1rem;
+    }
+}
+
 
 /* Sort container */
 .sort-container {
@@ -169,47 +199,6 @@ html, body {
     flex-direction: column;
     gap: 1.5rem;
 }
-
-/* Tender cards */
-.tender-card {
-    background: var(--bg-card);
-    border: 1px solid var(--card-border);
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow);
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    transition: box-shadow var(--transition), border-color var(--transition);
-}
-
-    .tender-card:hover {
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-        /*border-color: var(--color-primary);*/
-    }
-
-/* Tender info */
-.tender-title {
-    font-weight: 600;
-    font-size: 1.1rem;
-    color: var(--color-primary);
-    margin-bottom: 0.4rem;
-}
-
-.tender-location,
-.tender-closing {
-    display: flex;
-    align-items: center;
-    font-size: 0.9rem;
-    color: var(--text-secondary);
-    margin-top: 6px;
-}
-
-    .tender-location svg,
-    .tender-closing svg {
-        margin-right: 6px;
-        color: var(--icon-color);
-    }
 
 /* Tags */
 .tender-tags {

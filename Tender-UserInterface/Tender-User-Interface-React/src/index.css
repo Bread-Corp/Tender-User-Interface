@@ -134,12 +134,28 @@ a:hover {
     color: var(--link-hover);
 }
 
+.btn-primary {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 0.75rem;
+    margin: 0 0.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: var(--font-family);
+}
+
+    .btn-primary:hover {
+        background-color: var(--button-hover);
+    }
+
 /* For light backgrounds */
 .btn-secondary-dark {
     background-color: rgba(60, 90, 150, 0.08); 
     color: var(--heading-color);
     padding: 0.75rem 1.5rem;
-    border-radius: 25px;
+    border-radius: 0.75rem;
     font-weight: 500;
     font-family: var(--font-family);
     cursor: pointer;
@@ -154,10 +170,10 @@ a:hover {
 
 /* For dark backgrounds */
 .btn-secondary-light {
-    background-color: rgba(255, 255, 255, 0.08); 
+    background-color: rgba(255, 255, 255, 0.08);
     color: #fff;
     padding: 0.75rem 1.5rem;
-    border-radius: 25px;
+    border-radius: 0.75rem;
     font-weight: 500;
     font-family: var(--font-family);
     cursor: pointer;

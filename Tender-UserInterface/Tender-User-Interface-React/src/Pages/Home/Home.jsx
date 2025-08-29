@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaCalendarCheck, FaSearch, FaRegBookmark, FaUser, FaEnvelope, FaCommentDots } from 'react-icons/fa';
 import './Home.css';
+import { Link } from "react-router-dom";
 
 const Home = () => {
     return (
@@ -10,7 +11,7 @@ const Home = () => {
                     <h1>Welcome to Tender Tool</h1>
                     <p>Discover and track the latest South African IT tenders- scraped, sorted and simplified.</p>
                     <div className="hero-buttons">
-                        <button className="btn-primary">Search Tenders</button>
+                      <Link to ="/discover" className="btn-primary">Search Tenders</Link>
                     </div>
                 </div>
             </section>
@@ -40,7 +41,7 @@ const Home = () => {
             <section className="cta-section">
                 <h2>Ready to Get Started?</h2>
                 <p>Create your free account and streamline your tender search today.</p>
-                <button className="btn-secondary-dark">Create Account</button>
+                <Link to= "/login" className = "btn-secondary-dark">Create Account</Link>
             </section>
 
             <section className="contact-section">

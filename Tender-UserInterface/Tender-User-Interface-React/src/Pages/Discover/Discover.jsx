@@ -1,27 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import './Discover.css';
-import { FaMapMarkerAlt, FaRegClock, FaSearch, FaBookmark, FaBinoculars, FaFilter } from 'react-icons/fa';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "./Discover.css";
+import TenderCard from "../../Components/TenderCard/tendercard";
+import { FaSearch, FaFilter } from "react-icons/fa";
+import ErrorBoundary from "../../Components/ErrorBoundary";
 
 const apiURL = import.meta.env.VITE_API_URL; //process.env.REACT_APP_API_URL;
 console.log('API URL:', apiURL);
-
-// base tender
-const baseTender = {
-    title: "SUPPLY AND DELIVERY OF (162) BULK LAPTOPS FOR EXTENSION AND ADVISORY SERVICES",
-    location: "Eastern Cape",
-    closing: "Friday, 06 June 2025 - 11:00",
-    tags: ["New", "Computer programming", "Consultancy"]
-};
-
-// mock data
-const mockTenders = [
-    { id: 1, ...baseTender },
-    { id: 2, ...baseTender },
-    { id: 3, ...baseTender }
-];
-
-//^^ LEGACY ^^
 
 const Discover = () => {
 
@@ -29,23 +14,31 @@ const Discover = () => {
     //Checks localstorage for previous stores and toggles the attribute on the body class then saves the setting to localStorage.
     useEffect(() => {
         const storedMode = localStorage.getItem("darkMode");
-        if (storedMode === "true") {
-            document.body.classList.toggle("dark-mode", true);
-        }
-        else {
-            document.body.classList.toggle("dark-mode", false);
-        }
+        document.body.classList.toggle("dark-mode", storedMode === "true");
     }, []);
 
-    const [filters, setFilters] = useState(["New", "Programming", "Construction", "Emergency", "Green Energy", "x", "x", "x", "x", "x"]);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [sortOption, setSortOption] = useState('Popularity');
+    const [filters, setFilters] = useState(["New", "Programming", "Construction", "Emergency", "Green Energy"]);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [sortOption, setSortOption] = useState("Popularity");
     const [tenders, setTenders] = useState([]);
 
     //Tender Logic (maybe nest in seperate classes?)
     useEffect(() => {
         const fetchTenders = async () => {
             try {
+
+                const response = await axios.get(
+                    "https://ktomenjalj.execute-api.us-east-1.amazonaws.com/Prod/api/mocktender/getalltenders"
+                );
+                const oldData = (response.data || []).map((item, index) => ({
+                    index: index + 1,
+                    // fallbacks if the information is missing
+                    id: item.tenderID || `tender-${index}`,
+                    title: item.title || "No Title",
+                    location: item.location || "Unknown Location",
+                    closing: item.closingDate || "Not Provided",
+                    tags: Array.isArray(item.tags) ? item.tags.map(tag => tag.tagValue) : [], // changed to safely handle tags
+
                 //get tenders from lambda-test api
                 const response = await axios.get(`${apiURL}/tender/fetch`); //await axios.get('https://ktomenjalj.execute-api.us-east-1.amazonaws.com/Prod/api/mocktender/getalltenders');
                 const data = Array.isArray(response.data) ? response.data : [response.data]; //data can either be an array or initalises array for single object for flexibility.
@@ -62,25 +55,26 @@ const Discover = () => {
                 //we can query and filter based on all the tenders in the cache! we set a timer to refresh db query every 5-10min
 
                 ///set tender to list/array? of tenders stored in [data]
+
                 setTenders(tenderData);
             } catch (err) {
+                // log error and set tebders to empty to prevent crashes
                 console.error("Failed to fetch tenders:", err);
+                setTenders([]); // prevent crash if fetch fails
             }
         };
         //invoke
         fetchTenders();
-    }, [/*implement refresh variable to reinitialise this function*/]);
+    }, []);/*implement refresh variable to reinitialise this function*/
 
     const removeFilter = (index) => {
-        const updated = [...filters];
-        updated.splice(index, 1);
-        setFilters(updated);
+        setFilters(prev => prev.filter((_, i) => i !== index));
     };
 
     const filteredTenders = tenders.filter(tender => {
         const titleMatch = tender.title.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesFilter = filters.length === 0 || tender.tags.some(tag => filters.includes(tag));
-        return titleMatch && matchesFilter
+        return titleMatch && matchesFilter;
     });
 
     return (
@@ -88,14 +82,16 @@ const Discover = () => {
             <h1 className="discovery-title">Discover</h1>
             <p className="discovery-subtitle">Search for public sector tenders in South Africa</p>
 
+            {/* filters and search bar */}
+
             <div className="filter-tags">
                 {filters.map((filter, index) => (
                     <button key={index} className="filter-tag" onClick={() => removeFilter(index)}>
-                        × {filter}
+                        &times; {filter}
                     </button>
                 ))}
             </div>
-
+            <div className= "search-filter-container">
             <div className="search-bar">
                 <FaSearch className="search-icon" />
                 <input
@@ -104,7 +100,8 @@ const Discover = () => {
                     placeholder="Search..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                />
+                    />
+                </div>
                 <button className="filter-button">
                     <FaFilter />
                 </button>
@@ -123,29 +120,20 @@ const Discover = () => {
                 </select>
             </div>
 
-            <div className="tender-list">
-                {filteredTenders.map((tender) => (
-                    <div className="tender-card" key={tender.id}>
-                        <h2 className="tender-title">{tender.title}</h2>
-                        <p className="tender-location"> <FaMapMarkerAlt />{tender.location}</p>
-                        <p className="tender-closing"> <FaRegClock /> Closing Info: {tender.closing}</p>
-                        <div className="tender-tags">
-                            {tender.tags.map((tag, idx) => (
-                                <span
-                                    key={idx}
-                                    className={`tag ${tag === "New" ? "tag-new" : "tag-blue"}`}
-                                >
-                                    {tag}
-                                </span>
-                            ))}
-                        </div>
-                        <div className="tender-icons">
-                            <FaBookmark className="icon" />
-                            <FaBinoculars className="icon" />
-                        </div>
-                    </div>
-                ))}
-            </div>
+            {/* error boundary will catch any rendering errors inside */}
+            <ErrorBoundary>
+                <div className="tender-list">
+                    {filteredTenders.map((tender) => (
+                        <TenderCard
+                            key={tender.id}
+                            title={tender.title}
+                            location={tender.location}
+                            closing={tender.closing}
+                            tags={tender.tags}
+                        />
+                    ))}
+                </div>
+            </ErrorBoundary>
         </div>
     );
 };
