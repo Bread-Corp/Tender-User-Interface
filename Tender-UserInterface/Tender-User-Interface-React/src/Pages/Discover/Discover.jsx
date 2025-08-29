@@ -5,6 +5,9 @@ import TenderCard from "../../Components/TenderCard/tendercard";
 import { FaSearch, FaFilter } from "react-icons/fa";
 import ErrorBoundary from "../../Components/ErrorBoundary";
 
+const apiURL = import.meta.env.VITE_API_URL; //process.env.REACT_APP_API_URL;
+console.log('API URL:', apiURL);
+
 const Discover = () => {
 
     //triggered on initialisation.
@@ -23,10 +26,11 @@ const Discover = () => {
     useEffect(() => {
         const fetchTenders = async () => {
             try {
+
                 const response = await axios.get(
                     "https://ktomenjalj.execute-api.us-east-1.amazonaws.com/Prod/api/mocktender/getalltenders"
                 );
-                const tenderData = (response.data || []).map((item, index) => ({
+                const oldData = (response.data || []).map((item, index) => ({
                     index: index + 1,
                     // fallbacks if the information is missing
                     id: item.tenderID || `tender-${index}`,
@@ -34,6 +38,18 @@ const Discover = () => {
                     location: item.location || "Unknown Location",
                     closing: item.closingDate || "Not Provided",
                     tags: Array.isArray(item.tags) ? item.tags.map(tag => tag.tagValue) : [], // changed to safely handle tags
+
+                //get tenders from lambda-test api
+                const response = await axios.get(`${apiURL}/tender/fetch`); //await axios.get('https://ktomenjalj.execute-api.us-east-1.amazonaws.com/Prod/api/mocktender/getalltenders');
+                const data = Array.isArray(response.data) ? response.data : [response.data]; //data can either be an array or initalises array for single object for flexibility.
+                console.log("response:", response.headers, response, response.data); //log for testing :/
+                const tenderData = data.map((item, index) => ({
+                    index: index + 1,
+                    id: item.tenderID,
+                    title: item.title,
+                    location: item.officeLocation,
+                    closing: item.closingDate,
+                    tags: item.tags ? item.tags.map(tag => tag.tagName) : [],
                 }));
                 //cache the data here -- it would likely be best to hold the full list of tags and tender info in the cache
                 //we can query and filter based on all the tenders in the cache! we set a timer to refresh db query every 5-10min
