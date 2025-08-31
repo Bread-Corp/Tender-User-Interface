@@ -237,7 +237,7 @@ const Login = () => {
                                 <a href="#">Forgot password?</a>
                             </div>
 
-                            <div class="form-navigation">
+                            <div className="form-navigation">
                                 <button type="submit">Login</button>
                             </div>
 

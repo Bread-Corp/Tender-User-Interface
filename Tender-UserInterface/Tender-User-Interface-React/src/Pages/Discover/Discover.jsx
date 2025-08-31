@@ -8,6 +8,8 @@ import ErrorBoundary from "../../Components/ErrorBoundary";
 const apiURL = import.meta.env.VITE_API_URL; //process.env.REACT_APP_API_URL;
 console.log('API URL:', apiURL);
 
+const max_visible_filters = 4;
+
 const Discover = () => {
 
     //triggered on initialisation.
@@ -18,6 +20,7 @@ const Discover = () => {
     }, []);
 
     const [filters, setFilters] = useState(["New", "Programming", "Construction", "Emergency", "Green Energy"]);
+    const [showAllFilters, setShowAllFilters] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [sortOption, setSortOption] = useState("Popularity");
     const [tenders, setTenders] = useState([]);
@@ -68,10 +71,15 @@ const Discover = () => {
     };
 
     const filteredTenders = tenders.filter(tender => {
-        const titleMatch = tender.title.toLowerCase().includes(searchTerm.toLowerCase());
+        const title = tender.title || ""; //fallback to empty string if undefined
+        const titleMatch = title.toLowerCase().includes(searchTerm.toLowerCase());
         const matchesFilter = filters.length === 0 || tender.tags.some(tag => filters.includes(tag));
         return titleMatch && matchesFilter;
     });
+
+    const visibleFilters = filters.slice(0, max_visible_filters); 
+    const hiddenCount = filters.length - visibleFilters.length;
+    const filtersToShow = showAllFilters ? filters : visibleFilters;
 
     return (
         <div className="discovery-container">
@@ -81,12 +89,18 @@ const Discover = () => {
             {/* filters and search bar */}
 
             <div className="filter-tags">
-                {filters.map((filter, index) => (
+                {filtersToShow.map((filter, index) => (
                     <button key={index} className="filter-tag" onClick={() => removeFilter(index)}>
                         &times; {filter}
                     </button>
                 ))}
+                {!showAllFilters && hiddenCount > 0 && (
+                    <button className="filter-tag hidden-count" onClick={() => setShowAllFilters(true)}>
+                        +{hiddenCount}
+                    </button>
+                )}
             </div>
+
             <div className= "search-filter-container">
             <div className="search-bar">
                 <FaSearch className="search-icon" />
