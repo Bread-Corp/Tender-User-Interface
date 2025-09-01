@@ -4,6 +4,7 @@ import "./Discover.css";
 import TenderCard from "../../Components/TenderCard/tendercard";
 import { FaSearch, FaFilter } from "react-icons/fa";
 import ErrorBoundary from "../../Components/ErrorBoundary";
+import FilterOverlay from "../../Components/FilterOverlay/FilterOverlay";
 
 const apiURL = import.meta.env.VITE_API_URL; //process.env.REACT_APP_API_URL;
 console.log('API URL:', apiURL);
@@ -19,6 +20,7 @@ const Discover = () => {
         document.body.classList.toggle("dark-mode", storedMode === "true");
     }, []);
 
+    const [showFilterOverlay, setShowFilterOverlay] = useState(false);
     const [filters, setFilters] = useState(["New", "Programming", "Construction", "Emergency", "Green Energy"]);
     const [showAllFilters, setShowAllFilters] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
@@ -101,20 +103,25 @@ const Discover = () => {
                 )}
             </div>
 
-            <div className= "search-filter-container">
-            <div className="search-bar">
-                <FaSearch className="search-icon" />
-                <input
-                    type="text"
-                    className="search-input"
-                    placeholder="Search..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+            <div className="search-filter-container">
+                <div className="search-bar">
+                    <FaSearch className="search-icon" />
+                    <input
+                        type="text"
+                        className="search-input"
+                        placeholder="Search..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
-                <button className="filter-button">
+
+                <button className="filter-button" onClick={() => setShowFilterOverlay(true)}> {/*set overlay state to true on click*/}
                     <FaFilter />
                 </button>
+
+                {showFilterOverlay && (
+                    <FilterOverlay onClose={() => setShowFilterOverlay(false)} />
+                )}
             </div>
 
             <div className="sort-container">
