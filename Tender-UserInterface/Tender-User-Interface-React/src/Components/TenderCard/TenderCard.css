@@ -87,3 +87,32 @@
     .btn-icon:hover {
         color: #000;
     }
+
+/* Title text */
+.tender-title {
+    font-size: 1.1rem;
+    line-height: 1.4;
+    margin: 0;
+    flex: 1; /* take available space */
+}
+
+/* Read more button */
+.read-more-btn {
+    background-color: transparent;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 0 0 10px 0;
+    white-space: nowrap;
+    transition: color 0.2s;
+}
+
+    .read-more-btn.show-less {
+        margin-left: 10px; /* only adds space when expanded */
+    }
+
+    .read-more-btn:hover {
+        color: #0056b3;
+        text-decoration: underline;
+    }

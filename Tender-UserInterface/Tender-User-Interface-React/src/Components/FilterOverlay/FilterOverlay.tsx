@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from "react";
 import "./FilterOverlay.css";
 
-const FilterOverlay = ({ onClose }) => {
+interface FilterOverlayProps {
+    onClose: () => void; // onClose is a function with no arguments that returns nothing
+}
+
+const FilterOverlay: React.FC<FilterOverlayProps> = ({ onClose }) => {
 
     const [closing, setClosing] = useState(false);
     const handleClose = () => {
-        setClosing(true); // triggers the slide out animation
+        setClosing(true); // triggers the slide-out animation
     };
 
-    // after animation ends, call onClose to remove overlay
     useEffect(() => {
         if (closing) {
             const timer = setTimeout(() => {
-                onClose();
-            }, 300); // match css
+                onClose(); // safely call the prop
+            }, 300); // match CSS animation duration
             return () => clearTimeout(timer);
         }
     }, [closing, onClose]);
@@ -27,7 +30,6 @@ const FilterOverlay = ({ onClose }) => {
                 className={`filter-overlay-panel ${closing ? "slide-out" : ""}`}
                 onClick={(e) => e.stopPropagation()}
             >
-           {/* headings and contents of the overlay*/}
                 <h2>Filter Options</h2>
                 <p>(These are placeholders, not functional)</p>
                 <div className="filter-options">
