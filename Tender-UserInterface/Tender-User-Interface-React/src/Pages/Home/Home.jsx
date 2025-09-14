@@ -65,7 +65,10 @@ const Home = () => {
             </section>
 
             <footer className="footer">
-                &copy; {new Date().getFullYear()} Tender Tool. All rights reserved.
+                &copy; {new Date().getFullYear()} Tender Tool. All rights reserved.{''}
+                <Link to="/policy" className="footer-link">
+                    Privacy Policy
+                </Link>
             </footer>
         </div>
     );

@@ -51,21 +51,24 @@ const Tracking = () => {
             : tenders.filter((t) => t.status.toLowerCase() === filter.toLowerCase());
 
     return (
-        <div className="saved-tenders-container">
-            <h2 className="page-title">Tracked Tenders</h2>
+        <div className="tracking-container">
+    <div className="tracking-header">
+        <h1 className="tracking-title">Tracked Tenders</h1>
+        <p className="tracking-subtitle">View the tenders you are monitoring</p>
+    </div>
 
-            <div className="filter-container">
-                <label htmlFor="statusFilter">Filter by Status:</label>
-                <select
-                    id="statusFilter"
-                    onChange={(e) => setFilter(e.target.value)}
-                    value={filter}
-                >
-                    <option value="All">All</option>
-                    <option value="Open">Open</option>
-                    <option value="Closed">Closed</option>
-                </select>
-            </div>
+    <div className="filter-container">
+        <label htmlFor="statusFilter">Filter by Status:</label>
+        <select
+            id="statusFilter"
+            onChange={(e) => setFilter(e.target.value)}
+            value={filter}
+        >
+            <option value="All">All</option>
+            <option value="Open">Open</option>
+            <option value="Closed">Closed</option>
+        </select>
+    </div>
 
             <div className="tender-grid">
                 {filteredTenders.map((tender) => (

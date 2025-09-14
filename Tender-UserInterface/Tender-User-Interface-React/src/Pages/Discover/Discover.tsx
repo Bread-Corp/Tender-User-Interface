@@ -98,71 +98,86 @@ const Discover: React.FC = () => {
 
     return (
         <div className="discovery-container">
-            <h1 className="discovery-title">Discover</h1>
-            <p className="discovery-subtitle">Search for public sector tenders in South Africa</p>
+            <section className="discovery-header">
+                <div className="discovery-context">
+                    <h1>Discover</h1>
+                    <p>Search for public sector tenders in South Africa</p>
 
-            {/* Filters */}
-            <div className="filter-tags">
-                {filtersToShow.map((filter, index) => (
-                    <button key={index} className="filter-tag" onClick={() => removeFilter(index)}>
-                        &times; {filter}
-                    </button>
-                ))}
-                {!showAllFilters && hiddenCount > 0 && (
-                    <button className="filter-tag hidden-count" onClick={() => setShowAllFilters(true)}>
-                        +{hiddenCount}
-                    </button>
-                )}
-            </div>
+                    {/* Filters */}
+                    <div className="filter-tags">
+                        {filtersToShow.map((filter, index) => (
+                            <button key={index} className="filter-tag" onClick={() => removeFilter(index)}>
+                                &times; {filter}
+                            </button>
+                        ))}
+                        {!showAllFilters && hiddenCount > 0 && (
+                            <button
+                                className="filter-tag hidden-count"
+                                onClick={() => setShowAllFilters(true)}
+                            >
+                                +{hiddenCount}
+                            </button>
+                        )}
+                    </div>
 
-            {/* Search & filter overlay */}
-            <div className="search-filter-container">
-                <div className="search-bar">
-                    <FaSearch className="search-icon" />
-                    <input
-                        type="text"
-                        className="search-input"
-                        placeholder="Search..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                    />
+                    {/* Search & filter overlay */}
+                    <div className="search-filter-container">
+                        <div className="search-bar">
+                            <FaSearch className="search-icon" />
+                            <input
+                                type="text"
+                                className="search-input"
+                                placeholder="Search..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                            />
+                        </div>
+
+                        <button className="filter-button" onClick={() => setShowFilterOverlay(true)}>
+                            <FaFilter />
+                        </button>
+
+                        {showFilterOverlay && (
+                            <FilterOverlay onClose={() => setShowFilterOverlay(false)} />
+                        )}
+                    </div>
+                </div> 
+            </section>
+
+
+
+            {/* White section for sorting and cards */}
+            <section className="discovery-cards-section">
+                {/* Sorting */}
+                <div className="sort-container">
+                    <label className="sort-label">Sort by</label>
+                    <select
+                        className="sort-select"
+                        value={sortOption}
+                        onChange={(e) => setSortOption(e.target.value)}
+                    >
+                        <option>Popularity</option>
+                        <option>Date</option>
+                        <option>Region</option>
+                    </select>
                 </div>
 
-                <button className="filter-button" onClick={() => setShowFilterOverlay(true)}>
-                    <FaFilter />
-                </button>
-
-                {showFilterOverlay && (
-                    <FilterOverlay onClose={() => setShowFilterOverlay(false)} />
-                )}
-            </div>
-
-            {/* Sorting */}
-            <div className="sort-container">
-                <label className="sort-label">Sort by</label>
-                <select
-                    className="sort-select"
-                    value={sortOption}
-                    onChange={(e) => setSortOption(e.target.value)}
-                >
-                    <option>Popularity</option>
-                    <option>Date</option>
-                    <option>Region</option>
-                </select>
-            </div>
-
-            {/* Tender Cards */}
-            <ErrorBoundary>
-                <div className="tender-list">
-                    {filteredTenders.length > 0 ? (
-                        filteredTenders.map((tender) => (
-                            <TenderCard key={tender.tenderID} tender={tender} />
-                        ))
-                    ) : (
-                        <p>Loading tenders...</p>
-                    )}
-                </div>
-            </ErrorBoundary>
+                {/* Tender Cards */}
+                <ErrorBoundary>
+                    <div className="tender-list">
+                        {filteredTenders.length > 0 ? (
+                            filteredTenders.map((tender) => (
+                                <TenderCard key={tender.tenderID} tender={tender} />
+                            ))
+                        ) : (
+                            <div className="spinner-container">
+                                <div className="spinner"></div>
+                                <p className="loading-text">Loading tenders...</p>
+                            </div>
+                        )}
+                    </div>
+                </ErrorBoundary>
+            </section>
         </div>
     );
 };

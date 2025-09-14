@@ -1,7 +1,8 @@
-.saved-tenders-container {
-    padding: 2rem;
+.tracking-container {
+    margin: 80px auto 3rem auto;
+    padding: 2rem 1.5rem; /* top/bottom 2rem, left/right 1.5rem */
     max-width: 1000px;
-    margin: 0 auto;
+    box-sizing: border-box; /* ensure padding is included in width */
 }
 
 .page-title {
@@ -17,6 +18,37 @@
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+}
+
+.tracking-header {
+    position: relative;
+    background-image: url('/src/assets/homecard.png');
+    background-size: cover;
+    background-position: center;
+    border-radius: 20px;
+    background-repeat: no-repeat;
+    padding: 30px; /* just a little space around the text */
+    color: white;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+
+/* Page Title */
+.tracking-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    color: var(--bg-page);
+    margin-bottom: 0.75rem;
+    text-align: center;
+}
+
+/* Subtitle */
+.tracking-subtitle {
+    font-size: 1.2rem;
+    color: var(--bg-page);
+    text-align: center;
+    margin-bottom: 2rem;
 }
 
 /* tender card */
@@ -164,6 +196,15 @@
     .page-title {
         font-size: 1.75rem;
         margin-top: 60px;
+    }
+
+    .tracking-container {
+        margin-top: 130px;
+        padding: 2rem 1rem; /* smaller side padding */
+    }
+
+    .discovery-header {
+        padding: 60px 1rem; /* smaller header height and padding on small screens */
     }
 
     .card-header h3 {
