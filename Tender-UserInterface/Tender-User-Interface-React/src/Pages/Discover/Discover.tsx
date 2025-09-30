@@ -21,6 +21,26 @@ const Discover: React.FC = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [sortOption, setSortOption] = useState("Popularity");
     const [tenders, setTenders] = useState<(EskomTender | ETender)[]>([]);
+    const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+    // overlay filter state
+    const [overlayFilters, setOverlayFilters] = useState<{
+        date: string | null;
+        tags: string[];
+        alphabetical: string | null;
+        status: string | null;
+    }>({
+        date: null,
+        tags: [],
+        alphabetical: null,
+        status: null,
+    });
+
+    // hlper for toast message
+    const showToast = (message: string, duration = 2000) => {
+        setToastMessage(message);
+        setTimeout(() => setToastMessage(null), duration);
+    };
 
     // Apply dark mode from localStorage
     useEffect(() => {
@@ -86,11 +106,66 @@ const Discover: React.FC = () => {
         setFilters(prev => prev.filter((_, i) => i !== index));
     };
 
-    const filteredTenders = tenders.filter(tender => {
-        const titleMatch = (tender.title || "").toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesFilter = filters.length === 0 || tender.tag.some(tag => filters.includes(tag.name));
-        return titleMatch && matchesFilter;
-    });
+    // FILTERING logic
+    const isWithinDays = (dateInput: string | Date, days: number, fromPast = false) => {
+        const today = new Date();
+        const date = dateInput instanceof Date ? dateInput : new Date(dateInput);
+        const diffDays = (date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24);
+        return fromPast ? diffDays >= 0 && diffDays <= days : diffDays <= days;
+    };
+
+    const startsWithLetter = (str: string) => /^[A-Za-z]/.test(str);
+
+    const filteredTenders = tenders
+        .filter((tender) => {
+            const title = tender.title || "";
+            const titleMatch = title.toLowerCase().includes(searchTerm.toLowerCase());
+
+            if (!titleMatch) return false;
+
+            // tag pills
+            if (filters.length > 0 && !tender.tag.some((t) => filters.includes(t.name))) {
+                return false;
+            }
+
+            // overlay status
+            if (overlayFilters.status && tender.status !== overlayFilters.status) {
+                return false;
+            }
+
+            // overlay tags
+            if (
+                overlayFilters.tags.length > 0 &&
+                !overlayFilters.tags.some((t) =>
+                    tender.tag.map((tag) => tag.name).includes(t)
+                )
+            ) {
+                return false;
+            }
+
+            // overlay date
+            if (overlayFilters.date === "Closing Soon" && !isWithinDays(tender.closingDate, 7)) {
+                return false;
+            }
+            if (overlayFilters.date === "Newly Added" && !isWithinDays(tender.publishedDate, 7, true)) {
+                return false;
+            }
+
+            return true;
+        })
+        .sort((a, b) => {
+            const aTitle = a.title || "";
+            const bTitle = b.title || "";
+
+            if (overlayFilters.alphabetical === "A-Z") {
+                return aTitle.localeCompare(bTitle, undefined, { sensitivity: "base" });
+            }
+            if (overlayFilters.alphabetical === "Z-A") {
+                return bTitle.localeCompare(aTitle, undefined, { sensitivity: "base" });
+            }
+
+            return 0;
+        });
 
     const visibleFilters = filters.slice(0, max_visible_filters);
     const hiddenCount = filters.length - visibleFilters.length;
@@ -98,6 +173,16 @@ const Discover: React.FC = () => {
 
     return (
         <div className="discovery-container">
+
+            {toastMessage && (
+                <div
+                    className={`toast-notification show ${toastMessage.includes("cleared") ? "toast-red" : "toast-green"
+                        }`}
+                >
+                    {toastMessage}
+                </div>
+            )}
+
             <section className="discovery-header">
                 <div className="discovery-context">
                     <h1>Discover</h1>
@@ -138,12 +223,18 @@ const Discover: React.FC = () => {
                         </button>
 
                         {showFilterOverlay && (
-                            <FilterOverlay onClose={() => setShowFilterOverlay(false)} />
+                            <FilterOverlay
+                                onClose={() => setShowFilterOverlay(false)}
+                                onApply={(filters) => {
+                                    setOverlayFilters(filters)
+                                    showToast("Filters applied!");
+                                }}
+                                showToast={showToast}
+                            />
                         )}
                     </div>
                 </div> 
             </section>
-
 
 
             {/* White section for sorting and cards */}

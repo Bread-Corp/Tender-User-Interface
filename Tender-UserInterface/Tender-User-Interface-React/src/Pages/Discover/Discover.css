@@ -28,19 +28,22 @@ html, body {
 
 .discovery-container {
     font-family: var(--font-family);
-    color: var(--home-heading);
+    color: var(--heading-color);
     background: #33497D; /* change this later*/
     padding-top: 4rem;
 }
 
 .discovery-header {
     position: relative;
+    width: 100vw; /* full viewport width */
+    margin-left: calc(50% - 50vw); /* cancel out any body/container padding */
     background-image: url('/src/assets/homecard.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     padding: 4.5rem 2rem;
     color: white;
+    min-height: 250px;
     text-align: center;
     margin-bottom: 30px;
 }
@@ -203,11 +206,13 @@ html, body {
         outline: none;
     }
 
-/* Tender list */
 .tender-list {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    max-width: 1000px; 
+    margin: 0 auto; 
+    padding: 1.5rem; 
 }
 
 /* Tags */
@@ -339,3 +344,30 @@ html, body {
     }
 }
 
+.toast-notification {
+    position: fixed;
+    bottom: -50px; /* start below screen */
+    left: 50%;
+    transform: translateX(-50%);
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    z-index: 1000;
+    opacity: 0;
+    transition: all 0.4s ease;
+}
+
+    /* slide up and fade in */
+    .toast-notification.show {
+        bottom: 20px;
+        opacity: 0.9;
+    }
+
+/* color variations */
+.toast-red {
+    background-color: #e74c3c; /* red */
+}
+
+.toast-green {
+    background-color: #2ecc71; /* green */
+}

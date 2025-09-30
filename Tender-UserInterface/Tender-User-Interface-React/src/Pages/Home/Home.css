@@ -194,9 +194,11 @@
     }
 
     .btn-primary,
-    .btn-secondary {
+    .btn-secondary-light,
+    .btn-secondary-dark {
         margin: 0.5rem 0;
-        width: 80%;
+        width: 100%;
+        display: block;
     }
 
     .feature-card {
