@@ -1,12 +1,15 @@
 .home-container {
     font-family: var(--font-family);
     color: var(--home-heading);
-    background: var(--home-bg); 
-    padding-top: 4rem; 
+    background: #33497D;
+    padding-top: 4rem;
 }
 
 .hero-home {
-    background: var(--home-bg);
+    position: relative;
+    background-image: url('/src/assets/homecard.png');
+    background-size: cover;
+    background-position: center;
     text-align: center;
     padding: 6rem 2rem;
     box-shadow: var(--hero-shadow);
@@ -24,11 +27,10 @@
     margin-bottom: 2rem;
 }
 
-
 .features {
     background-color: var(--card-bg);
     text-align: center;
-    padding: 4rem 2rem;
+    padding: 3.2rem 2rem;
     color: var(--text-color);
 }
 
@@ -53,7 +55,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 3rem 4rem;
+    gap: 3rem 6rem;
 }
 
 .feature-card {
@@ -164,6 +166,17 @@
     color: var(--subtext-color);
 }
 
+.footer-link {
+    color: var(--text-primary);
+    margin-left: 10px;
+    text-decoration: underline;
+    transition: color 0.2s ease;
+}
+
+    .footer-link:hover {
+        color: #072365;
+    }
+
 /* Responsive Tweaks */
 @media screen and (max-width: 768px) {
 
@@ -181,9 +194,11 @@
     }
 
     .btn-primary,
-    .btn-secondary {
+    .btn-secondary-light,
+    .btn-secondary-dark {
         margin: 0.5rem 0;
-        width: 80%;
+        width: 100%;
+        display: block;
     }
 
     .feature-card {

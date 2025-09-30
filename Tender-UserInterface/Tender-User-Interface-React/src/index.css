@@ -3,51 +3,42 @@
 :root {
     /* Typography */
     --font-family: 'Poppins', sans-serif;
-
     /* Text Colors */
     --text-color: #1F2B4A;
     --heading-color: #2A3C64;
     --subtext-color: #4a5a78;
-
     /* Backgrounds */
     --hero-bg: linear-gradient(135deg, #d6e6f2, #eaf3fb);
-    --home-bg: linear-gradient(90deg,rgba(51, 73, 125, 1) 0%, rgba(85, 113, 166, 1) 50%, rgba(205, 79, 110, 1) 100%);
+    --home-bg: white;
     --card-bg: #ffffff;
     --cta-bg: #d6e6f2;
     --tender-card-bg: #f0f6fc;
-
     /* Shadows */
     --hero-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
     --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-
     /* Buttons */
     --button-bg: #33497d;
     --button-hover: #1f325c;
-    --button-text: white;
-
+    --button-text: #e0e6f1;
     /* Icons */
     --icon-color: #33497D;
     --nav-icon: #fff;
-
     /* Profile Button Hover */
     --profile-button-hover-bg: #d7e3fc;
-
     /* Tender Card Details */
     --tender-card-border: #dbe7f4;
     --tender-card-header: #2d4d7a;
     --tender-secondary-txt: #3f4c61;
-
     /* Status Badges */
     --open-badge-bg: #c7f5d2;
     --open-badge-txt: #256029;
     --closed-badge-bg: #f9d7d5;
     --closed-badge-txt: #8a1c1c;
-
     /* Hero Text */
     --home-heading: #e0e6f1;
-
     /* Contact us*/
-    --contact-us-bg: #2A3C64;;
+    --contact-us-bg: #2A3C64;
+    ;
 }
 
 body.dark-mode {
@@ -96,12 +87,8 @@ body.dark-mode {
     --contact-us-bg: #1c2636;
 }
 
-/* switch gradient from horizontal to vertical on smaller screens */
+/*Responsive adjustments*/
 @media screen and (max-width: 768px) {
-    :root {
-
-        --home-bg: radial-gradient( circle at top center, rgba(205, 79, 110, 0.9) 0%, rgba(100, 125, 170, 0.9) 50%, rgba(51, 73, 125, 1) 100% );
-    }
 
     .btn-primary,
     .btn-secondary-light,
@@ -135,20 +122,39 @@ a:hover {
 }
 
 .btn-primary {
-    background-color: var(--button-bg);
+    background-color: transparent;
     color: var(--button-text);
     padding: 0.8rem 1.5rem;
     border: none;
     border-radius: 0.75rem;
     margin: 0 0.5rem;
-    font-weight: bold;
+    font-weight: 600;
+    font-size: 1.05rem; 
     cursor: pointer;
     font-family: var(--font-family);
+    position: relative;
+    overflow: hidden;
+    transition: color 0.3s ease, border-color 0.3s ease;
 }
 
-    .btn-primary:hover {
-        background-color: var(--button-hover);
+    /* chevron after the text */
+    .btn-primary::after {
+        content: ">";
+        display: inline-block;
+        margin-left: 0.5rem;
+        transition: all 0.3s ease;
     }
+
+    /* morph chevron */
+    .btn-primary:hover {
+        background-color: transparent; 
+    }
+
+        .btn-primary:hover::after {
+            content: ">>"; /* becomes >> */
+            margin-left: 0.7rem; /* small slide for effect */
+        }
+
 
 /* For light backgrounds */
 .btn-secondary-dark {

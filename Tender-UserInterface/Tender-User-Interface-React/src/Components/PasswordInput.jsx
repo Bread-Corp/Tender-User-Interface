@@ -7,9 +7,6 @@ const PasswordInput = ({ value, onChange, placeholder, required = false }) => {
     const [show, setShow] = useState(false);
     const [error, setError] = useState(""); // validation message
 
-    // regex - at least 8 characters, 1 uppercase, 1 lowercase, 1 number, 1 special character
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
     return (
         <div className="password-wrapper" style={{ position: "relative" }}>
             <input

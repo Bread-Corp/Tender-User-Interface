@@ -1,0 +1,245 @@
+/* Backdrop */
+.filter-overlay-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.45);
+    z-index: 1000;
+    display: flex;
+    justify-content: flex-end;
+    transition: background 0.3s ease;
+}
+
+/* Adjust panel padding to avoid overlapping header */
+.filter-overlay-panel {
+    background: #fdfdfd;
+    width: 320px;
+    max-width: 85%;
+    height: 100%;
+    padding: 80px 24px 24px 24px; /* top padding = header height + gap */
+    box-shadow: -6px 0 20px rgba(0,0,0,0.15);
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 16px;
+    transform: translateX(100%);
+    animation: slideIn 0.35s ease forwards;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: relative; /* so header can be positioned absolutely within it */
+}
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(100%);
+    }
+}
+
+.slide-out {
+    animation: slideOut 0.35s ease forwards;
+}
+
+.fade-out {
+    animation: fadeBackdrop 0.3s ease forwards;
+}
+
+@keyframes fadeBackdrop {
+    to {
+        background: rgba(0,0,0,0);
+    }
+}
+
+/* Header Bar as an extension above the main panel */
+.filter-header-bar {
+    position: absolute; /* sit above the panel content */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px; 
+    background-color: rgba(244, 249, 255, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 30px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #33497D;
+    border-bottom: 1px solid #dce6f2;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    backdrop-filter: saturate(180%) blur(50px);
+    z-index: 10;
+}
+
+/* Close button */
+.filter-close-btn {
+    background: transparent;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #33497D;
+    display: flex;
+    justify-content: center;
+    padding: 0;
+}
+
+    /* Rotate the icon inside on hover */
+    .filter-close-btn svg {
+        transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    .filter-close-btn:hover svg {
+        transform: rotate(90deg);
+        color: #5571A6;
+    }
+
+/* Filter options */
+.filter-options {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+    .filter-options label {
+        cursor: pointer;
+        font-size: 15px;
+        padding: 10px 14px;
+        border-radius: 10px;
+        background: #f3f4f6;
+        transition: background 0.2s ease, color 0.2s ease;
+    }
+
+        .filter-options label:hover {
+            background: #e5e7eb;
+        }
+
+/* Apply button */
+.filter-apply-btn {
+    padding: 12px 18px;
+    border: none;
+    background-color: #33497D;
+    color: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.25s ease;
+    margin-top: auto;
+}
+
+    .filter-apply-btn:hover {
+        background-color: #22315a;
+    }
+
+/* Section headers */
+.filter-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+    .filter-section h3 {
+        font-size: 14px;
+        font-weight: 600;
+        color: #33497D;
+        margin-bottom: 8px;
+    }
+
+    /* Radio buttons styled with spacing */
+    .filter-section label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        cursor: pointer;
+    }
+
+/* Action buttons row */
+.filter-actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: auto;
+}
+
+/* Clear button */
+.filter-clear-btn {
+    flex: 1;
+    padding: 12px 18px;
+    border: 1px solid #d1d5db;
+    background-color: #f9fafb;
+    color: #374151;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+    .filter-clear-btn:hover {
+        background-color: #f3f4f6;
+    }
+
+/* Apply button (already defined, reused here) */
+.filter-apply-btn {
+    flex: 1;
+    padding: 12px 18px;
+    border: none;
+    background-color: #33497D;
+    color: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.25s ease;
+}
+
+    .filter-apply-btn:hover {
+        background-color: #22315a;
+    }
+
+.filter-section input[type="checkbox"],
+.filter-section input[type="radio"] {
+    accent-color: #33497D; /* modern browser support */
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+/* Section headers */
+.filter-section h3 {
+    font-size: 14px;
+    font-weight: 600;
+    text-align:left;
+    color: #33497D; 
+    margin-bottom: 8px;
+}
+
+.filter-header-bar h2 {
+    font-size: 18px; 
+    font-weight: 800; 
+    margin: 0; 
+}
+
+/* Labels */
+.filter-section label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    color: #111827; /* dark gray text for readability */
+}
