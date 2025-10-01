@@ -41,7 +41,7 @@ const Home = () => {
             <section className="cta-section">
                 <h2>Ready to Get Started?</h2>
                 <p>Create your free account and streamline your tender search today.</p>
-                <Link to= "/login" className = "btn-secondary-dark">Create Account</Link>
+                <Link to={{ pathname: '/login', search: '?tab=register' }} className = "btn-secondary-dark">Create Account</Link>
             </section>
 
             <section className="contact-section">

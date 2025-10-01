@@ -5,6 +5,7 @@ import './Login.css';
 import { useLocation } from 'react-router-dom';
 import TenderToolGraphic from "../../Components/TenderToolGraphic";
 import { useAuth } from '../../context/AuthContext';
+import { register } from '../../context/CoreLogicContext.js';
 import PasswordInput from '../../Components/PasswordInput';
 import ErrorMessage from '../../Components/ErrorMessage.jsx'
 
@@ -19,6 +20,7 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false); // toggle the password to text feature
 
     // state for form inputs and errors
+    const [id] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -119,6 +121,7 @@ const Login = () => {
         // --- THIS IS THE MOST IMPORTANT STEP ---
         // Log the exact object we are about to send.
         const submissionData = {
+            id,
             email,
             password,
             name,
@@ -130,6 +133,19 @@ const Login = () => {
         // ------------------------------------
 
         try {
+            //Here we need to register the user in our database.
+            //The database returns a uniqueID that we need for filtering
+            //We can then append this ID to cognito for easier fetching.
+            const response = await register(
+                submissionData.name +" "+ submissionData.surname,
+                submissionData.email,
+                submissionData.formattedPhone,
+                submissionData.address
+            )
+
+            //set the ID to pass through
+            submissionData.id = response;
+
             // We are using the variables from the object above
             await signUp(
                 submissionData.email,
@@ -137,7 +153,8 @@ const Login = () => {
                 submissionData.name,
                 submissionData.surname,
                 submissionData.formattedPhone,
-                submissionData.address
+                submissionData.address,
+                submissionData.id,
             );
 
             navigate(`/confirm-signup?username=${email}`);

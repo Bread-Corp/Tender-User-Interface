@@ -1,19 +1,19 @@
 export class TenderUser {
-    userID: string;
-    fullName: string;
-    email: string;
-    phoneNumber?: string;
-    role: string;
-    profilePicture?: string;
-    isSuperUser: boolean;
+    UserID: string;
+    FullName: string;
+    Email: string;
+    PhoneNumber?: string;
+    Role: string;
+    ProfilePicture?: string;
+    IsSuperUser: boolean;
 
     constructor(data: any) {
-        this.userID = data.userID ?? crypto.randomUUID(); // fallback like Guid.NewGuid()
-        this.fullName = data.fullName ?? "";
-        this.email = data.email ?? "";
-        this.phoneNumber = data.phoneNumber ?? undefined;
-        this.role = data.role ?? "StandardUser"; // default role
-        this.profilePicture = data.profilePicture ?? undefined;
-        this.isSuperUser = data.isSuperUser ?? false; // default false
+        this.UserID = data.UserID ?? undefined; // fallback like Guid.NewGuid()
+        this.FullName = data.FullName ?? "";
+        this.Email = data.Email ?? "";
+        this.PhoneNumber = data.PhoneNumber ?? undefined;
+        this.Role = data.Role ?? "StandardUser"; // default role
+        this.ProfilePicture = data.ProfilePicture ?? undefined;
+        this.IsSuperUser = data.IsSuperUser ?? false; // default false
     }
 }

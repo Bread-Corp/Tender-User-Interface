@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }) => {
 
     // RECONFIGURED SIGNUP FUNCTION
     // The signature is simplified. We assume the 'username' is the 'email'.
-    const signUp = async (email, password, name, surname, phoneNumber, address) => {
+    const signUp = async (email, password, name, surname, phoneNumber, address, id) => {
         try {
             return await amplifySignUp({
                 username: email, // Use email as the username for sign-up
@@ -63,7 +63,8 @@ export const AuthProvider = ({ children }) => {
                         name,
                         phone_number: phoneNumber,
                         'custom:surname': surname,
-                        'custom:address': address
+                        'custom:address': address,
+                        'custom:CoreID': id
                     },
                 },
             });

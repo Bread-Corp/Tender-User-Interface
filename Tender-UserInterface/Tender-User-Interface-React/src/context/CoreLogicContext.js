@@ -1,0 +1,37 @@
+import axios from 'axios';
+import { StandardUser } from '../Models/UserModels/StandardUser.js';
+
+//const apiURL = import.meta.env.VITE_API_URL;
+const apiURL = 'https://localhost:55144';
+
+export const register = async (FullName, Email, PhoneNumber, Address)  =>
+{
+    console.log(FullName, Email, PhoneNumber, Address);
+
+    try {
+        const standardUser = new StandardUser({
+            FullName: FullName,
+            Email: Email,
+            PhoneNumber: PhoneNumber,
+            Address: Address,
+        });
+        console.log('StandarrdUser:', standardUser);
+
+        const res =
+            await axios.post(`${apiURL}/tenderuser/register`, standardUser)
+                .then(response => {
+                    const userID = response.data.value;
+                    console.log('User created at :', Date.now());
+                    console.log('USerID:', userID);
+                    return userID
+                })
+                .catch(error => {
+                    console.error('Error posting user: ', error);
+                });
+
+        return res;
+    }
+    catch (error) {
+        console.error('Internal error creating user: ', error);
+    }
+}
