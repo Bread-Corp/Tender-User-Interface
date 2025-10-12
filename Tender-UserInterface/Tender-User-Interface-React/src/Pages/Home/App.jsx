@@ -12,6 +12,7 @@ import TenderDetails from "../TenderDetails/TenderDetails";
 import ProtectedRoute from '../../Components/ProtectedRoute';
 import ConfirmSignUp from '../Login/ConfirmSignUp';
 import Settings from "../Settings/Settings";
+import Analytics from "../Analytics/Analytics";
 
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
                 <Route path="/tracking" element={<ProtectedRoute><Tracking /></ProtectedRoute>} />
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                 <Route path="/settings" element={<Settings />} />/*Fix protection*/
+                <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
             </Routes>
         </>
     );

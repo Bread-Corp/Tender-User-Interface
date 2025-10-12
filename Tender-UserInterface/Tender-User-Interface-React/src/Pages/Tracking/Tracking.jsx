@@ -74,7 +74,7 @@ const Tracking = () => {
                 {filteredTenders.map((tender) => (
                     // tender card click toggles expansion
                     <div
-                        className="tender-card"
+                        className="tracking-tender-card"
                         key={tender.id}
                     >
                         {/* card header displays title status + expand icon */}

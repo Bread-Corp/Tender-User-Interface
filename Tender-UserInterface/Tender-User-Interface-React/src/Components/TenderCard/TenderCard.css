@@ -1,10 +1,10 @@
 .tender-card {
     border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 1rem;
+    border-radius: 16px;
+    padding: 1.6rem 2.2rem 1rem;
     margin-bottom: 1rem;
     background: var(--card-bg);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
 }
     .tender-card:hover {
      border-color: var(--color-primary);
@@ -151,24 +151,51 @@
     word-break: break-word; /* wrap long content */
 }
 
-/* See More button */
 .see-more-btn {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
     margin-top: 0.8rem;
-    padding: 0.4rem 1rem;
-    background-color: var(--color-primary);
-    color: white;
+    padding: 0;
+    color: var(--color-primary);
     font-weight: 500;
-    text-decoration: none;
-    border-radius: 6px;
     font-size: 0.9rem;
-    transition: background-color 0.2s ease, transform 0.2s ease;
+    text-decoration: none;
+    position: relative;
+    transition: color 0.2s ease;
 }
 
+    .see-more-btn::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -2px;
+        width: 0;
+        height: 1.3px;
+        background-color: var(--color-primary);
+        transition: width 0.3s ease;
+    }
+
     .see-more-btn:hover {
-        background-color: #2B3F6E;
-        color: white;
-        text-decoration: none; /* remove underline */
+        color: var(--color-primary-dark);
+    }
+
+        .see-more-btn:hover::after {
+            width: 100%;
+        }
+
+    .see-more-btn .arrow {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-right: 2px solid currentColor;
+        border-bottom: 2px solid currentColor;
+        margin-left: 0.3rem;
+        transform: translateX(0) rotate(-45deg);
+        transition: transform 0.2s ease;
+    }
+
+    .see-more-btn:hover .arrow {
+        transform: translateX(4px) rotate(-45deg);
     }
 
 /* Binoculars rotation */

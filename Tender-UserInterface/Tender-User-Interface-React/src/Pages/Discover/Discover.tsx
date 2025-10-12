@@ -9,6 +9,7 @@ import { EskomTender } from "../../Models/EskomTender.js";
 import { ETender } from "../../Models/eTender.js";
 import { BaseTender } from "../../Models/BaseTender.js";
 import { Tags } from "../../Models/Tags.js";
+import Modal from "../../Components/Modal/Modal.jsx";
 
 const apiURL = import.meta.env.VITE_API_URL;
 
@@ -22,6 +23,8 @@ const Discover: React.FC = () => {
     const [sortOption, setSortOption] = useState("Popularity");
     const [tenders, setTenders] = useState<(EskomTender | ETender)[]>([]);
     const [toastMessage, setToastMessage] = useState<string | null>(null);
+    const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("userToken"));
+    const [loginModalOpen, setLoginModalOpen] = useState(false);
 
     // overlay filter state
     const [overlayFilters, setOverlayFilters] = useState<{
@@ -183,6 +186,16 @@ const Discover: React.FC = () => {
                 </div>
             )}
 
+            {/* Login Modal */}
+            {loginModalOpen && (
+                <Modal
+                    isOpen={loginModalOpen}
+                    onClose={() => setLoginModalOpen(false)}
+                    title="Login Required"
+                    message="Please log in to bookmark tenders."
+                />
+            )}
+
             <section className="discovery-header">
                 <div className="discovery-context">
                     <h1>Discover</h1>
@@ -258,7 +271,12 @@ const Discover: React.FC = () => {
                     <div className="tender-list">
                         {filteredTenders.length > 0 ? (
                             filteredTenders.map((tender) => (
-                                <TenderCard key={tender.tenderID} tender={tender} />
+                                <TenderCard
+                                    key={tender.tenderID}
+                                    tender={tender}
+                                    isLoggedIn={isLoggedIn}
+                                    onRequireLogin={() => setLoginModalOpen(true)}
+                                />
                             ))
                         ) : (
                             <div className="spinner-container">
@@ -269,6 +287,7 @@ const Discover: React.FC = () => {
                     </div>
                 </ErrorBoundary>
             </section>
+
         </div>
     );
 };
