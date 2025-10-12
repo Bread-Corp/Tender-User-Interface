@@ -28,7 +28,7 @@
 }
 
 .features {
-    background-color: var(--card-bg);
+    background-color: var(--feature-bg);
     text-align: center;
     padding: 3.2rem 2rem;
     color: var(--text-color);
@@ -59,7 +59,7 @@
 }
 
 .feature-card {
-    background-color: var(--tender-card-bg);
+    background-color: var(--card-bg);
     padding: 2rem;
     border-radius: 15px;
     width: 250px;

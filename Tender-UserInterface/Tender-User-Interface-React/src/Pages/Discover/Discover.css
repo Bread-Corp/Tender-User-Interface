@@ -5,7 +5,7 @@
     --color-primary: #2a4c98;
     --color-primary-hover: #1f3b7a;
     --text-primary: #33497D;
-    --text-secondary: #7187a6;
+    --text-secondary: #43506B;
     --text-muted: #555;
     --bg-page: #fefefe;
     --bg-card: #ffffff;
@@ -182,7 +182,7 @@ html, body {
     justify-content: flex-end;
     align-items: center;
     gap: 0.5rem;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
     color: var(--text-secondary);
 }
 .sort-label {
@@ -209,7 +209,7 @@ html, body {
 .tender-list {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 0rem;
     max-width: 1000px; 
     margin: 0 auto; 
     padding: 1.5rem; 

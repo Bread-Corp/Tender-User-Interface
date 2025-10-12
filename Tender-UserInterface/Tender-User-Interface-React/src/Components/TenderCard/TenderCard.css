@@ -1,10 +1,10 @@
 .tender-card {
     border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 1rem;
+    border-radius: 16px;
+    padding: 1.6rem 2.2rem 1rem;
     margin-bottom: 1rem;
-    background: white;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    background: var(--card-bg);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
 }
     .tender-card:hover {
      border-color: var(--color-primary);
@@ -13,7 +13,12 @@
 .tender-title {
     font-size: 1.1rem;
     font-weight: bold;
-    margin-bottom: 0.5rem;
+}
+
+.tender-card h2 {
+    font-size: 1.2rem;
+    margin-bottom: 0.4rem;
+    color: var(--heading-color);
 }
 
 .tender-meta {
@@ -24,13 +29,17 @@
     margin-bottom: 0.5rem;
 }
 
+.tender-card p {
+    margin: 0.2rem 0;
+    line-height: 1.5;
+}
+
 .tender-location,
 .tender-closing {
     display: flex;
     align-items: center;
     font-size: 0.9rem;
     color: var(--text-secondary);
-    margin-top: 6px;
 }
 
     .tender-location svg,
@@ -43,7 +52,6 @@
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
-    margin-bottom: 0.5rem;
 }
 
 .tender-tag {
@@ -51,6 +59,7 @@
     padding: 0.2rem 0.5rem;
     border-radius: 4px;
     font-size: 0.8rem;
+    border: 1px solid green;
 }
 
 .tender-status {
@@ -75,18 +84,6 @@
     display: flex;
     gap: 0.5rem;
 }
-
-.btn-icon {
-    border: none;
-    background: none;
-    cursor: pointer;
-    font-size: 1.2rem;
-    color: #555;
-}
-
-    .btn-icon:hover {
-        color: #000;
-    }
 
 /* Title text */
 .tender-title {
@@ -115,4 +112,97 @@
     .read-more-btn:hover {
         color: #0056b3;
         text-decoration: underline;
+    }
+
+.tender-expanded {
+    margin-top: 1rem;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.tender-details-heading {
+    font-size: 1rem; /* slightly smaller than tender-title */
+    font-weight: 600; /* semi-bold, not full bold */
+    color: var(--heading-color);
+    margin-bottom: 0.4rem; /* slightly tighter spacing */
+    padding-top: 0.8rem;
+    border-top: 1px solid #e0e0e0; /* lighter than card border */
+    padding-bottom: 0.3rem;
+}
+
+/* Info rows */
+.tender-info-row {
+    display: grid;
+    grid-template-columns: 120px 1fr; 
+    gap: 0.5rem;
+    margin-bottom: 0.4rem;
+    align-items: start; 
+}
+
+.tender-info-label {
+    font-weight: 550;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.tender-info-value {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    word-break: break-word; /* wrap long content */
+}
+
+.see-more-btn {
+    display: inline-flex;
+    align-items: center;
+    margin-top: 0.8rem;
+    padding: 0;
+    color: var(--color-primary);
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-decoration: none;
+    position: relative;
+    transition: color 0.2s ease;
+}
+
+    .see-more-btn::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        bottom: -2px;
+        width: 0;
+        height: 1.3px;
+        background-color: var(--color-primary);
+        transition: width 0.3s ease;
+    }
+
+    .see-more-btn:hover {
+        color: var(--color-primary-dark);
+    }
+
+        .see-more-btn:hover::after {
+            width: 100%;
+        }
+
+    .see-more-btn .arrow {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-right: 2px solid currentColor;
+        border-bottom: 2px solid currentColor;
+        margin-left: 0.3rem;
+        transform: translateX(0) rotate(-45deg);
+        transition: transform 0.2s ease;
+    }
+
+    .see-more-btn:hover .arrow {
+        transform: translateX(4px) rotate(-45deg);
+    }
+
+/* Binoculars rotation */
+.icon.binoculars {
+    transition: transform 0.3s ease;
+}
+
+    .icon.binoculars.rotated {
+        transform: rotate(90deg); /* rotate when expanded */
     }

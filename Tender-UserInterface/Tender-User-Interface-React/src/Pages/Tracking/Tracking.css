@@ -1,6 +1,6 @@
 .tracking-container {
     margin: 80px auto 3rem auto;
-    padding: 2rem 1.5rem; /* top/bottom 2rem, left/right 1.5rem */
+    padding: 2.5rem 1.5rem; /* top/bottom 2rem, left/right 1.5rem */
     max-width: 1000px;
     box-sizing: border-box; /* ensure padding is included in width */
 }
@@ -30,7 +30,7 @@
     padding: 30px; /* just a little space around the text */
     color: white;
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 50px;
 }
 
 
@@ -52,7 +52,7 @@
 }
 
 /* tender card */
-.tender-card {
+.tracking-tender-card {
     background: var(--tender-card-bg);
     border: 1px solid var(--tender-card-border);
     transition: background 0.2s ease;

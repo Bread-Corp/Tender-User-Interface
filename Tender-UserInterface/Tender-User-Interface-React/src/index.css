@@ -10,7 +10,8 @@
     /* Backgrounds */
     --hero-bg: linear-gradient(135deg, #d6e6f2, #eaf3fb);
     --home-bg: white;
-    --card-bg: #ffffff;
+    --card-bg: #EFF5FA;
+    --feature-bg: white;
     --cta-bg: #d6e6f2;
     --tender-card-bg: #f0f6fc;
     /* Shadows */
@@ -51,6 +52,7 @@ body.dark-mode {
     --hero-bg: linear-gradient(135deg, #1b2431, #10151c);
     --home-bg: linear-gradient(135deg, #202b3a, #141a23);
     --card-bg: #252c36;
+    --feature-bg: black;
     --cta-bg: #1e2735;
     --tender-card-bg: #27303b;
 

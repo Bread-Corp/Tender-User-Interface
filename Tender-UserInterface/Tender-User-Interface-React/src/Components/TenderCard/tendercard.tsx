@@ -1,49 +1,77 @@
-import React, { useState } from "react";
-import { FaMapMarkerAlt, FaRegClock, FaBookmark, FaBinoculars } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { FaMapMarkerAlt, FaRegClock, FaRegBookmark, FaBookmark, FaBinoculars } from "react-icons/fa";
 import "./TenderCard.css";
 import { BaseTender } from "../../Models/BaseTender.js";
 import { Tags } from "../../Models/Tags.js";
+import { Link } from "react-router-dom";
 
 type TenderCardProps = {
-    tender?: BaseTender; // optional in case data is not loaded yet
+    tender?: BaseTender;
+    isLoggedIn: boolean;
+    onRequireLogin: () => void;
 };
 
-const MAX_TITLE_LENGTH = 100; // number of characters before truncation
+const MAX_TITLE_LENGTH = 100;
 
-const TenderCard: React.FC<TenderCardProps> = ({ tender }) => {
+const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, onRequireLogin }) => {
+
     const [expanded, setExpanded] = useState(false);
 
     if (!tender) {
-        return <div className="tender-card">Loading tender...</div>; // fallback UI
+        return <div className="tender-card">Loading tender...</div>;
     }
+
+    const [titleExpanded, setTitleExpanded] = useState(false); // for title
+    const [bookmarked, setBookmarked] = useState(false); // for bookmark
+
 
     const title = tender.title || "No Title";
     const isLong = title.length > MAX_TITLE_LENGTH;
-    const displayedTitle = expanded || !isLong
-        ? title
-        : title.slice(0, MAX_TITLE_LENGTH) + "...";
+    const displayedTitle =
+        titleExpanded || !isLong ? title : title.slice(0, MAX_TITLE_LENGTH) + "...";
+
+
+    // prepping for saving logic
+    useEffect(() => {
+        console.log(`Bookmark state for ${tender.tenderID}:`, bookmarked);
+    }, [bookmarked, tender.tenderID]);
+
+    const handleBookmarkClick = () => {
+        if (!isLoggedIn) {
+            onRequireLogin();
+            return;
+        } 
+
+        // placeholder + logs
+        setBookmarked((prev) => !prev);
+        console.log(bookmarked ? "Bookmark removed" : "Bookmark added", tender.tenderID);
+    };
 
     return (
         <div className="tender-card">
-            <h2 className="tender-title">
-                {displayedTitle}
-                {isLong && (
-                    <button
-                        className={`read-more-btn ${expanded ? "show-less" : ""}`}
-                        onClick={() => setExpanded(!expanded)}
-                    >
-                        {expanded ? " Show less" : " Read more"}
-                    </button>
-                )}
-            </h2>
+            {/* Header */}
+            <div className="tender-card-header">
+                <h2 className="tender-title">
+                    {displayedTitle}
+                    {isLong && !titleExpanded && (
+                        <button
+                            className="read-more-btn"
+                            onClick={() => setTitleExpanded(true)}>Read more
+                        </button>
+                    )}
+                </h2>
+            </div>
 
+            {/* Quick info */}
             <p className="tender-location">
                 <FaMapMarkerAlt /> {tender.source || "Unknown"}
             </p>
 
             <p className="tender-closing">
                 <FaRegClock /> Closing:{" "}
-                {tender.closingDate ? tender.closingDate.toLocaleDateString() : "N/A"}{" "}
+                {tender.closingDate
+                    ? tender.closingDate.toLocaleDateString()
+                    : "N/A"}{" "}
                 {tender.isClosed() ? "(Closed)" : "(Open)"}
             </p>
 
@@ -62,9 +90,54 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender }) => {
                 )}
             </div>
 
+            {/* Expanded details */}
+            {expanded && (
+                <div className="tender-expanded">
+                    <h3 className="tender-details-heading">Tender Details</h3>
+
+                    <div className="tender-info-row">
+                        <span className="tender-info-label">ID:</span>
+                        <span className="tender-info-value">{tender.tenderID}</span>
+                    </div>
+
+                    <div className="tender-info-row">
+                        <span className="tender-info-label">Status:</span>
+                        <span className="tender-info-value">{tender.status}</span>
+                    </div>
+
+                    <div className="tender-info-row">
+                        <span className="tender-info-label">Published:</span>
+                        <span className="tender-info-value">{tender.publishedDate?.toDateString()}</span>
+                    </div>
+
+                    <div className="tender-info-row">
+                        <span className="tender-info-label">Closing Date:</span>
+                        <span className="tender-info-value">{tender.closingDate?.toDateString()}</span>
+                    </div>
+
+                    <div className="tender-info-row">
+                        <span className="tender-info-label">Description:</span>
+                        <span className="tender-info-value">{tender.description || "N/A"}</span>
+                    </div>
+
+                    <Link to={`/tender/${tender.tenderID}`} className="see-more-btn">
+                        See Full Tender
+                        <span className="arrow"></span>
+                    </Link>
+
+
+                </div>
+            )}
+
+            {/* Action icons */}
             <div className="tender-icons">
-                <FaBookmark className="icon" />
-                <FaBinoculars className="icon" />
+                <FaBinoculars className={`icon binoculars ${expanded ? "rotated" : ""}`}
+                    onClick={() => { const newState = !expanded; setExpanded(newState); setTitleExpanded(newState); }} // expand and collapse details + title if cut off
+                    style={{ cursor: "pointer" }} />
+                {bookmarked
+                    ? <FaBookmark className="icon bookmarked" onClick={handleBookmarkClick} style={{ cursor: "pointer" }} />
+                    : <FaRegBookmark className="icon" onClick={handleBookmarkClick} style={{ cursor: "pointer" }} />
+                }
             </div>
         </div>
     );
