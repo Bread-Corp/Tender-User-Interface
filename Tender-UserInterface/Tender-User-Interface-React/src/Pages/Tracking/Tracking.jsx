@@ -1,6 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import "./Tracking.css";
 import { FaMapMarkerAlt, FaRegClock, FaTrashAlt, FaChevronDown } from "react-icons/fa";
+import axios from 'axios';
+import { fetchUserAttributes } from '@aws-amplify/auth';
+import { EskomTender } from "../../Models/EskomTender.js";
+import { ETender } from "../../Models/eTender.js";
+import { BaseTender } from "../../Models/BaseTender.js";
+import { Tags } from "../../Models/Tags.js";
+
+//required url
+const apiURL = import.meta.env.VITE_API_URL;
 
 // mock data
 const initialTenders = [
@@ -23,17 +33,22 @@ const initialTenders = [
 ];
 
 const Tracking = () => {
+    const navigate = useNavigate();
 
-    const [tenders, setTenders] = useState(initialTenders);
+    const [tenders, setTenders] = useState([]);
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0)
     // state to track which status filter is active
     const [filter, setFilter] = useState("All");
     // state to track which tenders are currently expanded
     const [expanded, setExpanded] = useState([]);
+    // state to track coreID
+    const [ID, setID] = useState('');
 
     // updates the note field for a tender with matching id
     const updateNote = (id, value) => {
         setTenders((prev) =>
-            prev.map((t) => (t.id === id ? { ...t, note: value } : t))
+            prev.map((t) => (t.tenderID === id ? { ...t, note: value } : t))
         );
     };
 
@@ -49,6 +64,119 @@ const Tracking = () => {
         filter === "All"
             ? tenders
             : tenders.filter((t) => t.status.toLowerCase() === filter.toLowerCase());
+
+    //method to get user watchlist
+    useEffect(() => {
+        const pageSize = 10;
+        const initialPage = 1;
+        const fetchWatchlist = async (pageNumber = initialPage) => {
+            //get coreID from auth context
+            let coreID = null;
+
+            try {
+                // Get the logged-in user attributes from Amplify
+                const attributes = await fetchUserAttributes();
+                console.log("attributes:", attributes);
+
+                //get and set coreID
+                coreID = attributes['custom:CoreID'];
+                console.log("CoreID:", coreID);
+
+            } catch (error) {
+                console.error("Error fetching CoreID:", error);
+                if (error.name === 'NotAuthorizedException') {
+                    navigate('/login');
+                }
+                return;
+            }
+
+            //now we can use the coreID to get the user's saved tenders
+            try {
+                //request API
+                const response = await axios.get(`${apiURL}/watchlist/${coreID}`);
+                const result = response.data;
+
+                // make sure the response data is akways an array
+                // if  API returns a single object, wrap it in an array
+                const data = Array.isArray(result) ? result : result.data || [];
+
+                // map over each tender item to convert it into an instance of a class
+                const tenderObjects = data.map((item) => {
+                    // convert the tags array into an array of Tag instances
+                    // if the item has tags, map them - otherwise use emtpy array
+                    const tagsArray = item.tags
+                        ? item.tags.map((t) => new Tags(t.id || "", t.name || ""))
+                        : [];
+
+                    // decide which class to instantiate based on the source of the tender
+                    // eg eskom tenders use the eskomtender class
+                    if (item.source === "Eskom") {
+                        return new EskomTender({
+                            ...item,
+                            tag: tagsArray,
+                            source: item.source
+                        });
+                    } else {
+                        return new ETender({
+                            ...item,
+                            tag: tagsArray,
+                            source: item.source || "ETender" // attempted fallback since the API does provide it - doesnt work :<
+                        });
+                    }
+                });
+
+                // log for debugging
+                console.log("Fetched tenders:", tenderObjects);
+
+                // update the state to store the fetched and processed tenders
+                setTenders(tenderObjects);
+                setPage(result.currentPage || 1);
+                setTotalPages(result.totalPages || 1)
+            }
+            catch (err) {
+                // If the API request fails, log the error and reset the tenders state to empty
+                console.error("Failed to fetch tenders:", err);
+                setTenders([]);
+            }
+        };
+
+        // call the async function to initiate the API request
+        fetchWatchlist(page);
+    }, [page]);
+
+    //handle remove bookmark
+    const handleBookmarkClick = async (tenderID) => {
+        //get coreID from auth context
+        let coreID = null;
+
+        try {
+            // Get the logged-in user attributes from Amplify
+            const attributes = await fetchUserAttributes();
+            console.log("attributes:", attributes);
+
+            //get and set coreID
+            coreID = attributes['custom:CoreID'];
+            console.log("CoreID:", coreID);
+
+        } catch (error) {
+            console.error("Error fetching CoreID:", error);
+            onRequireLogin();
+            return;
+        }
+
+        try {
+            // Make a POST request to the API endpoint to togglewatch
+            const response = await axios.post(`${apiURL}/watchlist/togglewatch/${coreID}/${tenderID}`);
+
+            // placeholder + logs
+            setTenders(prev => prev.filter(t => t.tenderID !== tenderID));
+            console.log("Bookmark removed", tenderID);
+
+        } catch (err) {
+            // If the API request fails, log the error and reset the tenders state to empty
+            console.error("Failed to toggle watch:", err);
+        }
+    };
 
     return (
         <div className="tracking-container">
@@ -75,7 +203,7 @@ const Tracking = () => {
                     // tender card click toggles expansion
                     <div
                         className="tracking-tender-card"
-                        key={tender.id}
+                        key={tender.tenderID}
                     >
                         {/* card header displays title status + expand icon */}
                         <div className="card-header">
@@ -86,16 +214,16 @@ const Tracking = () => {
                                 </span>
                                 {/* rotate aroow when expanded */}
                                 <FaChevronDown
-                                    className={`expand-icon ${expanded.includes(tender.id) ? "rotated" : ""}`}
+                                    className={`expand-icon ${expanded.includes(tender.tenderID) ? "rotated" : ""}`}
                                     onClick={(e) => {
                                         e.stopPropagation(); // prevent triggering any parent clicks
-                                        toggleExpand(tender.id);
+                                        toggleExpand(tender.tenderID);
                                     }}
                                 />
                             </div>
                         </div>
 
-                        {expanded.includes(tender.id) && (
+                        {expanded.includes(tender.tenderID) && (
                             <>
                                 <p className="location">
                                     <FaMapMarkerAlt /> {tender.location}
@@ -108,7 +236,7 @@ const Tracking = () => {
                                     className="card-actions"
                                     onClick={(e) => e.stopPropagation()}
                                 >
-                                    <button className="remove-btn">
+                                    <button className="remove-btn" onClick={() => handleBookmarkClick(tender.tenderID)}>
                                         <FaTrashAlt /> Remove
                                     </button>
                                     <button className="view-btn">View Tender</button>

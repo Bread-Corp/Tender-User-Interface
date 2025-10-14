@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { fetchUserAttributes } from '@aws-amplify/auth';
+import { useNavigate } from 'react-router-dom';
 import { FaMapMarkerAlt, FaRegClock, FaRegBookmark, FaBookmark, FaBinoculars } from "react-icons/fa";
 import "./TenderCard.css";
 import { BaseTender } from "../../Models/BaseTender.js";
@@ -12,9 +15,10 @@ type TenderCardProps = {
 };
 
 const MAX_TITLE_LENGTH = 100;
+const apiURL = import.meta.env.VITE_API_URL;
 
 const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, onRequireLogin }) => {
-
+    const navigate = useNavigate();
     const [expanded, setExpanded] = useState(false);
 
     if (!tender) {
@@ -36,15 +40,38 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, onRequireLo
         console.log(`Bookmark state for ${tender.tenderID}:`, bookmarked);
     }, [bookmarked, tender.tenderID]);
 
-    const handleBookmarkClick = () => {
-        if (!isLoggedIn) {
+    const handleBookmarkClick = async () => {
+        //get coreID from auth context
+        let coreID = null;
+
+        try {
+            // Get the logged-in user attributes from Amplify
+            const attributes = await fetchUserAttributes();
+            console.log("attributes:", attributes);
+
+            //get and set coreID
+            coreID = attributes['custom:CoreID'];
+            console.log("CoreID:", coreID);
+
+        } catch (error) {
+            console.error("Error fetching CoreID:", error);
             onRequireLogin();
             return;
-        } 
+        }
 
-        // placeholder + logs
-        setBookmarked((prev) => !prev);
-        console.log(bookmarked ? "Bookmark removed" : "Bookmark added", tender.tenderID);
+        try
+        {
+            // Make a POST request to the API endpoint to togglewatch
+            const response = await axios.post(`${apiURL}/watchlist/togglewatch/${coreID}/${tender.tenderID}`);
+
+            // placeholder + logs
+            setBookmarked((prev) => !prev);
+            console.log(bookmarked ? "Bookmark removed" : "Bookmark added", tender.tenderID);
+
+        } catch (err) {
+            // If the API request fails, log the error and reset the tenders state to empty
+            console.error("Failed to toggle watch:", err);
+        }
     };
 
     return (

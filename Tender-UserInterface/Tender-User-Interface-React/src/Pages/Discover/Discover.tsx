@@ -14,14 +14,18 @@ import Modal from "../../Components/Modal/Modal.jsx";
 const apiURL = import.meta.env.VITE_API_URL;
 
 const max_visible_filters = 4;
-
+ 
 const Discover: React.FC = () => {
     const [showFilterOverlay, setShowFilterOverlay] = useState(false);
     const [filters, setFilters] = useState < string[] > (["New", "Programming", "Construction", "Emergency", "Green Energy"]);
     const [showAllFilters, setShowAllFilters] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [sortOption, setSortOption] = useState("Popularity");
+    //fetchTenders states
     const [tenders, setTenders] = useState<(EskomTender | ETender)[]>([]);
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0)
+
     const [toastMessage, setToastMessage] = useState<string | null>(null);
     const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("userToken"));
     const [loginModalOpen, setLoginModalOpen] = useState(false);
@@ -53,15 +57,18 @@ const Discover: React.FC = () => {
 
     // the empty dependency array makes sure it only runs once when the component mounts
     useEffect(() => {
+        const pageSize = 10;
+        const initialPage = 1;
         // define async function to fetch tenders from the API
-        const fetchTenders = async () => {
+        const fetchTenders = async (pageNumber = initialPage) => {
             try {
                 // Make a GET request to the API endpoint to fetch tenders
-                const response = await axios.get(`${apiURL}/tender/fetch`);
+                const response = await axios.get(`${apiURL}/tender/fetch?page=${pageNumber}&pageSize=${pageSize}`);
+                const result = response.data;
 
                 // make sure the response data is akways an array
                 // if  API returns a single object, wrap it in an array
-                const data = Array.isArray(response.data) ? response.data : [response.data];
+                const data = Array.isArray(result) ? result : result.data || [];
 
                 // map over each tender item to convert it into an instance of a class
                 const tenderObjects: BaseTender[] = data.map((item: any) => {
@@ -93,6 +100,8 @@ const Discover: React.FC = () => {
 
                 // update the state to store the fetched and processed tenders
                 setTenders(tenderObjects);
+                setPage(result.currentPage || 1);
+                setTotalPages(result.totalPages || 1)
 
             } catch (err) {
                 // If the API request fails, log the error and reset the tenders state to empty
@@ -102,8 +111,8 @@ const Discover: React.FC = () => {
         };
 
         // call the async function to initiate the API request
-        fetchTenders();
-    }, []); // empty dependency array so this runs only once on component mount
+        fetchTenders(page);
+    }, [page]); // empty dependency array so this runs only once on component mount
 
     const removeFilter = (index: number) => {
         setFilters(prev => prev.filter((_, i) => i !== index));
