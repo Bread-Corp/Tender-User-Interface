@@ -15,7 +15,7 @@ const apiURL = import.meta.env.VITE_API_URL;
 
 const max_visible_filters = 4;
  
-const Discover: React.FC = () => {
+const Discover = () => {
     const [showFilterOverlay, setShowFilterOverlay] = useState(false);
     const [filters, setFilters] = useState < string[] > (["New", "Programming", "Construction", "Emergency", "Green Energy"]);
     const [showAllFilters, setShowAllFilters] = useState(false);
@@ -100,7 +100,6 @@ const Discover: React.FC = () => {
 
                 // update the state to store the fetched and processed tenders
                 setTenders(tenderObjects);
-                setPage(result.currentPage || 1);
                 setTotalPages(result.totalPages || 1)
 
             } catch (err) {
@@ -179,6 +178,19 @@ const Discover: React.FC = () => {
             return 0;
         });
 
+    const pageSize = 10;
+
+    // update totalPages whenever filteredTenders changes
+    useEffect(() => {
+        setTotalPages(Math.ceil(filteredTenders.length / pageSize));
+    }, [filteredTenders]);
+
+    // slice filtered tenders for current page
+    const paginatedTenders = filteredTenders.slice(
+        (page - 1) * pageSize,
+        page * pageSize
+    );
+
     const visibleFilters = filters.slice(0, max_visible_filters);
     const hiddenCount = filters.length - visibleFilters.length;
     const filtersToShow = showAllFilters ? filters : visibleFilters;
@@ -189,9 +201,7 @@ const Discover: React.FC = () => {
             {toastMessage && (
                 <div
                     className={`toast-notification show ${toastMessage.includes("cleared") ? "toast-red" : "toast-green"
-                        }`}
-                >
-                    {toastMessage}
+                        }`}>{toastMessage}
                 </div>
             )}
 
@@ -220,8 +230,7 @@ const Discover: React.FC = () => {
                         {!showAllFilters && hiddenCount > 0 && (
                             <button
                                 className="filter-tag hidden-count"
-                                onClick={() => setShowAllFilters(true)}
-                            >
+                                onClick={() => setShowAllFilters(true)}>
                                 +{hiddenCount}
                             </button>
                         )}
@@ -236,8 +245,7 @@ const Discover: React.FC = () => {
                                 className="search-input"
                                 placeholder="Search..."
                                 value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                            />
+                                onChange={(e) => setSearchTerm(e.target.value)}/>
                         </div>
 
                         <button className="filter-button" onClick={() => setShowFilterOverlay(true)}>
@@ -251,8 +259,7 @@ const Discover: React.FC = () => {
                                     setOverlayFilters(filters)
                                     showToast("Filters applied!");
                                 }}
-                                showToast={showToast}
-                            />
+                                showToast={showToast}/>
                         )}
                     </div>
                 </div> 
@@ -267,8 +274,7 @@ const Discover: React.FC = () => {
                     <select
                         className="sort-select"
                         value={sortOption}
-                        onChange={(e) => setSortOption(e.target.value)}
-                    >
+                        onChange={(e) => setSortOption(e.target.value)}>
                         <option>Popularity</option>
                         <option>Date</option>
                         <option>Region</option>
@@ -278,8 +284,8 @@ const Discover: React.FC = () => {
                 {/* Tender Cards */}
                 <ErrorBoundary>
                     <div className="tender-list">
-                        {filteredTenders.length > 0 ? (
-                            filteredTenders.map((tender) => (
+                        {paginatedTenders.length > 0 ? (
+                            paginatedTenders.map((tender) => (
                                 <TenderCard
                                     key={tender.tenderID}
                                     tender={tender}
@@ -291,6 +297,57 @@ const Discover: React.FC = () => {
                             <div className="spinner-container">
                                 <div className="spinner"></div>
                                 <p className="loading-text">Loading tenders...</p>
+                            </div>
+                        )}
+
+                        {/* Only show pagination when there are tenders */}
+                        {paginatedTenders.length > 0 && (
+                            <div className="pagination">
+                                {/* Previous button */}
+                                <button
+                                    disabled={page === 1}
+                                    onClick={() => setPage(page - 1)}
+                                    className="pagination-btn">
+                                    &laquo;
+                                </button>
+
+                                {/* Page numbers with proper ellipses */}
+                                {(() => {
+                                    const pages = [];
+                                    for (let i = 1; i <= totalPages; i++) {
+                                        if (
+                                            i === 1 ||
+                                            i === totalPages ||
+                                            (i >= page - 1 && i <= page + 1)
+                                        ) {
+                                            pages.push(
+                                                <button
+                                                    key={i}
+                                                    className={`pagination-btn page-number ${page === i ? "active" : ""}`}
+                                                    onClick={() => setPage(i)}
+                                                >
+                                                    {i}
+                                                </button>
+                                            );
+                                        } else if (
+                                            (i === 2 && page > 3) ||
+                                            (i === totalPages - 1 && page < totalPages - 2)
+                                        ) {
+                                            pages.push(
+                                                <span key={i} className="ellipsis">...</span>
+                                            );
+                                        }
+                                    }
+                                    return pages;
+                                })()}
+
+                                {/* Next button */}
+                                <button
+                                    disabled={page === totalPages}
+                                    onClick={() => setPage(page + 1)}
+                                    className="pagination-btn">
+                                    &raquo;
+                                </button>
                             </div>
                         )}
                     </div>
