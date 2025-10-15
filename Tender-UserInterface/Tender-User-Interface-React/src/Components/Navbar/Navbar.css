@@ -571,13 +571,12 @@ body {
 
 /* ===== Dark Mode ===== */
 body.dark-mode {
-    background-color: #121212;
+    background-color: #2A344B;
     color: #e0e0e0;
 }
 
     body.dark-mode .navbar {
-        background: rgba(33, 33, 33, 0.95);
-        box-shadow: 0 2px 4px rgba(255, 255, 255, 0.08);
+        background: rgba(32, 41, 62, 0.95);
     }
 
         body.dark-mode .navbar a,
@@ -595,9 +594,8 @@ body.dark-mode {
     }
 
     body.dark-mode .profile-dropdown {
-        background-color: #1e1e1e;
+        background-color: #20293E;
         border-color: #333;
-        box-shadow: 0 6px 16px rgba(255, 255, 255, 0.08);
     }
 
         body.dark-mode .profile-dropdown a {

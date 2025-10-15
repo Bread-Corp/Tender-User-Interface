@@ -47,9 +47,9 @@ select {
 
 /* Dropdowns */
 .settings-dropdown {
-    background-color: #f9f9f9;
-    color: #333;
-    border: 1px solid #ccc;
+    background-color: var(--dropdown-bg);
+    color: var(--text-color);
+    border: 1px solid var(--dropdown-border);
     padding: 0.5rem 1rem;
     border-radius: 8px;
     width: 100%;
@@ -76,9 +76,10 @@ select {
 
 /* Card-style section for settings */
 .settings-section {
-    background: #fff;
+    background: var(--tender-card-bg);
+    border: 1px solid var(--tender-card-border);
     border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     padding: 2rem;
 }
 
@@ -168,3 +169,4 @@ select {
 .mode-text {
     font-weight: 500;
 }
+

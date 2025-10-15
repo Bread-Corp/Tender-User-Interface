@@ -60,6 +60,7 @@
 
 .feature-card {
     background-color: var(--card-bg);
+    border: 1px solid var(--tender-card-border);
     padding: 2rem;
     border-radius: 15px;
     width: 250px;
