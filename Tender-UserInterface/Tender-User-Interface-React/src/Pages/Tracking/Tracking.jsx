@@ -8,6 +8,7 @@ import { EskomTender } from "../../Models/EskomTender.js";
 import { ETender } from "../../Models/eTender.js";
 import { BaseTender } from "../../Models/BaseTender.js";
 import { Tags } from "../../Models/Tags.js";
+import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
 
 //required url
 const apiURL = import.meta.env.VITE_API_URL;
@@ -44,6 +45,7 @@ const Tracking = () => {
     const [expanded, setExpanded] = useState([]);
     // state to track coreID
     const [ID, setID] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
 
     // updates the note field for a tender with matching id
     const updateNote = (id, value) => {
@@ -138,6 +140,9 @@ const Tracking = () => {
                 console.error("Failed to fetch tenders:", err);
                 setTenders([]);
             }
+            finally {
+                setIsLoading(false);
+            }
         };
 
         // call the async function to initiate the API request
@@ -161,6 +166,7 @@ const Tracking = () => {
         } catch (error) {
             console.error("Error fetching CoreID:", error);
             onRequireLogin();
+            setIsLoading(false);
             return;
         }
 
@@ -190,8 +196,8 @@ const Tracking = () => {
         <select
             id="statusFilter"
             onChange={(e) => setFilter(e.target.value)}
-            value={filter}
-        >
+                    value={filter}>
+
             <option value="All">All</option>
             <option value="Open">Open</option>
             <option value="Closed">Closed</option>
@@ -199,12 +205,28 @@ const Tracking = () => {
     </div>
 
             <div className="tender-grid">
-                {filteredTenders.map((tender) => (
-                    // tender card click toggles expansion
-                    <div
-                        className="tracking-tender-card"
-                        key={tender.tenderID}
-                    >
+                {/* loading spinner rendered*/}
+
+                {isLoading ? (
+                    <div className="loading-wrapper">
+                        <LoadingSpinner text="Loading your tracked tenders..." />
+                    </div>
+                ) : // message for no results
+                    filteredTenders.length === 0 ? (
+
+                        <div className="no-tenders">
+                            <p>You are not currently tracking any tenders.</p>
+                            <button onClick={() => navigate('/discover')} className="discover-btn">
+                                Discover New Tenders
+                            </button>
+                        </div>
+                    ) : (
+                        // tender cards
+                        filteredTenders.map((tender) => (
+                            <div
+                                className="tracking-tender-card"
+                                key={tender.tenderID}>
+
                         {/* card header displays title status + expand icon */}
                         <div className="card-header">
                             <h3>{tender.title}</h3>
@@ -234,8 +256,8 @@ const Tracking = () => {
                                 {/* prevents parent card click from collapsing when clicking inside buttons */}
                                 <div
                                     className="card-actions"
-                                    onClick={(e) => e.stopPropagation()}
-                                >
+                                            onClick={(e) => e.stopPropagation()}>
+
                                     <button className="remove-btn" onClick={() => handleBookmarkClick(tender.tenderID)}>
                                         <FaTrashAlt /> Remove
                                     </button>
@@ -244,7 +266,8 @@ const Tracking = () => {
                             </>
                         )}
                     </div>
-                ))}
+                ))
+            )}
             </div>
         </div>
     );

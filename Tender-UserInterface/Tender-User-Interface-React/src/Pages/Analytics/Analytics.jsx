@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { FaChartLine, FaMapMarkerAlt, FaRegClock } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 import "./Analytics.css";
+import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
 import {
     PieChart,
     Pie,
@@ -52,9 +53,28 @@ const Analytics = () => {
         fetchAnalytics();
     }, [user]);
 
-    if (loading) return <div>Loading analytics...</div>;
-    if (error) return <div>Error loading analytics: {error}</div>;
-    if (!analytics) return <div>No analytics data available.</div>;
+    if (loading) {
+        return (
+            <div className="loading-overlay">
+                <LoadingSpinner text="Compiling your tender analytics..." />
+            </div>
+        );
+    }
+
+    // conditional loading block for the spinner
+    if (error) return
+    <div className="analytics-container error-container">
+        <h1>Analytics Load Error :(</h1>
+        <p>We could not load your data. Please try again later.</p>
+        <small>Details: {error}</small>
+    </div>;
+
+    if (!analytics) return
+    <div className="analytics-container no-data-container">
+        <h1>No Data Available</h1>
+        <p>There is no tender analytics data to display yet.</p>
+    </div>;
+    // end
 
     const { totalTenders, openTenders, closedTenders, openRatio, statusBreakdown, tendersByProvince } = analytics;
 

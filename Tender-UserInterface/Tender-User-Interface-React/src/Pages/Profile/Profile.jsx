@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "./Profile.css";
-import { FaUserCircle, FaMoon, FaSun } from "react-icons/fa"; // Import new icons
+import { FaUserCircle, FaMoon, FaSun } from "react-icons/fa"; 
 import {
     fetchUserAttributes,
     updateUserAttributes,
     signOut
 } from '@aws-amplify/auth';
 import { useNavigate } from "react-router-dom";
+import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
 
 const Profile = () => {
     // --- State Declarations ---
@@ -121,7 +122,9 @@ const Profile = () => {
     };
 
     if (loading) {
-        return <div className="loading-container">Loading profile...</div>;
+        <div className="loading-overlay">
+            <LoadingSpinner text="Fetching user profile data..." />
+        </div>
     }
 
     // --- JSX Rendering ---

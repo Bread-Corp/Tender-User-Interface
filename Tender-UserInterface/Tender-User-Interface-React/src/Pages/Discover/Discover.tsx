@@ -11,6 +11,7 @@ import { ETender } from "../../Models/eTender.js";
 import { BaseTender } from "../../Models/BaseTender.js";
 import { Tags } from "../../Models/Tags.js";
 import Modal from "../../Components/Modal/Modal.jsx";
+import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner.jsx";
 
 const apiURL = import.meta.env.VITE_API_URL;
 
@@ -309,7 +310,11 @@ const Discover = () => {
                 {/* Tender Cards */}
                 <ErrorBoundary>
                     <div className="tender-list">
-                        {paginatedTenders.length > 0 ? (
+                        {isLoading ? (
+                            // show spinner while data being fetched
+                            <LoadingSpinner text="Loading tenders..." />
+                        ) : paginatedTenders.length > 0 ? (
+                            // show tenders if loading is false and we have results
                             paginatedTenders.map((tender) => (
                                 <TenderCard
                                     key={tender.tenderID}
@@ -320,9 +325,9 @@ const Discover = () => {
                                 />
                             ))
                         ) : (
-                            <div className="spinner-container">
-                                <div className="spinner"></div>
-                                <p className="loading-text">Loading tenders...</p>
+                            // show no results if loading is false and paginatedtenders is empty
+                            <div className="no-results-message">
+                                <p>No tenders found matching your current filters or search term.</p>
                             </div>
                         )}
 

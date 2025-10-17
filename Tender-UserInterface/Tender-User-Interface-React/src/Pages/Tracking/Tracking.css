@@ -226,3 +226,11 @@
         justify-content: center;
     }
 }
+
+.loading-wrapper {
+    grid-column: 1 / -1;
+    min-height: 300px;
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+}
