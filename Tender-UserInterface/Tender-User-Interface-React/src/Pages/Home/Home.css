@@ -159,6 +159,13 @@
         pointer-events: none;
     }
 
+textarea {
+    resize: vertical;
+    max-width: 100%; 
+    width: 100%; 
+    box-sizing: border-box; 
+}
+
 .footer {
     background-color: var(--card-bg);
     text-align: center;
@@ -206,3 +213,4 @@
         width: 90%;
     }
 }
+

@@ -2,7 +2,7 @@ import axios from 'axios';
 import { StandardUser } from '../Models/UserModels/StandardUser.js';
 
 //const apiURL = import.meta.env.VITE_API_URL;
-const apiURL = 'https://localhost:55144';
+const apiURL = import.meta.env.VITE_API_URL;
 
 export const register = async (FullName, Email, PhoneNumber, Address)  =>
 {

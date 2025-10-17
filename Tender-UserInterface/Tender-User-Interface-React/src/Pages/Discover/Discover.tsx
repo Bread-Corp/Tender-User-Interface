@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { fetchUserAttributes } from '@aws-amplify/auth';
 import "./Discover.css";
 import TenderCard from "../../Components/TenderCard/tendercard.js";
 import { FaSearch, FaFilter } from "react-icons/fa";
@@ -14,6 +15,7 @@ import Modal from "../../Components/Modal/Modal.jsx";
 const apiURL = import.meta.env.VITE_API_URL;
 
 const max_visible_filters = 4;
+const pageSize = 10;
  
 const Discover = () => {
     const [showFilterOverlay, setShowFilterOverlay] = useState(false);
@@ -21,10 +23,14 @@ const Discover = () => {
     const [showAllFilters, setShowAllFilters] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [sortOption, setSortOption] = useState("Popularity");
-    //fetchTenders states
-    const [tenders, setTenders] = useState<(EskomTender | ETender)[]>([]);
+
+    // pagination state
     const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(0)
+    const [totalPages, setTotalPages] = useState(0);
+    const [isLoading, setIsLoading] = useState(true); // New loading state
+
+    const [allTenders, setAllTenders] = useState<(EskomTender | ETender)[]>([]);
+    const [watchlist, setWatchlist] = useState<WatchlistItem[]>([]);
 
     const [toastMessage, setToastMessage] = useState<string | null>(null);
     const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("userToken"));
@@ -55,63 +61,73 @@ const Discover = () => {
         document.body.classList.toggle("dark-mode", storedMode === "true");
     }, []);
 
+    // fetch the watchlist when the user logs in
+    useEffect(() => {
+        if (!isLoggedIn) {
+            setWatchlist([]); // clear watchlist if user logs out
+            return;
+        }
+
+        const fetchWatchlist = async () => {
+            try {
+                const attributes = await fetchUserAttributes();
+                const coreID = attributes["custom:CoreID"];
+
+                if (coreID) {
+                    // fetch the entire watchlist for the user
+                    const response = await axios.get(`${apiURL}/watchlist/${coreID}`);
+                    const result = response.data;
+
+                    const data = Array.isArray(result) ? result : result.data || [];
+
+                    setWatchlist(data); // store the full watchlist array
+                }
+            } catch (error) {
+                console.error("Failed to fetch user watchlist:", error);
+            }
+        };
+
+        fetchWatchlist();
+        // run whenever the login state changes
+    }, [isLoggedIn]);
+
     // the empty dependency array makes sure it only runs once when the component mounts
     useEffect(() => {
-        const pageSize = 10;
-        const initialPage = 1;
-        // define async function to fetch tenders from the API
-        const fetchTenders = async (pageNumber = initialPage) => {
+        const fetchAllTenders = async () => {
+            setIsLoading(true);
             try {
-                // Make a GET request to the API endpoint to fetch tenders
-                const response = await axios.get(`${apiURL}/tender/fetch?page=${pageNumber}&pageSize=${pageSize}`);
+                // fetch all data
+                const response = await axios.get(`${apiURL}/tender/fetch?pageSize=500&page=1`);
                 const result = response.data;
 
-                // make sure the response data is akways an array
-                // if  API returns a single object, wrap it in an array
+                // make sure the response data is always an array
                 const data = Array.isArray(result) ? result : result.data || [];
 
                 // map over each tender item to convert it into an instance of a class
                 const tenderObjects: BaseTender[] = data.map((item: any) => {
-                    // convert the tags array into an array of Tag instances
-                    // if the item has tags, map them - otherwise use emtpy array
                     const tagsArray: Tags[] = item.tags
                         ? item.tags.map((t: any) => new Tags(t.id || "", t.name || ""))
                         : [];
 
-                    // decide which class to instantiate based on the source of the tender
-                    // eg eskom tenders use the eskomtender class
                     if (item.source === "Eskom") {
-                        return new EskomTender({
-                            ...item,       
-                            tag: tagsArray, 
-                            source: item.source 
-                        });
+                        return new EskomTender({ ...item, tag: tagsArray, source: item.source });
                     } else {
-                        return new ETender({
-                            ...item,
-                            tag: tagsArray,
-                            source: item.source || "ETender" // attempted fallback since the API does provide it - doesnt work :<
-                        });
+                        return new ETender({ ...item, tag: tagsArray, source: item.source || "ETender" });
                     }
                 });
 
-                // log for debugging
-                console.log("Fetched tenders:", tenderObjects);
-
-                // update the state to store the fetched and processed tenders
-                setTenders(tenderObjects);
-                setTotalPages(result.totalPages || 1)
-
+                setAllTenders(tenderObjects);
+                // setTotalPages will be handled by the logic below based on filteredTenders
             } catch (err) {
-                // If the API request fails, log the error and reset the tenders state to empty
-                console.error("Failed to fetch tenders:", err);
-                setTenders([]);
+                console.error("Failed to fetch all tenders:", err);
+                setAllTenders([]);
+            } finally {
+                setIsLoading(false);
             }
         };
 
-        // call the async function to initiate the API request
-        fetchTenders(page);
-    }, [page]); // empty dependency array so this runs only once on component mount
+        fetchAllTenders();
+    }, []); // empty dependency array so this runs only once on component mount
 
     const removeFilter = (index: number) => {
         setFilters(prev => prev.filter((_, i) => i !== index));
@@ -127,7 +143,7 @@ const Discover = () => {
 
     const startsWithLetter = (str: string) => /^[A-Za-z]/.test(str);
 
-    const filteredTenders = tenders
+    const filteredTenders = allTenders
         .filter((tender) => {
             const title = tender.title || "";
             const titleMatch = title.toLowerCase().includes(searchTerm.toLowerCase());
@@ -182,10 +198,20 @@ const Discover = () => {
 
     // update totalPages whenever filteredTenders changes
     useEffect(() => {
-        setTotalPages(Math.ceil(filteredTenders.length / pageSize));
-    }, [filteredTenders]);
+        // recalc total pages based on the length of the filtered results
+        const newTotalPages = Math.ceil(filteredTenders.length / pageSize);
+        setTotalPages(newTotalPages);
 
-    // slice filtered tenders for current page
+        // reset page to 1 if the current page is out of bounds after filtering
+        if (page > newTotalPages && newTotalPages > 0) {
+            setPage(1);
+        } else if (newTotalPages === 0) {
+            setPage(1); // keep page at 1 if no results
+        }
+
+    }, [filteredTenders, page]); // Rerun when filteredTenders array changes
+
+    // slice the filtered array for the current page
     const paginatedTenders = filteredTenders.slice(
         (page - 1) * pageSize,
         page * pageSize
@@ -265,8 +291,7 @@ const Discover = () => {
                 </div> 
             </section>
 
-
-            {/* White section for sorting and cards */}
+            {/* white section for sorting and cards */}
             <section className="discovery-cards-section">
                 {/* Sorting */}
                 <div className="sort-container">
@@ -290,6 +315,7 @@ const Discover = () => {
                                     key={tender.tenderID}
                                     tender={tender}
                                     isLoggedIn={isLoggedIn}
+                                    watchlistArray={watchlist}
                                     onRequireLogin={() => setLoginModalOpen(true)}
                                 />
                             ))
@@ -300,7 +326,7 @@ const Discover = () => {
                             </div>
                         )}
 
-                        {/* Only show pagination when there are tenders */}
+                        {/* only show pagination when there are tenders */}
                         {paginatedTenders.length > 0 && (
                             <div className="pagination">
                                 {/* Previous button */}
@@ -311,7 +337,7 @@ const Discover = () => {
                                     &laquo;
                                 </button>
 
-                                {/* Page numbers with proper ellipses */}
+                                {/* page numbers with ellipses */}
                                 {(() => {
                                     const pages = [];
                                     for (let i = 1; i <= totalPages; i++) {
@@ -341,7 +367,7 @@ const Discover = () => {
                                     return pages;
                                 })()}
 
-                                {/* Next button */}
+                                {/* > button */}
                                 <button
                                     disabled={page === totalPages}
                                     onClick={() => setPage(page + 1)}

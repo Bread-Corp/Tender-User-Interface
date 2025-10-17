@@ -28,11 +28,11 @@ function App() {
                 <Route path="/discover" element={<Discover />} />
                 <Route path="/tender/:id" element={<TenderDetails />} />
                 <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/analytics" element={<Analytics />} />
                 {/* Protected Routes */ }          
                 <Route path="/tracking" element={<ProtectedRoute><Tracking /></ProtectedRoute>} />
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                 <Route path="/settings" element={<Settings />} />/*Fix protection*/
-                <Route path="/analytics" element={<ProtectedRoute><Analytics /></ProtectedRoute>} />
             </Routes>
         </>
     );

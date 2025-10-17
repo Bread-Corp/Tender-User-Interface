@@ -179,3 +179,10 @@
     color: #5571A6;
     margin-bottom: 20px;
 }
+
+.guest-note {
+    text-align: center;
+    margin-top: 1rem;
+    color: #888;
+    font-style: italic;
+}
