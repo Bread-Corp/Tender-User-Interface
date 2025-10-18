@@ -122,9 +122,11 @@ const Profile = () => {
     };
 
     if (loading) {
+        return (
         <div className="loading-overlay">
             <LoadingSpinner text="Fetching user profile data..." />
-        </div>
+            </div>
+        );
     }
 
     // --- JSX Rendering ---
@@ -173,16 +175,16 @@ const Profile = () => {
                                         readOnly={editingField !== key || key === 'email'}
                                     />
                                     {key !== 'email' && (
-                                        editingField !== key ? (
-                                            <button
-                                                className="info-edit-btn"
-                                                onClick={() => setEditingField(key)}
-                                            >
-                                                Edit
-                                            </button>
-                                        ) : (
-                                            <span className="editing-label">Editing</span>
-                                        )
+                                        <div className="info-action-wrapper">
+                                            {editingField !== key ? (
+                                                <button
+                                                    className="info-edit-btn"
+                                                    onClick={() => setEditingField(key)}>Edit
+                                                </button>
+                                            ) : (
+                                                <span className="editing-label">Editing</span>
+                                            )}
+                                        </div>
                                     )}
                                 </div>
                             ))}
@@ -190,7 +192,12 @@ const Profile = () => {
 
                         <div className="button-group">
 
-                            <button className="cancel-btn" onClick={handleCancel} disabled={!hasChanges}>Cancel</button>
+                            <button
+                                className="cancel-btn"
+                                onClick={handleCancel}
+                                disabled={!hasChanges && !editingField} // button is ONLY disabled if no changes AND no field is being edited
+                            >Cancel
+                            </button>
                             <button className="save-btn" onClick={handleSave} disabled={!hasChanges}>Save</button>
 
                         </div>

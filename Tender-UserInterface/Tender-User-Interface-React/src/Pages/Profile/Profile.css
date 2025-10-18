@@ -87,6 +87,24 @@
         text-align: left;
     }
 
+    .info-row input[readonly] {
+        background-color: var(--dropdown-bg);
+        border: 1px solid var(--tender-card-border, #d9e0ea);
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+        cursor: default;
+        color: var(--heading-color);
+        padding: 10px 12px;
+    }
+
+    .info-row input:not([readonly]) {
+        background-color: var(--input-edit-bg);
+    }
+
+        .info-row input:not([readonly]):focus {
+            border-color: var(--color-primary, #5571A6);
+            box-shadow: 0 0 0 3px rgba(85, 113, 166, 0.2); /* Subtle glow on focus */
+        }
+
     .info-row input {
         flex: 1;
         padding: 10px 12px;
@@ -101,6 +119,12 @@
             outline: none;
         }
 
+.info-action-wrapper {
+    min-width: 80px;
+    display: flex; 
+    justify-content: flex-end; 
+}
+
 body.dark-mode input {
     background-color: var(--dropdown-bg);
     color: var(--text-color);
@@ -113,24 +137,27 @@ body.dark-mode input {
 
 /* Edit button */
 .info-edit-btn {
-    font-size: 13px;
-    padding: 10px 12px;
-    background-color: var(--button-bg);
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color var(--transition);
+    background-color: var(--btn-secondary-bg, #eef3fb); 
+    color: var(--color-primary, #5571A6);
+    padding: 8px 12px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    border: 1px solid var(--btn-secondary-border, #d8e0f1);
 }
 
-    .info-edit-btn:hover {
-        background-color: var(--color-primary-hover);
-    }
+.info-edit-btn:hover {
+    background-color: var(--btn-secondary-hover, #e0e6f5);
+    border-color: var(--color-primary, #5571A6);
+}
 
+/* Styling for the 'Editing' label */
 .editing-label {
     font-size: 13px;
-    color: var(--color-primary);
-    font-weight: bold;
+    color: var(--color-primary, #5571A6);
+    font-weight: 600; 
+    padding: 8px 12px;
+    background-color: #e0e6f5;
+    border-radius: 6px;
 }
 
 /* Save / Cancel buttons */
@@ -155,19 +182,23 @@ body.dark-mode input {
 }
 
 .save-btn {
-    background-color: var(--button-bg);
-    color: #fff;
+    /* Use the Primary Color */
+    background-color: var(--color-primary, #5571A6);
+    color: #fff; /* White text for contrast */
+    border: none;
+    transition: all 0.2s ease;
 }
 
     .save-btn:disabled {
-        background-color: #a0aec0;
+        background-color: #a0aec0; /* Lighter primary shade for disabled */
+        box-shadow: none;
         cursor: not-allowed;
     }
 
-        .save-btn:hover {
-            background-color: var(--color-primary-hover);
-            color: var(--button-text);
-        }
+    .save-btn:not(:disabled):hover {
+        background-color: var(--color-primary-hover, #42649B); /* Slightly darker primary on hover */
+        box-shadow: 0 6px 15px rgba(85, 113, 166, 0.4);
+    }
 
 .cancel-btn {
     background-color: #CD4F6E;
@@ -179,10 +210,10 @@ body.dark-mode input {
         color: #999;
     }
 
-        .cancel-btn:hover {
-            background-color: #AE435D;
-            color: var(--button-text);
-        }
+    .cancel-btn:not(:disabled):hover {
+        background-color: #AE435D;
+        color: var(--button-text);
+    }
 
 /* responsive */
 @media (max-width: 768px) {

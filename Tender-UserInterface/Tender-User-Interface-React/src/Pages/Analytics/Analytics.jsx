@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaChartLine, FaMapMarkerAlt, FaRegClock } from "react-icons/fa";
+import { FaChartLine, FaMapMarkerAlt, FaRegClock, FaExclamationTriangle } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 import "./Analytics.css";
 import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
@@ -61,20 +61,39 @@ const Analytics = () => {
         );
     }
 
-    // conditional loading block for the spinner
-    if (error) return
-    <div className="analytics-container error-container">
-        <h1>Analytics Load Error :(</h1>
-        <p>We could not load your data. Please try again later.</p>
-        <small>Details: {error}</small>
-    </div>;
+    // error check: runs if loading is false + error message exists
+    if (error) {
+        return (
+            <div className="analytics-container">
+                <div className="analytics-state-wrapper">
+                    <div className="error-state-message">
+                        <span className="error-state-icon">
+                            <FaExclamationTriangle />
+                        </span>
+                        <h2>Analytics Unavailable</h2>
+                        <p>We couldn't load your tender analytics right now. Please try again later.</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
-    if (!analytics) return
-    <div className="analytics-container no-data-container">
-        <h1>No Data Available</h1>
-        <p>There is no tender analytics data to display yet.</p>
-    </div>;
-    // end
+    // no data check: runs if loading is false + no error + the data is missing / empty
+    if (!analytics || analytics.totalTenders === 0) {
+        return (
+            <div className="analytics-container">
+                <div className="analytics-state-wrapper">
+                    <div className="empty-state-message">
+                        <span className="error-state-icon">
+                            <FaChartLine />
+                        </span>
+                        <h2>No Data Available</h2>
+                        <p>There is no tender analytics data to display yet. Start tracking tenders to see your insights here!</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     const { totalTenders, openTenders, closedTenders, openRatio, statusBreakdown, tendersByProvince } = analytics;
 

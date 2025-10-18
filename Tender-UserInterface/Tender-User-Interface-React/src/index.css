@@ -53,6 +53,7 @@
     --dropdown-bg: #f9f9f9;
     --dropdown-border: #ccc;
     --dropdown-arrow: #dce3ed;
+    --input-edit-bg: #f5f5f5
 }
 
 body.dark-mode {
@@ -105,6 +106,7 @@ body.dark-mode {
     --dropdown-bg: #2a344b; 
     --dropdown-border: #3a3f57; 
     --dropdown-arrow: #dce3ed; 
+    --input-edit-bg: #35354a;
 }
 
 /*Responsive adjustments*/
@@ -178,14 +180,14 @@ a:hover {
 
 /* For light backgrounds */
 .btn-secondary-dark {
-    background-color: rgba(60, 90, 150, 0.08); 
+    background-color: rgba(60, 90, 150, 0.08);
     color: var(--heading-color);
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.75rem;
+    padding: 0.65rem 1.4rem;
+    border-radius: 0.5rem;
     font-weight: 500;
     font-family: var(--font-family);
     cursor: pointer;
-    border: 0.5px solid rgba(60, 90, 150, 0.12); 
+    border: 0.5px solid rgba(60, 90, 150, 0.12);
     transition: background-color 0.25s ease, border-color 0.25s ease;
 }
 
@@ -198,8 +200,8 @@ a:hover {
 .btn-secondary-light {
     background-color: rgba(255, 255, 255, 0.08);
     color: #fff;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.75rem;
+    padding: 0.65rem 1.4rem;
+    border-radius: 0.5rem;
     font-weight: 500;
     font-family: var(--font-family);
     cursor: pointer;

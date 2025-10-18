@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import "./Tracking.css";
-import { FaMapMarkerAlt, FaRegClock, FaTrashAlt, FaChevronDown } from "react-icons/fa";
+import { FaMapMarkerAlt, FaRegClock, FaTrashAlt, FaChevronDown, FaRegFolderOpen } from "react-icons/fa";
 import axios from 'axios';
 import { fetchUserAttributes } from '@aws-amplify/auth';
 import { EskomTender } from "../../Models/EskomTender.js";
@@ -214,9 +214,14 @@ const Tracking = () => {
                 ) : // message for no results
                     filteredTenders.length === 0 ? (
 
-                        <div className="no-tenders">
-                            <p>You are not currently tracking any tenders.</p>
-                            <button onClick={() => navigate('/discover')} className="discover-btn">
+                        <div className="empty-state-message">
+                            <span className="empty-state-icon">
+                                <FaRegFolderOpen />
+                            </span>
+
+                            <h2>No Tenders Found</h2>
+                            <p>We couldn't find any results matching your current filters or search query.</p>
+                            <button onClick={() => navigate('/discover')} className="btn-secondary-dark">
                                 Discover New Tenders
                             </button>
                         </div>

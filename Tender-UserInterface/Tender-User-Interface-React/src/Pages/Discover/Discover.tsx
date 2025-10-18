@@ -325,10 +325,14 @@ const Discover = () => {
                                 />
                             ))
                         ) : (
-                            // show no results if loading is false and paginatedtenders is empty
-                            <div className="no-results-message">
-                                <p>No tenders found matching your current filters or search term.</p>
-                            </div>
+                                    <div className="empty-state-message">
+                                        <span className="empty-state-icon">
+                                            <FaSearch /> 
+                                        </span>
+
+                                        <h2>No Results Found</h2>
+                                        <p>We couldn't find any tenders matching your current filters or search term. Try adjusting your criteria.</p>
+                                    </div>
                         )}
 
                         {/* only show pagination when there are tenders */}

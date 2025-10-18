@@ -198,3 +198,12 @@
     justify-content: center;
     align-items: center;
 }
+
+.analytics-state-wrapper {
+    min-height: 40vh; 
+    width: 100%;
+    display: flex;
+    justify-content: center; 
+    align-items: center; 
+    margin: 30px 0;
+}
