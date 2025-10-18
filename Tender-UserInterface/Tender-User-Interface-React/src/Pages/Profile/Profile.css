@@ -102,7 +102,7 @@
 
         .info-row input:not([readonly]):focus {
             border-color: var(--color-primary, #5571A6);
-            box-shadow: 0 0 0 3px rgba(85, 113, 166, 0.2); /* Subtle glow on focus */
+            box-shadow: 0 0 0 3px rgba(85, 113, 166, 0.2); 
         }
 
     .info-row input {

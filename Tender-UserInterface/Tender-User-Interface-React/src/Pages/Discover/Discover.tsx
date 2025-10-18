@@ -28,7 +28,7 @@ const Discover = () => {
     // pagination state
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
-    const [isLoading, setIsLoading] = useState(true); // New loading state
+    const [isLoading, setIsLoading] = useState(true);
 
     const [allTenders, setAllTenders] = useState<(EskomTender | ETender)[]>([]);
     const [watchlist, setWatchlist] = useState<WatchlistItem[]>([]);
@@ -322,6 +322,14 @@ const Discover = () => {
                                     isLoggedIn={isLoggedIn}
                                     watchlistArray={watchlist}
                                     onRequireLogin={() => setLoginModalOpen(true)}
+                                    onBookmarkSuccess={(tenderTitle, isAdded) => {
+                                        if (isAdded) {
+                                            showToast(`'${tenderTitle}' added to watchlist!`, 3000);
+                                        } else {
+                                            // Assuming you handle removal too
+                                            showToast(`'${tenderTitle}' removed from watchlist.`, 3000);
+                                        }
+                                    }}
                                 />
                             ))
                         ) : (
@@ -359,9 +367,7 @@ const Discover = () => {
                                                 <button
                                                     key={i}
                                                     className={`pagination-btn page-number ${page === i ? "active" : ""}`}
-                                                    onClick={() => setPage(i)}
-                                                >
-                                                    {i}
+                                                    onClick={() => setPage(i)}>{i}
                                                 </button>
                                             );
                                         } else if (

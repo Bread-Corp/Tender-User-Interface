@@ -13,46 +13,17 @@ import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
 //required url
 const apiURL = import.meta.env.VITE_API_URL;
 
-// mock data
-const initialTenders = [
-    {
-        id: 1,
-        title: "SUPPLY AND DELIVERY OF (162) BULK LAPTOPS",
-        location: "Eastern Cape",
-        closing: "Friday, 06 June 2025",
-        status: "Open",
-        note: "",
-    },
-    {
-        id: 2,
-        title: "VEHICLE MAINTENANCE SERVICES",
-        location: "KwaZulu-Natal",
-        closing: "Tuesday, 11 June 2025",
-        status: "Closed",
-        note: "",
-    },
-];
+const PAGE_SIZE = 10;
 
 const Tracking = () => {
     const navigate = useNavigate();
 
-    const [tenders, setTenders] = useState([]);
+    const [tenders, setTenders] = useState([]); // all fetched tenders
     const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(0)
-    // state to track which status filter is active
-    const [filter, setFilter] = useState("All");
-    // state to track which tenders are currently expanded
-    const [expanded, setExpanded] = useState([]);
-    // state to track coreID
-    const [ID, setID] = useState('');
+    const [totalPages, setTotalPages] = useState(0) 
+    const [filter, setFilter] = useState("All"); //state to check which status filter is active
+    const [expanded, setExpanded] = useState([]); // state to track which tenders are currently expanded
     const [isLoading, setIsLoading] = useState(true);
-
-    // updates the note field for a tender with matching id
-    const updateNote = (id, value) => {
-        setTenders((prev) =>
-            prev.map((t) => (t.tenderID === id ? { ...t, note: value } : t))
-        );
-    };
 
     // toggles expansion of a tender card by adding or removing its id
     const toggleExpand = (id) => {
@@ -61,79 +32,80 @@ const Tracking = () => {
         );
     };
 
-    // filters tenders based on status dropdown
+    //filters tenders based on status dropdown
     const filteredTenders =
         filter === "All"
             ? tenders
             : tenders.filter((t) => t.status.toLowerCase() === filter.toLowerCase());
 
+    // slice the filtered array for the current page
+    const paginatedTenders = filteredTenders.slice(
+        (page - 1) * PAGE_SIZE,
+        page * PAGE_SIZE
+    );
+
     //method to get user watchlist
     useEffect(() => {
-        const pageSize = 10;
-        const initialPage = 1;
-        const fetchWatchlist = async (pageNumber = initialPage) => {
-            //get coreID from auth context
+        const fetchWatchlist = async () => {
+
+            setIsLoading(true);
             let coreID = null;
 
             try {
                 // Get the logged-in user attributes from Amplify
                 const attributes = await fetchUserAttributes();
-                console.log("attributes:", attributes);
 
                 //get and set coreID
                 coreID = attributes['custom:CoreID'];
-                console.log("CoreID:", coreID);
 
             } catch (error) {
-                console.error("Error fetching CoreID:", error);
+                // If the user is not authenticated
                 if (error.name === 'NotAuthorizedException') {
                     navigate('/login');
                 }
+                setIsLoading(false);
                 return;
             }
 
             //now we can use the coreID to get the user's saved tenders
             try {
-                //request API
+                // request API to fetch ALL tracked items
                 const response = await axios.get(`${apiURL}/watchlist/${coreID}`);
                 const result = response.data;
 
-                // make sure the response data is akways an array
-                // if  API returns a single object, wrap it in an array
+                // make sure the response data is always an array
                 const data = Array.isArray(result) ? result : result.data || [];
 
                 // map over each tender item to convert it into an instance of a class
                 const tenderObjects = data.map((item) => {
+                    // Explicitly resolve the ID as a fallback
+                    const id = item.tenderID || item.TenderID || item.id;
+
                     // convert the tags array into an array of Tag instances
-                    // if the item has tags, map them - otherwise use emtpy array
                     const tagsArray = item.tags
                         ? item.tags.map((t) => new Tags(t.id || "", t.name || ""))
                         : [];
 
                     // decide which class to instantiate based on the source of the tender
-                    // eg eskom tenders use the eskomtender class
                     if (item.source === "Eskom") {
                         return new EskomTender({
                             ...item,
+                            tenderID: id,
                             tag: tagsArray,
                             source: item.source
                         });
                     } else {
                         return new ETender({
                             ...item,
+                            tenderID: id,
                             tag: tagsArray,
-                            source: item.source || "ETender" // attempted fallback since the API does provide it - doesnt work :<
+                            source: item.source || "ETender"
                         });
                     }
                 });
 
-                // log for debugging
-                console.log("Fetched tenders:", tenderObjects);
-
                 // update the state to store the fetched and processed tenders
                 setTenders(tenderObjects);
-                setPage(result.currentPage || 1);
-                setTotalPages(result.totalPages || 1)
             }
             catch (err) {
                 // If the API request fails, log the error and reset the tenders state to empty
@@ -146,74 +118,124 @@ const Tracking = () => {
         };
 
         // call the async function to initiate the API request
-        fetchWatchlist(page);
-    }, [page]);
+        fetchWatchlist();
+    }, []); // empty dependency array so this runs only once on component mount
+
+    useEffect(() => {
+        const newTotalPages = Math.ceil(filteredTenders.length / PAGE_SIZE);
+        setTotalPages(newTotalPages === 0 ? 1 : newTotalPages);
+
+        if (page > newTotalPages && newTotalPages > 0) {
+            setPage(1);
+        }
+
+    }, [filteredTenders, filter, page]);
 
     //handle remove bookmark
     const handleBookmarkClick = async (tenderID) => {
-        //get coreID from auth context
         let coreID = null;
 
         try {
-            // Get the logged-in user attributes from Amplify
             const attributes = await fetchUserAttributes();
-            console.log("attributes:", attributes);
-
-            //get and set coreID
             coreID = attributes['custom:CoreID'];
-            console.log("CoreID:", coreID);
 
         } catch (error) {
-            console.error("Error fetching CoreID:", error);
             onRequireLogin();
             setIsLoading(false);
             return;
         }
 
         try {
-            // Make a POST request to the API endpoint to togglewatch
             const response = await axios.post(`${apiURL}/watchlist/togglewatch/${coreID}/${tenderID}`);
 
-            // placeholder + logs
             setTenders(prev => prev.filter(t => t.tenderID !== tenderID));
-            console.log("Bookmark removed", tenderID);
-
         } catch (err) {
-            // If the API request fails, log the error and reset the tenders state to empty
-            console.error("Failed to toggle watch:", err);
         }
+    };
+
+    const PaginationControls = () => {
+        if (totalPages <= 1 && filteredTenders.length <= PAGE_SIZE) return null;
+
+        const pages = [];
+        for (let i = 1; i <= totalPages; i++) {
+            if (
+                i === 1 ||
+                i === totalPages ||
+                (i >= page - 1 && i <= page + 1)
+            ) {
+                pages.push(
+                    <button
+                        key={i}
+                        className={`pagination-btn page-number ${page === i ? "active" : ""}`}
+                        onClick={() => setPage(i)}
+                        disabled={isLoading}
+                    >
+                        {i}
+                    </button>
+                );
+            } else if (
+                (i === 2 && page > 3)
+                || (i === totalPages - 1 && page < totalPages - 2)
+            ) {
+                if (!pages.find(p => p.props.className?.includes('ellipsis') && p.key === i)) {
+                    pages.push(
+                        <span key={i} className="ellipsis">...</span>
+                    );
+                }
+            }
+        }
+
+        return (
+            <div className="pagination">
+                <button
+                    disabled={page === 1 || isLoading}
+                    onClick={() => setPage(page - 1)}
+                    className="pagination-btn">
+                    &laquo;
+                </button>
+
+                {pages.filter(p => p !== null)}
+
+                <button
+                    disabled={page === totalPages || isLoading}
+                    onClick={() => setPage(page + 1)}
+                    className="pagination-btn">
+                    &raquo;
+                </button>
+            </div>
+        );
     };
 
     return (
         <div className="tracking-container">
-    <div className="tracking-header">
-        <h1 className="tracking-title">Tracked Tenders</h1>
-        <p className="tracking-subtitle">View the tenders you are monitoring</p>
-    </div>
+            <div className="tracking-header">
+                <h1 className="tracking-title">Tracked Tenders</h1>
+                <p className="tracking-subtitle">View the tenders you are monitoring</p>
+            </div>
 
-    <div className="filter-container">
-        <label htmlFor="statusFilter">Filter by Status:</label>
-        <select
-            id="statusFilter"
-            onChange={(e) => setFilter(e.target.value)}
+            <div className="filter-container">
+                <label htmlFor="statusFilter">Filter by Status:</label>
+                <select
+                    id="statusFilter"
+                    onChange={(e) => {
+                        setFilter(e.target.value);
+                        setPage(1);
+                    }}
                     value={filter}>
 
-            <option value="All">All</option>
-            <option value="Open">Open</option>
-            <option value="Closed">Closed</option>
-        </select>
-    </div>
+                    <option value="All">All</option>
+                    <option value="Open">Open</option>
+                    <option value="Closed">Closed</option>
+                </select>
+            </div>
 
             <div className="tender-grid">
-                {/* loading spinner rendered*/}
-
                 {isLoading ? (
                     <div className="loading-wrapper">
                         <LoadingSpinner text="Loading your tracked tenders..." />
                     </div>
-                ) : // message for no results
+                ) :
                     filteredTenders.length === 0 ? (
-
                         <div className="empty-state-message">
                             <span className="empty-state-icon">
                                 <FaRegFolderOpen />
@@ -226,54 +248,53 @@ const Tracking = () => {
                             </button>
                         </div>
                     ) : (
-                        // tender cards
-                        filteredTenders.map((tender) => (
+                        paginatedTenders.map((tender) => (
                             <div
                                 className="tracking-tender-card"
                                 key={tender.tenderID}>
 
-                        {/* card header displays title status + expand icon */}
-                        <div className="card-header">
-                            <h3>{tender.title}</h3>
-                            <div className="card-header-right">
-                                <span className={`status-badge ${tender.status.toLowerCase()}`}>
-                                    {tender.status}
-                                </span>
-                                {/* rotate aroow when expanded */}
-                                <FaChevronDown
-                                    className={`expand-icon ${expanded.includes(tender.tenderID) ? "rotated" : ""}`}
-                                    onClick={(e) => {
-                                        e.stopPropagation(); // prevent triggering any parent clicks
-                                        toggleExpand(tender.tenderID);
-                                    }}
-                                />
-                            </div>
-                        </div>
+                                <div className="card-header">
+                                    <h3>{tender.title}</h3>
+                                    <div className="card-header-right">
+                                        <span className={`status-badge ${tender.status.toLowerCase()}`}>
+                                            {tender.status}
+                                        </span>
+                                        <FaChevronDown
+                                            className={`expand-icon ${expanded.includes(tender.tenderID) ? "rotated" : ""}`}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                toggleExpand(tender.tenderID);
+                                            }}
+                                        />
+                                    </div>
+                                </div>
 
-                        {expanded.includes(tender.tenderID) && (
-                            <>
-                                <p className="location">
-                                    <FaMapMarkerAlt /> {tender.location}
-                                </p>
-                                <p className="closing-date">
-                                    <FaRegClock /> Closing: {tender.closing}
-                                </p>
-                                {/* prevents parent card click from collapsing when clicking inside buttons */}
-                                <div
-                                    className="card-actions"
+                                {expanded.includes(tender.tenderID) && (
+                                    <>
+                                        <p className="location">
+                                            <FaMapMarkerAlt /> {tender.location}
+                                        </p>
+                                        <p className="closing-date">
+                                            <FaRegClock /> Closing: {tender.closing}
+                                        </p>
+                                        <div
+                                            className="card-actions"
                                             onClick={(e) => e.stopPropagation()}>
 
-                                    <button className="remove-btn" onClick={() => handleBookmarkClick(tender.tenderID)}>
-                                        <FaTrashAlt /> Remove
-                                    </button>
-                                    <button className="view-btn">View Tender</button>
-                                </div>
-                            </>
-                        )}
-                    </div>
-                ))
-            )}
+                                            <button className="remove-btn" onClick={() => handleBookmarkClick(tender.tenderID)}>
+                                                <FaTrashAlt /> Remove
+                                            </button>
+                                            <button className="view-btn">View Tender</button>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
+                        ))
+                    )}
             </div>
+
+            {!isLoading && <PaginationControls />}
+
         </div>
     );
 };

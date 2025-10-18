@@ -18,12 +18,13 @@ type TenderCardProps = {
     isLoggedIn: boolean;
     watchlistArray: WatchlistItem[];
     onRequireLogin: () => void;
+    onBookmarkSuccess: (tenderTitle: string, isAdded: boolean) => void;
 };
 
 const MAX_TITLE_LENGTH = 100;
 const apiURL = import.meta.env.VITE_API_URL;
 
-const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, watchlistArray, onRequireLogin }) => {
+const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, watchlistArray, onRequireLogin, onBookmarkSuccess }) => {
     const navigate = useNavigate();
     const [expanded, setExpanded] = useState(false);
 
@@ -120,8 +121,11 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, watchlistAr
 
             // placeholder + logs
             setBookmarked(prev => {
-                console.log(prev ? "Bookmark removed" : "Bookmark added", tender.tenderID);
-                return !prev;
+                const newBookmarkedState = !prev;
+
+                onBookmarkSuccess(tender.title, newBookmarkedState);
+
+                return newBookmarkedState;
             });
 
         } catch (err) {
