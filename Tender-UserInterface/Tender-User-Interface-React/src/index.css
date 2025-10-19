@@ -1,12 +1,15 @@
 /* light + dark themes */
 
 :root {
+
     /* Typography */
     --font-family: 'Poppins', sans-serif;
+
     /* Text Colors */
     --text-color: #1F2B4A;
     --heading-color: #2A3C64;
     --subtext-color: #4a5a78;
+
     /* Backgrounds */
     --hero-bg: linear-gradient(135deg, #d6e6f2, #eaf3fb);
     --home-bg: white;
@@ -14,32 +17,43 @@
     --feature-bg: white;
     --cta-bg: #d6e6f2;
     --tender-card-bg: #f0f6fc;
+
     /* Shadows */
     --hero-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
     --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+
     /* Buttons */
     --button-bg: #33497d;
     --button-hover: #1f325c;
     --button-text: #e0e6f1;
+
     /* Icons */
     --icon-color: #33497D;
     --nav-icon: #fff;
+
     /* Profile Button Hover */
     --profile-button-hover-bg: #d7e3fc;
+
     /* Tender Card Details */
     --tender-card-border: #dbe7f4;
     --tender-card-header: #2d4d7a;
     --tender-secondary-txt: #3f4c61;
+
     /* Status Badges */
     --open-badge-bg: #c7f5d2;
     --open-badge-txt: #256029;
     --closed-badge-bg: #f9d7d5;
     --closed-badge-txt: #8a1c1c;
+
     /* Hero Text */
     --home-heading: #e0e6f1;
+
     /* Contact us*/
     --contact-us-bg: #2A3C64;
-    ;
+    --dropdown-bg: #f9f9f9;
+    --dropdown-border: #ccc;
+    --dropdown-arrow: #dce3ed;
+    --input-edit-bg: #f5f5f5
 }
 
 body.dark-mode {
@@ -51,10 +65,10 @@ body.dark-mode {
     /* Backgrounds */
     --hero-bg: linear-gradient(135deg, #1b2431, #10151c);
     --home-bg: linear-gradient(135deg, #202b3a, #141a23);
-    --card-bg: #252c36;
-    --feature-bg: black;
-    --cta-bg: #1e2735;
-    --tender-card-bg: #27303b;
+    --card-bg: #20293E;
+    --feature-bg: #2A344B;
+    --cta-bg: #20293E;
+    --tender-card-bg: #20293E;
 
     /* Shadows */
     --hero-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
@@ -72,7 +86,7 @@ body.dark-mode {
     --profile-button-hover-bg: rgba(255, 255, 255, 0.08);
 
     /* Tender Card Details */
-    --tender-card-border: #374558;
+    --tender-card-border: #1F2533;
     --tender-card-header: #dce5f3;
     --tender-secondary-txt: #95a4b8;
 
@@ -87,6 +101,12 @@ body.dark-mode {
 
     /* Contact us */
     --contact-us-bg: #1c2636;
+
+    /*Dropdowns*/
+    --dropdown-bg: #2a344b; 
+    --dropdown-border: #3a3f57; 
+    --dropdown-arrow: #dce3ed; 
+    --input-edit-bg: #35354a;
 }
 
 /*Responsive adjustments*/
@@ -160,14 +180,14 @@ a:hover {
 
 /* For light backgrounds */
 .btn-secondary-dark {
-    background-color: rgba(60, 90, 150, 0.08); 
+    background-color: rgba(60, 90, 150, 0.08);
     color: var(--heading-color);
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.75rem;
+    padding: 0.65rem 1.4rem;
+    border-radius: 0.5rem;
     font-weight: 500;
     font-family: var(--font-family);
     cursor: pointer;
-    border: 0.5px solid rgba(60, 90, 150, 0.12); 
+    border: 0.5px solid rgba(60, 90, 150, 0.12);
     transition: background-color 0.25s ease, border-color 0.25s ease;
 }
 
@@ -180,8 +200,8 @@ a:hover {
 .btn-secondary-light {
     background-color: rgba(255, 255, 255, 0.08);
     color: #fff;
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.75rem;
+    padding: 0.65rem 1.4rem;
+    border-radius: 0.5rem;
     font-weight: 500;
     font-family: var(--font-family);
     cursor: pointer;

@@ -1,6 +1,8 @@
-import React, { useState } from "react";
-import { FaChartLine, FaMapMarkerAlt, FaRegClock } from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { FaChartLine, FaMapMarkerAlt, FaRegClock, FaExclamationTriangle } from "react-icons/fa";
+import { useAuth } from "../../context/AuthContext";
 import "./Analytics.css";
+import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
 import {
     PieChart,
     Pie,
@@ -14,46 +16,103 @@ import {
     ResponsiveContainer,
 } from "recharts";
 
-// Mock tender data
-const initialTenders = [
-    { id: 1, title: "Bulk Laptops", location: "Eastern Cape", closing: "06/06/2025", status: "Open" },
-    { id: 2, title: "Vehicle Maintenance", location: "KwaZulu-Natal", closing: "11/06/2025", status: "Closed" },
-    { id: 3, title: "Solar Street Lights", location: "Gauteng", closing: "20/06/2025", status: "Open" },
-    { id: 4, title: "Catering Services", location: "Western Cape", closing: "28/06/2025", status: "Closed" },
-    { id: 5, title: "Stationery Supply", location: "Gauteng", closing: "30/06/2025", status: "Open" },
-];
-
 const Analytics = () => {
-    const [tenders] = useState(initialTenders);
+    const { user } = useAuth(); // current logged-in user
+    const [analytics, setAnalytics] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    // Summary counts
-    const totalTenders = tenders.length;
-    const openCount = tenders.filter((t) => t.status === "Open").length;
-    const closedCount = tenders.filter((t) => t.status === "Closed").length;
-    const openPercentage = ((openCount / totalTenders) * 100).toFixed(1);
+    useEffect(() => {
+        const fetchAnalytics = async () => {
+            try {
+                // fallback to general endpoint
+                const endpoint = user?.coreId
+                    ? `https://vaon5sbbdk.execute-api.us-east-1.amazonaws.com/analytics/user/${userId}` //doesnt work - placeholder
+                    : `https://vaon5sbbdk.execute-api.us-east-1.amazonaws.com/analytics`;
 
-    // Data for charts
-    const statusData = [
-        { name: "Open", value: openCount },
-        { name: "Closed", value: closedCount },
-    ];
+                const response = await fetch(endpoint, {
+                    headers: user?.token
+                        ? { Authorization: `Bearer ${user.token}` }
+                        : {},
+                });
 
-    const locationCounts = tenders.reduce((acc, t) => {
-        acc[t.location] = (acc[t.location] || 0) + 1;
-        return acc;
-    }, {});
-    const locationData = Object.entries(locationCounts).map(([name, value]) => ({ name, value }));
+                if (!response.ok) {
+                    throw new Error(`HTTP Error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                setAnalytics(data);
+            } catch (err) {
+                console.error("Error fetching analytics:", err);
+                setError(err.message || "Unknown error");
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchAnalytics();
+    }, [user]);
+
+    if (loading) {
+        return (
+            <div className="loading-overlay">
+                <LoadingSpinner text="Compiling your tender analytics..." />
+            </div>
+        );
+    }
+
+    // error check: runs if loading is false + error message exists
+    if (error) {
+        return (
+            <div className="analytics-container">
+                <div className="analytics-state-wrapper">
+                    <div className="error-state-message">
+                        <span className="error-state-icon">
+                            <FaExclamationTriangle />
+                        </span>
+                        <h2>Analytics Unavailable</h2>
+                        <p>We couldn't load your tender analytics right now. Please try again later.</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // no data check: runs if loading is false + no error + the data is missing / empty
+    if (!analytics || analytics.totalTenders === 0) {
+        return (
+            <div className="analytics-container">
+                <div className="analytics-state-wrapper">
+                    <div className="empty-state-message">
+                        <span className="error-state-icon">
+                            <FaChartLine />
+                        </span>
+                        <h2>No Data Available</h2>
+                        <p>There is no tender analytics data to display yet. Start tracking tenders to see your insights here!</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    const { totalTenders, openTenders, closedTenders, openRatio, statusBreakdown, tendersByProvince } = analytics;
+
+    const mostActiveProvince =
+        tendersByProvince?.length > 0
+            ? [...tendersByProvince].sort((a, b) => b.value - a.value)[0].name
+            : "N/A";
 
     const COLORS = ["#81C784", "#CD4F6E"];
 
     return (
         <div className="analytics-container">
-
             {/* Page Header */}
             <div className="tracking-header">
-                <h1 className="tracking-title">Analytics</h1>
+                <h1 className="tracking-title">{user ? `${user.name}'s Analytics` : "Analytics"}</h1>
                 <p className="tracking-subtitle">
-                    Visual insights and statistics based on your tender activity
+                    {user
+                        ? "Insights tailored to your tender activity"
+                        : "Visual insights and statistics based on live tender data"}
                 </p>
             </div>
 
@@ -64,15 +123,33 @@ const Analytics = () => {
                 <div className="info-cards">
                     <div className="info-card">
                         <span className="info-icon"><FaChartLine /></span>
-                        <p>You currently have <strong>{openCount}</strong> open tenders out of <strong>{totalTenders}</strong> total.</p>
+                        <p>
+                            {user ? (
+                                <>You currently have <strong>{openTenders}</strong> open tenders out of <strong>{totalTenders}</strong> total.</>
+                            ) : (
+                                <>There are currently <strong>{openTenders}</strong> open tenders out of <strong>{totalTenders}</strong> tenders tracked.</>
+                            )}
+                        </p>
                     </div>
                     <div className="info-card">
                         <span className="info-icon"><FaMapMarkerAlt /></span>
-                        <p>Your most active province is <strong>{Object.entries(locationCounts).sort((a, b) => b[1] - a[1])[0][0]}</strong>.</p>
+                        <p>
+                            {user ? (
+                                <>Your most active province is <strong>{mostActiveProvince}</strong>.</>
+                            ) : (
+                                <>The province with the most tenders is <strong>{mostActiveProvince}</strong>.</>
+                            )}
+                        </p>
                     </div>
                     <div className="info-card">
                         <span className="info-icon"><FaRegClock /></span>
-                        <p>Overall, <strong>{openPercentage}%</strong> of your tenders remain open.</p>
+                        <p>
+                            {user ? (
+                                <>Overall, <strong>{openRatio}%</strong> of tenders remain open.</>
+                            ) : (
+                                <>Currently, <strong>{openRatio}%</strong> of tenders are open.</>
+                            )}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -89,17 +166,17 @@ const Analytics = () => {
                     </div>
                     <div className="summary-card">
                         <h3>Open</h3>
-                        <p>{openCount}</p>
+                        <p>{openTenders}</p>
                         <small>Tenders still accepting bids</small>
                     </div>
                     <div className="summary-card">
                         <h3>Closed</h3>
-                        <p>{closedCount}</p>
+                        <p>{closedTenders}</p>
                         <small>Tenders that have ended</small>
                     </div>
                     <div className="summary-card">
                         <h3>Open Ratio</h3>
-                        <p>{openPercentage}%</p>
+                        <p>{openRatio}%</p>
                         <small>Percentage of tenders that remain open</small>
                     </div>
                 </div>
@@ -118,15 +195,14 @@ const Analytics = () => {
                         <ResponsiveContainer width="100%" height={250}>
                             <PieChart>
                                 <Pie
-                                    data={statusData}
+                                    data={statusBreakdown}
                                     dataKey="value"
                                     nameKey="name"
                                     cx="50%"
                                     cy="50%"
                                     outerRadius={80}
-                                    label
-                                >
-                                    {statusData.map((entry, index) => (
+                                    label>
+                                    {statusBreakdown.map((entry, index) => (
                                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                     ))}
                                 </Pie>
@@ -140,7 +216,7 @@ const Analytics = () => {
                         <h3>Tenders by Province</h3>
                         <p className="chart-subtitle">Number of tenders in each province</p>
                         <ResponsiveContainer width="100%" height={250}>
-                            <BarChart data={locationData}>
+                            <BarChart data={tendersByProvince}>
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis dataKey="name" />
                                 <YAxis allowDecimals={false} />
@@ -149,10 +225,9 @@ const Analytics = () => {
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
-
+                                   
                 </div>
             </div>
-
         </div>
     );
 };

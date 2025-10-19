@@ -1,20 +1,31 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { fetchUserAttributes } from '@aws-amplify/auth';
+import { useNavigate } from 'react-router-dom';
 import { FaMapMarkerAlt, FaRegClock, FaRegBookmark, FaBookmark, FaBinoculars } from "react-icons/fa";
 import "./TenderCard.css";
 import { BaseTender } from "../../Models/BaseTender.js";
 import { Tags } from "../../Models/Tags.js";
 import { Link } from "react-router-dom";
 
+type WatchlistItem = {
+    tenderID: string;
+    // other fields - add later, this is for TS safety
+};
+
 type TenderCardProps = {
     tender?: BaseTender;
     isLoggedIn: boolean;
+    watchlistArray: WatchlistItem[];
     onRequireLogin: () => void;
+    onBookmarkSuccess: (tenderTitle: string, isAdded: boolean) => void;
 };
 
 const MAX_TITLE_LENGTH = 100;
+const apiURL = import.meta.env.VITE_API_URL;
 
-const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, onRequireLogin }) => {
-
+const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, watchlistArray, onRequireLogin, onBookmarkSuccess }) => {
+    const navigate = useNavigate();
     const [expanded, setExpanded] = useState(false);
 
     if (!tender) {
@@ -24,7 +35,6 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, onRequireLo
     const [titleExpanded, setTitleExpanded] = useState(false); // for title
     const [bookmarked, setBookmarked] = useState(false); // for bookmark
 
-
     const title = tender.title || "No Title";
     const isLong = title.length > MAX_TITLE_LENGTH;
     const displayedTitle =
@@ -32,19 +42,96 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, onRequireLo
 
 
     // prepping for saving logic
-    useEffect(() => {
-        console.log(`Bookmark state for ${tender.tenderID}:`, bookmarked);
-    }, [bookmarked, tender.tenderID]);
+    //useEffect(() => {
+    //    console.log(`Bookmark state for ${tender.tenderID}:`, bookmarked);
+    //}, [bookmarked, tender.tenderID]);
 
-    const handleBookmarkClick = () => {
-        if (!isLoggedIn) {
+    // Load initial bookmark state if logged in
+    useEffect(() => {
+        console.log(`Bookmark prefetch for ${tender.tenderID}:`, bookmarked);
+        //if (!isLoggedIn) return;
+
+        const fetchBookmarkState = async () => {
+            try {
+                const attributes = await fetchUserAttributes();
+                console.log("Attributes on page load:", attributes);
+                const coreID = attributes["custom:CoreID"];
+                if (!coreID) {
+                    console.warn("No CoreID found for user");
+                    return;
+                }
+
+                // Call the backend to get the watchlist entry for this tender
+                const response = await axios.get(`${apiURL}/watchlist/${coreID}`);
+                console.log(`GET watchlist response for user: ${coreID}:`, response.data);
+
+                const result = response.data;
+
+                // make sure the response data is akways an array
+                // if  API returns a single object, wrap it in an array
+                const data = Array.isArray(result) ? result : result.data || []
+
+                if (true) {
+                    watchlistArray.forEach((item) => {
+                        if (item.tenderID === tender.tenderID) {
+                            setBookmarked(true);
+                        }
+                    });
+                    
+                    console.log(`Fetched bookmark state for ${tender.tenderID}:`, bookmarked);
+                }
+
+            } catch (error) {
+                console.error("Failed to fetch initial bookmark state:", error);
+            }
+        };
+
+        fetchBookmarkState();
+    }, [bookmarked, isLoggedIn, tender.tenderID]);
+
+
+    const handleBookmarkClick = async () => {
+        //get coreID from auth context
+        let coreID = null;
+
+        try {
+            // Get the logged-in user attributes from Amplify
+            const attributes = await fetchUserAttributes();
+            console.log("attributes:", attributes);
+
+            // directly access the custom attribute
+            coreID = attributes["custom:CoreID"];
+            console.log("CoreID:", coreID);
+
+            if (!coreID) {
+                console.error("No CoreID found");
+                return;
+            }
+
+        } catch (error) {
+            console.error("Error fetching CoreID:", error);
             onRequireLogin();
             return;
-        } 
+        }
 
-        // placeholder + logs
-        setBookmarked((prev) => !prev);
-        console.log(bookmarked ? "Bookmark removed" : "Bookmark added", tender.tenderID);
+        //toggle watch endpoint
+        try {
+            const response = await axios.post(`${apiURL}/watchlist/togglewatch/${coreID}/${tender.tenderID}`);
+            console.log("POST /togglewatch response:", response.data);
+
+            // placeholder + logs
+            setBookmarked(prev => {
+                const newBookmarkedState = !prev;
+
+                onBookmarkSuccess(tender.title, newBookmarkedState);
+
+                return newBookmarkedState;
+            });
+
+        } catch (err) {
+            // If the API request fails, log the error and reset the tenders state to empty
+            console.error("Failed to toggle watch:", err);
+        }
     };
 
     return (
@@ -124,8 +211,6 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, onRequireLo
                         See Full Tender
                         <span className="arrow"></span>
                     </Link>
-
-
                 </div>
             )}
 
