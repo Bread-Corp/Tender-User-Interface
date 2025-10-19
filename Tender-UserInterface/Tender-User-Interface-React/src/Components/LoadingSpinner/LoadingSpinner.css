@@ -30,10 +30,9 @@
 
 .loading-text {
     font-size: 1rem;
-    color: #33497D;
+    color: var(--heading-text);
 }
 
-/* Smooth rotation with subtle opacity changes */
 @keyframes rotateFade {
     0% {
         transform: rotate(0deg);

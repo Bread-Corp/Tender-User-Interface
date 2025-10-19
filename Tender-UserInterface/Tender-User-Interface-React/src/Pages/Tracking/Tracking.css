@@ -140,35 +140,38 @@
 }
 
 .remove-btn,
-.view-btn {
-    background: none;
-    border: none;
+.tracking-view-btn {
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
-    padding: 6px 10px;
+    padding: 7px 13px;
     border-radius: 8px;
     transition: background 0.2s ease;
 }
 
 .remove-btn {
-    color: #d43c3c;
+    background-color: rgba(205, 79, 110, 0.08);
+    color: #CD4F6E;
+    border: 1px solid rgba(205, 79, 110, 0.2);
     display: flex;
     align-items: center;
     gap: 6px;
 }
 
     .remove-btn:hover {
-        background: rgba(212, 60, 60, 0.05);
+        background-color: rgba(205, 79, 110, 0.1);
+        border-color: rgba(205, 79, 110, 0.5);
     }
 
-.view-btn {
-    background-color: #1f3b7a;
-    color: white;
+.tracking-view-btn {
+    background-color: rgba(60, 90, 150, 0.08);
+    color: var(--heading-color);
+    border: 0.5px solid rgba(60, 90, 150, 0.12);
 }
 
-    .view-btn:hover {
-        background-color: #2a4c98;
+    .tracking-view-btn:hover {
+        background-color: rgba(60, 90, 150, 0.12);
+        border-color: rgba(60, 90, 150, 0.2);
     }
 
 .filter-container {
@@ -240,7 +243,6 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    background: white;
     padding: 30px 20px;
     border-radius: 16px;
     margin: 30px auto;

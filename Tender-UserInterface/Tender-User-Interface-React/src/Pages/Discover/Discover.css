@@ -171,7 +171,7 @@ html, body {
 }
 
 .discovery-cards-section {
-    background-color: #fff;
+    background-color: var(--feature-bg);
     margin-top: -3rem; /* optional overlap */
     padding: 2rem 1rem 3rem;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);

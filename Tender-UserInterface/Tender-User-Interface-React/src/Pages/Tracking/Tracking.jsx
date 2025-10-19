@@ -272,10 +272,19 @@ const Tracking = () => {
                                 {expanded.includes(tender.tenderID) && (
                                     <>
                                         <p className="location">
-                                            <FaMapMarkerAlt /> {tender.location}
+                                            <FaMapMarkerAlt /> <span className="tender-info-label">Source: &nbsp; </span>
+                                            <span className="tender-info-value">{tender.source || "N/A"} </span>
                                         </p>
                                         <p className="closing-date">
-                                            <FaRegClock /> Closing: {tender.closing}
+                                            <FaRegClock /><span className="tender-info-label">Closing Date: &nbsp; </span>
+                                            <span className="tender-info-value">
+                                                {tender.closingDate
+                                                    ? tender.closingDate.toLocaleDateString('en-GB', {
+                                                        day: '2-digit',
+                                                        month: '2-digit',
+                                                        year: 'numeric'
+                                                    }): "N/A"}
+                                            </span>
                                         </p>
                                         <div
                                             className="card-actions"
@@ -284,7 +293,7 @@ const Tracking = () => {
                                             <button className="remove-btn" onClick={() => handleBookmarkClick(tender.tenderID)}>
                                                 <FaTrashAlt /> Remove
                                             </button>
-                                            <button className="view-btn">View Tender</button>
+                                            <button className="tracking-view-btn" onClick={() => navigate(`/tender/${tender.tenderID}`)}>View Tender</button>
                                         </div>
                                     </>
                                 )}
