@@ -3,6 +3,7 @@ import {
     signIn as amplifySignIn,
     signUp as amplifySignUp,
     signOut as amplifySignOut,
+    deleteUser as amplifyDeleteUser,
     confirmSignUp as amplifyConfirmSignUp,
     getCurrentUser
 } from '@aws-amplify/auth';
@@ -93,6 +94,16 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const deleteCognitoUser = async() => {
+        try {
+            await amplifyDeleteUser();
+            return await signOut();
+        }
+        catch {
+            console.error("Error deleting user:", error);
+        }
+    }
+
     const value = {
         user,
         loading,
@@ -100,6 +111,7 @@ export const AuthProvider = ({ children }) => {
         signUp,
         confirmSignUp,
         signOut,
+        deleteCognitoUser,
     };
 
     return (

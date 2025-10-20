@@ -7,6 +7,7 @@ import {
     updateUserAttributes,
     signOut
 } from '@aws-amplify/auth';
+import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
 import { deleteUser } from '../../context/CoreLogicContext.js';
@@ -32,6 +33,7 @@ const Settings = () => {
     // state for the toggle
     const [activeView, setActiveView] = useState('settings'); // profile or settings
 
+    const { deleteCognitoUser } = useAuth();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -165,6 +167,7 @@ const Settings = () => {
 
         try {
             await deleteUser(coreID);
+            await deleteCognitoUser();
         }
         catch (error) {
             console.error('Failed to delete account: ', error);
