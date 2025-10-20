@@ -75,8 +75,6 @@ const Settings = () => {
     }, [hasChanges]);
 
 
-    // --- Handler Functions ---
-    // (All your handler functions remain exactly the same)
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         const updatedForm = { ...formData, [name]: value };
@@ -168,6 +166,10 @@ const Settings = () => {
         try {
             await deleteUser(coreID);
             await deleteCognitoUser();
+
+            alert("Account deleted successfully");
+            navigate('/login');
+
         }
         catch (error) {
             console.error('Failed to delete account: ', error);
