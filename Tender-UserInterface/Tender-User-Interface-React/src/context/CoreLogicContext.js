@@ -35,3 +35,14 @@ export const register = async (FullName, Email, PhoneNumber, Address)  =>
         console.error('Internal error creating user: ', error);
     }
 }
+
+export const deleteUser = async (userID) =>
+{
+    try {
+        const res = await axios.post(`${apiURL}/tenderuser/deleteuser/${userID}`);
+        console.log('DeleteUser:', res);
+    }
+    catch (error) {
+        console.error('Internal error deleting user: ', error);
+    }
+}

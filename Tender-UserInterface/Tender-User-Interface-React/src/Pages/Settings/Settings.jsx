@@ -8,7 +8,8 @@ import {
     signOut
 } from '@aws-amplify/auth';
 import { useNavigate } from "react-router-dom";
-import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner"; 
+import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
+import { deleteUser } from '../../context/CoreLogicContext.js';
 
 const Settings = () => {
     // profile states
@@ -160,6 +161,13 @@ const Settings = () => {
                 navigate('/login');
             }
             return;
+        }
+
+        try {
+            await deleteUser(coreID);
+        }
+        catch (error) {
+            console.error('Failed to delete account: ', error);
         }
     }
 
