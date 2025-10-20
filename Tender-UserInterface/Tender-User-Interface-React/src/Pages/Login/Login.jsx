@@ -80,7 +80,7 @@ const Login = () => {
         setError('');
         try {
             await signIn(email, password);
-            navigate('/profile');
+            navigate('/settings');
         } catch (err) {
             setError(err.message);
         }

@@ -90,22 +90,26 @@ const Profile = () => {
 
     const handleSave = async () => {
         try {
+            // Use '?? ""' to provide an empty string if any value is null/undefined
+            const attributesToUpdate = {
+                name: formData.name ?? "",
+                phone_number: formData.phone_number ?? "", // Specifically fixes the error
+                'custom:surname': formData.surname ?? "",
+                'custom:address': formData.address ?? ""
+            };
+
             await updateUserAttributes({
-                userAttributes: {
-                    name: formData.name,
-                    phone_number: formData.phone_number,
-                    'custom:surname': formData.surname,
-                    'custom:address': formData.address,
-                }
+                userAttributes: attributesToUpdate // Send the safe object
             });
 
             setInitialFormData({ ...formData });
             setHasChanges(false);
-            setEditingField(null);
+            setIsEditing(false);
             alert("Profile saved successfully!");
         } catch (error) {
             console.error("Error saving profile:", error);
-            alert("Error saving profile. Please check the console for details.");
+            // Show a more specific error message from Cognito
+            alert(`Error saving profile: ${error.message}`);
         }
     };
 
