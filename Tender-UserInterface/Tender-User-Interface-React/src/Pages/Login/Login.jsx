@@ -5,7 +5,7 @@ import './Login.css';
 import { useLocation } from 'react-router-dom';
 import TenderToolGraphic from "../../Components/TenderToolGraphic";
 import { useAuth } from '../../context/AuthContext';
-import { register } from '../../context/CoreLogicContext.js';
+import { register, deleteUser } from '../../context/CoreLogicContext.js';
 import PasswordInput from '../../Components/PasswordInput';
 import ErrorMessage from '../../Components/ErrorMessage.jsx'
 
@@ -80,7 +80,7 @@ const Login = () => {
         setError('');
         try {
             await signIn(email, password);
-            navigate('/profile');
+            navigate('/settings');
         } catch (err) {
             setError(err.message);
         }
@@ -146,18 +146,28 @@ const Login = () => {
             //set the ID to pass through
             submissionData.id = response;
 
-            // We are using the variables from the object above
-            await signUp(
-                submissionData.email,
-                submissionData.password,
-                submissionData.name,
-                submissionData.surname,
-                submissionData.formattedPhone,
-                submissionData.address,
-                submissionData.id,
-            );
+            //try append to cognito, if fails -- delete from database
+            try {
+                // We are using the variables from the object above
+                await signUp(
+                    submissionData.email,
+                    submissionData.password,
+                    submissionData.name,
+                    submissionData.surname,
+                    submissionData.formattedPhone,
+                    submissionData.address,
+                    submissionData.id,
+                );
 
-            navigate(`/confirm-signup?username=${email}`);
+                navigate(`/confirm-signup?username=${email}`);
+            }
+            catch (err) {
+                //delete from database
+                await deleteUser(submissionData.id);
+
+                setError(err.message);
+                console.error("Registration failed with error:", err);
+            }
 
         } catch (err) {
             setError(err.message);

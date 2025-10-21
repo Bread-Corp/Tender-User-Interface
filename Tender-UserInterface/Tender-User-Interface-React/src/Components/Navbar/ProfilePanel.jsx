@@ -45,7 +45,6 @@ const ProfilePanel = ({ show, toggle, close }) => {
                 <NavLink to="/login" className="dropdown-link">Login</NavLink>
                 <NavLink to={{ pathname: '/login', search: '?tab=register' }} className="dropdown-link">Register</NavLink>
                 <NavLink to="/settings" className="dropdown-link">Settings</NavLink>
-                <NavLink to="/profile" className="dropdown-link">Profile</NavLink>
                 {/* logout as NavLink but calls handleLogout */}
                 <NavLink
                     to="/login"
