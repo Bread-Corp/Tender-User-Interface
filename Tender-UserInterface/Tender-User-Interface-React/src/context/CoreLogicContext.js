@@ -46,3 +46,15 @@ export const deleteUser = async (userID) =>
         console.error('Internal error deleting user: ', error);
     }
 }
+
+export const editUser = async (userID, editUserDTO) =>
+{
+    try {
+        const res = await axios.post(`${apiURL}/tenderuser/edit/${userID}`, editUserDTO)
+        console.log('User editted at :', Date.now());
+        return res.data;
+    }
+    catch (error) {
+        console.error('Internal error editting user: ', error);
+    }
+}

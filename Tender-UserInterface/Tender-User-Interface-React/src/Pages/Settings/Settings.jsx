@@ -10,7 +10,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
-import { deleteUser } from '../../context/CoreLogicContext.js';
+import { deleteUser, editUser } from '../../context/CoreLogicContext.js';
 
 const Settings = () => {
     // profile states
@@ -99,6 +99,24 @@ const Settings = () => {
     }
 
     const handleSave = async () => {
+        let coreID = null;
+
+        try {
+            // Get the logged-in user attributes from Amplify
+            const attributes = await fetchUserAttributes();
+
+            //get and set coreID
+            coreID = attributes['custom:CoreID'];
+            console.log("CoreID:", coreID);
+
+        } catch (error) {
+            // If the user is not authenticated
+            if (error.name === 'NotAuthorizedException') {
+                navigate('/login');
+            }
+            return;
+        }
+
         try {
             const attributesToUpdate = {
                 name: formData.name ?? "",
@@ -106,6 +124,17 @@ const Settings = () => {
                 'custom:surname': formData.surname ?? "",
                 'custom:address': formData.address ?? ""
             };
+
+            const editUserDTO = {
+                email: formData.email,
+                fullName: formData.name + " " + formData.surname,
+                phoneNumber: formData.phone_number,
+                address: formData.address
+            };
+
+            const res = await editUser(coreID, editUserDTO);
+            console.log("User Profile: CoreLogic Edit", res);
+
             await updateUserAttributes({
                 userAttributes: attributesToUpdate
             });
