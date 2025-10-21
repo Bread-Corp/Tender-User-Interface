@@ -113,8 +113,9 @@
     .chart-subtitle {
         font-size: 0.9rem;
         color: #5571A6;
-        text-align: center;
+        text-align: left;
         margin-bottom: 20px;
+        padding-top: 0.5rem;
     }
 
 .info-section {
@@ -207,3 +208,21 @@
     align-items: center; 
     margin: 30px 0;
 }
+
+.section-content {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s ease-out;
+}
+
+    .section-content.open {
+        grid-template-rows: 1fr;
+    }
+
+    .section-content > .content-inner-wrapper {
+        overflow: hidden;
+    }
+
+    .section-content.open > .content-inner-wrapper {
+        padding-top: 1.5rem;
+    }
