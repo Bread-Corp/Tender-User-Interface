@@ -13,13 +13,15 @@ import ProtectedRoute from '../../Components/ProtectedRoute';
 import ConfirmSignUp from '../Login/ConfirmSignUp';
 import Settings from "../Settings/Settings";
 import Analytics from "../Analytics/Analytics";
+import { ThemeProvider } from '../../context/ThemeContext.jsx';
 
 
 function App() {
     return (
-        <>
+        <ThemeProvider>
             <Navbar />
             <Routes>
+
                 {/* Public Routes */ }
                 <Route path="/" element={<Home />} />
                 <Route path="/login" element={<Login />} />
@@ -29,12 +31,13 @@ function App() {
                 <Route path="/tender/:id" element={<TenderDetails />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/analytics" element={<Analytics />} />
+
                 {/* Protected Routes */ }          
                 <Route path="/tracking" element={<ProtectedRoute><Tracking /></ProtectedRoute>} />
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                 <Route path="/settings" element={<Settings />} />/*Fix protection*/
             </Routes>
-        </>
+        </ThemeProvider>
     );
 }
 

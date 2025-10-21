@@ -11,6 +11,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
 import { deleteUser, editUser } from '../../context/CoreLogicContext.js';
+import { useTheme } from '../../context/ThemeContext.jsx';
 
 const Settings = () => {
     // profile states
@@ -20,12 +21,6 @@ const Settings = () => {
     const [hasChanges, setHasChanges] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
 
-    // settings states
-    const [darkMode, setDarkMode] = useState(() => {
-        const storedMode = localStorage.getItem("darkMode");
-        return storedMode === "true";
-    });
-
     // combined state
     const [loading, setLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(false); // source to check if user is valid
@@ -33,6 +28,7 @@ const Settings = () => {
     // state for the toggle
     const [activeView, setActiveView] = useState('settings'); // profile or settings
 
+    const { darkMode, toggleDarkMode } = useTheme(); // get dark mode state + toggle function from global context
     const { deleteCognitoUser } = useAuth();
     const navigate = useNavigate();
 
@@ -57,11 +53,6 @@ const Settings = () => {
         };
         fetchUserData();
     }, [navigate]);
-
-    useEffect(() => {
-        document.body.classList.toggle("dark-mode", darkMode);
-        localStorage.setItem("darkMode", darkMode);
-    }, [darkMode]);
 
     useEffect(() => {
         const handleBeforeUnload = (e) => {
@@ -166,8 +157,6 @@ const Settings = () => {
             console.error('Error signing out: ', error);
         }
     };
-
-    const toggleDarkMode = () => setDarkMode(prev => !prev);
 
     const deleteAccount = async () => {
 
