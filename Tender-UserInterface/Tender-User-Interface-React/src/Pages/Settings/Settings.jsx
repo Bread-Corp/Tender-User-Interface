@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "./Settings.css";
-import "../profile/profile.css";
 import { FaUserCircle, FaMoon, FaSun } from "react-icons/fa";
 import {
     fetchUserAttributes,

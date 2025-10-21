@@ -52,14 +52,13 @@ const Tracking = () => {
             let coreID = null;
 
             try {
-                // Get the logged-in user attributes from Amplify
                 const attributes = await fetchUserAttributes();
 
-                //get and set coreID
                 coreID = attributes['custom:CoreID'];
 
             } catch (error) {
-                // If the user is not authenticated
+
+
                 if (error.name === 'NotAuthorizedException') {
                     navigate('/login');
                 }
@@ -67,17 +66,17 @@ const Tracking = () => {
                 return;
             }
 
-            //now we can use the coreID to get the user's saved tenders
+            const requestURL = `${apiURL}/watchlist/${coreID}`;
+
             try {
-                // request API to fetch ALL tracked items
-                const response = await axios.get(`${apiURL}/watchlist/${coreID}`);
+                const response = await axios.get(requestURL);
                 const result = response.data;
 
-                // make sure the response data is always an array
-                const data = Array.isArray(result) ? result : result.data || [];
+                const data = Array.isArray(result) ? result : result.watchlist || [];
 
                 // map over each tender item to convert it into an instance of a class
                 const tenderObjects = data.map((item) => {
+
                     // Explicitly resolve the ID as a fallback
                     const id = item.tenderID || item.TenderID || item.id;
 
@@ -94,7 +93,9 @@ const Tracking = () => {
                             tag: tagsArray,
                             source: item.source
                         });
+
                     } else {
+
                         return new ETender({
                             ...item,
                             tenderID: id,
@@ -102,14 +103,12 @@ const Tracking = () => {
                             source: item.source || "ETender"
                         });
                     }
-                });
+                }); 
 
-                // update the state to store the fetched and processed tenders
-                setTenders(tenderObjects);
+                 setTenders(tenderObjects);
             }
             catch (err) {
-                // If the API request fails, log the error and reset the tenders state to empty
-                console.error("Failed to fetch tenders:", err);
+
                 setTenders([]);
             }
             finally {
@@ -117,9 +116,8 @@ const Tracking = () => {
             }
         };
 
-        // call the async function to initiate the API request
         fetchWatchlist();
-    }, []); // empty dependency array so this runs only once on component mount
+    }, []);// empty dependency array so this runs only once on component mount
 
     useEffect(() => {
         const newTotalPages = Math.ceil(filteredTenders.length / PAGE_SIZE);
