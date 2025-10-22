@@ -1,10 +1,8 @@
 import { Routes, Route } from 'react-router-dom';
 import './App.css';
-import Navbar from "../../Components/Navbar/Navbar";
 import Home from "../Home/Home";
 import Login from "../Login/Login";
 import Policy from "../Policy/Policy";
-import Dashboard from "../Dashboard/Dashboard";
 import Discover from "../Discover/Discover";
 import Tracking from "../Tracking/Tracking";
 import Profile from "../Profile/Profile";
@@ -14,12 +12,14 @@ import ConfirmSignUp from '../Login/ConfirmSignUp';
 import Settings from "../Settings/Settings";
 import Analytics from "../Analytics/Analytics";
 import { ThemeProvider } from '../../context/ThemeContext.jsx';
+import Dashboard from '../SuperUser/Dashboard';
+import MainLayout from '../../Components/Layout/MainLayout'; 
 
 
 function App() {
     return (
         <ThemeProvider>
-            <Navbar />
+            <MainLayout>
             <Routes>
 
                 {/* Public Routes */ }
@@ -29,14 +29,17 @@ function App() {
                 <Route path="/policy" element={<Policy />} />
                 <Route path="/discover" element={<Discover />} />
                 <Route path="/tender/:id" element={<TenderDetails />} />
-                <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/analytics" element={<Analytics />} />
 
                 {/* Protected Routes */ }          
                 <Route path="/tracking" element={<ProtectedRoute><Tracking /></ProtectedRoute>} />
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                 <Route path="/settings" element={<Settings />} />/*Fix protection*/
-            </Routes>
+
+                {/* SuperUser Routes */}
+                <Route path="/superuser/dashboard" element={<Dashboard />} />
+                </Routes>
+            </MainLayout>
         </ThemeProvider>
     );
 }
