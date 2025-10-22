@@ -15,7 +15,7 @@ const Dashboard = () => {
             <div className="dashboard-sections">
                 <div className="dashboard-row">
                     {/* User Management */}
-                    <section className="dashboard-card-user-management">
+                    <section className="dashboard-card user-management">
                         <div className="card-header">
                             <h2>User Management</h2>
                         </div>
