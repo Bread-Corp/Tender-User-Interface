@@ -45,7 +45,7 @@ const Dashboard = () => {
                     <div className="card-header">
                         <h2>Recent Activity</h2>
                     </div>
-                    <ul>
+                    <ul className="activity-list">
                         <li>14:30: Scraper task executed successfully.</li>
                         <li>14:15: <span className="critical">CRITICAL:</span> Unhandled exception in Tender API</li>
                         <li>14:00: New user registered</li>

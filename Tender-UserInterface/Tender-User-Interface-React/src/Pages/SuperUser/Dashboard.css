@@ -110,7 +110,23 @@
         background-color: #5571A6;
     }
 
+    /* Activity */
+.activity-list {
+    list-style-position: inside; 
+    padding-left: 0; 
+    margin-top: 12px;
+}
+
+    .activity-list li {
+        padding-left: 12px; 
+        margin-bottom: 8px;
+        font-size: 14px;
+        color: #2e3b55;
+    }
+
 .critical {
     color: red;
     font-weight: bold;
 }
+
+
