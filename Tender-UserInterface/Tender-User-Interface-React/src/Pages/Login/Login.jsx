@@ -9,7 +9,7 @@ import { register, deleteUser } from '../../context/CoreLogicContext.js';
 import PasswordInput from '../../Components/PasswordInput';
 import ErrorMessage from '../../Components/ErrorMessage.jsx'
 
-const Login = () => {
+const Login = ({ onLoginSuccess }) => {
     const [activeForm, setActiveForm] = useState('login');
     const [registerPage, setRegisterPage] = useState(1); // for multi step registration
     const loginTabRef = useRef(null);
@@ -80,7 +80,8 @@ const Login = () => {
         setError('');
         try {
             await signIn(email, password);
-            navigate('/settings');
+            onLoginSuccess();
+            navigate('/');
         } catch (err) {
             setError(err.message);
         }

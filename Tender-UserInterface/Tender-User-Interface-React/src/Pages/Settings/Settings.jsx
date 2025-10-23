@@ -288,14 +288,7 @@ const Settings = () => {
                                             <option>Zulu</option>
                                         </select>
                                     </div>
-                                    <div className="setting-row">
-                                        <label>Date Format</label>
-                                        <select className="settings-dropdown">
-                                            <option value="dd/mm/yyyy">dd/mm/yyyy</option>
-                                            <option value="mm/dd/yyyy">mm/dd/yyyy</option>
-                                            <option value="yyyy-mm-dd">yyyy-mm-dd</option>
-                                        </select>
-                                    </div>
+                                 
                                     <div className="setting-row">
                                         <label>Default View</label>
                                         <select className="settings-dropdown">

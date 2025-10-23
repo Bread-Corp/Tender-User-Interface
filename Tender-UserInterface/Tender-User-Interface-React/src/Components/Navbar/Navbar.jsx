@@ -5,7 +5,7 @@ import ProfileMenu from './ProfilePanel';
 import MenuIcon from './MobileMenu';
 import './Navbar.css';
 
-const Navbar = () => {
+const Navbar = ({ isSignedIn, onLogoutSuccess }) => {
     const location = useLocation();
     const [menuOpen, setMenuOpen] = useState(false);
     const [showNotifications, setShowNotifications] = useState(false);
@@ -44,11 +44,14 @@ const Navbar = () => {
                             Analytics
                         </NavLink>
                     </li>
+
+                    {isSignedIn && (
                     <li>
                         <NavLink to="/tracking" className={({ isActive }) => (isActive ? 'active' : '')}>
-                            Tracking
+                            Watchlist
                         </NavLink>
                     </li>
+                    )}
                 </ul>
 
                 <div className="navbar-right">
@@ -62,6 +65,8 @@ const Navbar = () => {
                         show={showProfileDropdown}
                         toggle={() => setShowProfileDropdown(prev => !prev)}
                         close={() => setShowProfileDropdown(false)}
+                        isSignedIn={isSignedIn}
+                        onLogoutSuccess={onLogoutSuccess}
                     />
 
                     <MenuIcon open={menuOpen} toggle={() => setMenuOpen(prev => !prev)} />

@@ -13,8 +13,16 @@
 
 .single-card-container {
     width: 100%;
-    max-width: 600px;
+    transition: max-width 0.35s ease-out;
 }
+
+    .single-card-container.view-profile {
+        max-width: 500px;
+    }
+
+    .single-card-container.view-settings {
+        max-width: 650px;
+    }
 
 /* ============================================= */
 /* --- 2. View Toggle Switch (Top) --- */
