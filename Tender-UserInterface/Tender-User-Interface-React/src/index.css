@@ -9,6 +9,7 @@
     --text-color: #1F2B4A;
     --heading-color: #2A3C64;
     --subtext-color: #4a5a78;
+    --analytics-subtext: #2A3C64;
 
     /* Backgrounds */
     --hero-bg: linear-gradient(135deg, #d6e6f2, #eaf3fb);
@@ -47,6 +48,7 @@
 
     /* Hero Text */
     --home-heading: #e0e6f1;
+    --analytics-color: #33497d;
 
     /* Contact us*/
     --contact-us-bg: #2A3C64;
@@ -61,6 +63,7 @@ body.dark-mode {
     --text-color: #dce3ed;
     --heading-color: #f0f4ff;
     --subtext-color: #a6b2c5;
+    --analytics-subtext: #e0e0e0;
 
     /* Backgrounds */
     --hero-bg: linear-gradient(135deg, #1b2431, #10151c);
@@ -98,6 +101,7 @@ body.dark-mode {
 
     /* Hero Text */
     --home-heading: #f0f6ff;
+    --analytics-color: #5571A6;
 
     /* Contact us */
     --contact-us-bg: #1c2636;
