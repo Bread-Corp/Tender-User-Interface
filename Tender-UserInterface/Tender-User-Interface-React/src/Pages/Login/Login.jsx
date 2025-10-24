@@ -311,6 +311,7 @@ const Login = ({ onLoginSuccess }) => {
                         />
                     </div>
 
+                    <div className="form-content-wrapper">
 
                     {/* user guidance messages */}
                     <div className="auth-message">
@@ -342,6 +343,8 @@ const Login = ({ onLoginSuccess }) => {
                     {/* divider after user messages */}
                     <div className="form-input-section">
                         <div className="form-divider"></div>
+
+               </div>
 
                     {/* LOGIN FORM */}
                     {activeForm === 'login' ? (
