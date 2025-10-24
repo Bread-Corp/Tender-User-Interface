@@ -1,9 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FaCalendarCheck, FaSearch, FaRegBookmark, FaUser, FaEnvelope, FaCommentDots } from 'react-icons/fa';
 import './Home.css';
 import { Link } from "react-router-dom";
+import axios from 'axios';
 
 const Home = () => {
+    const [email, setEmail] = useState(null);
+    const [userName, setUserName] = useState(null);
+    const [message, setMessage] = useState(null);
+
+    //contact us - handler
+    const sendMessage = async (e) => {
+        e.preventDefault();
+        console.log("Sending:", { email, userName, message });
+
+        if (!email || !userName || !message) {
+            alert("Please fill out all fields before submitting.");
+            return;
+        }
+
+        try {
+            const res = await axios.post(`${import.meta.env.VITE_MAILER_API}`, { userEmail: email, userName });
+
+            if (res.status === 200) {
+                alert("Your message has been sent!");
+                setUserName(""); setEmail(""); setMessage("");
+            } else {
+                alert("Failed to send message. Please try again later.");
+            }
+        }
+        catch (err) {
+            console.error("Failed to contact mailer service", err);
+        }
+    }
+
     return (
         <div className="home-container">
             <section className="hero-home">
@@ -50,17 +80,17 @@ const Home = () => {
                 <form className="contact-form">
                     <div className="input-icon-group">
                         <FaUser className="input-icon" />
-                        <input type="text" placeholder="Your Name" required />
+                        <input type="text" placeholder="Your Name" value={userName} onChange={(e) => setUserName(e.target.value)} required />
                     </div>
                     <div className="input-icon-group">
                         <FaEnvelope className="input-icon" />
-                        <input type="email" placeholder="Your Email" required />
+                        <input type="email" placeholder="Your Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
                     </div>
                     <div className="input-icon-group">
                         <FaCommentDots className="input-icon" />
-                        <textarea placeholder="Your Message" rows="4" required></textarea>
+                        <textarea placeholder="Your Message" rows="4" value={message} onChange={(e) => setMessage(e.target.value)} required></textarea>
                     </div>
-                    <button className="btn-secondary-light" type="submit">Send Message</button>
+                    <button className="btn-secondary-light" type="submit" onClick={ sendMessage }>Send Message</button>
                 </form>
             </section>
 

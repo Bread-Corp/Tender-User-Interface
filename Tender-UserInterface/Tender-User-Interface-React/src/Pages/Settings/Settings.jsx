@@ -118,8 +118,8 @@ const Settings = () => {
             const editUserDTO = {
                 email: formData.email,
                 fullName: formData.name + " " + formData.surname,
-                phoneNumber: formData.phone_number,
-                address: formData.address
+                phoneNumber: formData.phone_number ?? "",
+                address: formData.address ?? ""
             };
 
             const res = await editUser(coreID, editUserDTO);
