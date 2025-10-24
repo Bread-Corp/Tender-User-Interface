@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import './Dashboard.css';
-import SuperUserNavBar from '../../Components/SuperUserNavBar/SuperUserNavBar';
+import SuperUserNavBar from '../../../Components/SuperUserNavBar/SuperUserNavBar';
 
 const scraperSources = ["Etenders", "Eskom", "SANRAL", "SARS", "Transnet"];
 
@@ -46,7 +47,9 @@ const Dashboard = () => {
                         <p>Active Users: 1233</p>
                         <p>New Users (last 7 days): 15</p>
                         <div className="dashboard-actions">
-                            <button className="manage-btn">Manage Users</button>
+                            <Link to="/superuser/manageusers" className="manage-btn">
+                                Manage Users
+                            </Link>
                             <button className="add-btn">Add +</button>
                         </div>
                     </section>

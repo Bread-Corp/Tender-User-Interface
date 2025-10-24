@@ -12,7 +12,8 @@ import ConfirmSignUp from '../Login/ConfirmSignUp';
 import Settings from "../Settings/Settings";
 import Analytics from "../Analytics/Analytics";
 import { ThemeProvider } from '../../context/ThemeContext.jsx';
-import Dashboard from '../SuperUser/Dashboard';
+import Dashboard from '../SuperUser/Dashboard/Dashboard';
+import ManageUsers from '../SuperUser/ManageUsers/ManageUsers';
 import MainLayout from '../../Components/Layout/MainLayout'; 
 
 
@@ -38,6 +39,7 @@ function App() {
 
                 {/* SuperUser Routes */}
                 <Route path="/superuser/dashboard" element={<Dashboard />} />
+                <Route path="/superuser/manageusers" element={<ManageUsers />} />
                 </Routes>
             </MainLayout>
         </ThemeProvider>
