@@ -1,17 +1,32 @@
-.dashboard-container {
-    font-family: 'Segoe UI', sans-serif;
-    padding: 20px;
-    background-color: #f5f7fa;
+
+:root {
+    --banner-height: 290px; 
+    --navbar-height: 60px; 
 }
 
-/* Banner */
+.dashboard-container {
+    font-family: 'Segoe UI', sans-serif;
+    padding: 0px 0px 10px 0px;
+}
+
+.dashboard-sections {
+    margin: 0 auto 3rem auto; 
+    padding: 2.5rem 1.5rem;
+    max-width: 1200px;
+    box-sizing: border-box;
+    padding-top: 2.5rem; 
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* BANNER */
 .dashboard-banner {
-    margin-top: 80px;
-    height: 120px;
-    background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-    border-radius: 8px;
-    padding: 20px;
+    z-index: 1;
+    height: var(--banner-height);
+    background-color: #33497d;
     color: white;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -19,114 +34,119 @@
 }
 
     .dashboard-banner h1 {
-        font-size: 30px;
+        font-size: 40px;
         font-weight: 700;
         margin-bottom: 10px;
+        margin-top: calc(var(--navbar-height));
     }
 
     .dashboard-banner p {
-        font-size: 16px;
+        font-size: 20px;
         opacity: 0.9;
     }
 
-    /* Grid */
-.dashboard-sections {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    margin: 80px auto 3rem auto;
-    padding: 2.5rem 1.5rem;
-    max-width: 1200px;
-    box-sizing: border-box;
-}
-
+/* GRID & CARDS */
 .dashboard-row {
+    margin-top: 25px; 
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
-    margin-top: 40px;
 }
 
 .dashboard-card {
-    background: var(--tender-card-bg);
+    background: var(--tender-card-bg, white); 
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    border: 1px solid var(--tender-card-border);
+    border: 1px solid var(--tender-card-border, #e0e0e0);
 }
 
-.card-header {
+.card-header h2 {
     font-size: 20px;
     font-weight: 600;
     margin-bottom: 10px;
 }
 
-/* Buttons */
+/* BUTTONS */
 .dashboard-actions {
     display: flex;
     gap: 12px;
     margin-top: 20px;
 }
 
-/* Base Button Style */
-.dashboard-actions button {
-  padding: 10px 16px;
-  font-size: 15px;
-  font-weight: 500;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease, box-shadow 0.3s ease;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-}
-
-/* Manage Button */
-.manage-btn {
-    background-color: #4B659A;
-    color: white;
-}
-
-    .manage-btn:hover {
-        background-color: #5571A6;
+    .dashboard-actions button {
+        padding: 10px 16px;
+        font-size: 15px;
+        font-weight: 500;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     }
 
-/* Add Button */
+.manage-btn,
+.scraper-btn {
+    background-color: #4B659A; 
+    color: white;
+    border: 1px solid #4B659A;
+}
+
+    .manage-btn:hover,
+    .scraper-btn:hover {
+        background-color: #5571A6; 
+        border-color: #5571A6;
+    }
+
+/* ADD BTN*/
 .add-btn {
     background-color: white;
     color: #4B659A;
-    border: 2px solid #4B659A;
+    border: 1px solid #4B659A;
     border-radius: 8px;
 }
 
     .add-btn:hover {
-        background-color: #5571A6;
+        background-color: #f0f0f0; 
+        color: #4B659A;
     }
 
-/* Scraper Button */
-.scraper-btn {
-    background-color: #4B659A;
-    color: white;
-}
-    .scraper-btn:hover {
-        background-color: #5571A6;
-    }
-
-    /* Activity */
+/* ACTIVITY LIST */
 .activity-list {
-    list-style-position: inside; 
-    padding-left: 0; 
+    list-style: none; 
+    padding-left: 0;
     margin-top: 12px;
 }
 
     .activity-list li {
-        padding-left: 12px; 
-        margin-bottom: 8px;
+        padding: 8px 0; 
         font-size: 14px;
         color: #2e3b55;
+        border-bottom: 1px dashed #e0e0e0;
     }
 
+        .activity-list li:last-child {
+            border-bottom: none; 
+        }
+
 .critical {
-    color: red;
+    color: #d9534f; 
     font-weight: bold;
 }
 
+/* SCRAPER DROPDOWN */
+.scraper-select {
+    padding: 10px 16px;
+    font-size: 15px;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #4B659A;
+    color: white;
+    border: 1px solid #4B659A;
+    transition: background-color 0.3s ease;
+}
 
+    .scraper-select:hover {
+        background-color: #5571A6;
+        border-color: #5571A6;
+    }
