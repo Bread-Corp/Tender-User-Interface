@@ -1,4 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
+import React, { useState } from 'react';
 import './App.css';
 import Navbar from "../../Components/Navbar/Navbar";
 import Home from "../Home/Home";
@@ -15,16 +16,29 @@ import Settings from "../Settings/Settings";
 import Analytics from "../Analytics/Analytics";
 import { ThemeProvider } from '../../context/ThemeContext.jsx';
 
-
 function App() {
+
+    // manage authentication state
+    const [isSignedIn, setIsSignedIn] = useState(false);
+
+    // function to update state
+    const handleLogin = () => {
+        setIsSignedIn(true);
+    };
+
+    const handleLogout = () => {
+        setIsSignedIn(false);
+    };
+
     return (
         <ThemeProvider>
-            <Navbar />
+            {/* pass state and handler to nav */}
+            <Navbar isSignedIn={isSignedIn} onLogoutSuccess={handleLogout} />
             <Routes>
 
                 {/* Public Routes */ }
                 <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
+                <Route path="/login" element={<Login onLoginSuccess={handleLogin} />} />
                 <Route path="/confirm-signup" element={<ConfirmSignUp />} />
                 <Route path="/policy" element={<Policy />} />
                 <Route path="/discover" element={<Discover />} />
