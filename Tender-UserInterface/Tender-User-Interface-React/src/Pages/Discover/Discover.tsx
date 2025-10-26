@@ -69,10 +69,11 @@ const Discover = ({ onNewNotif }) => {
 
     // fetch the watchlist when the user logs in
     useEffect(() => {
-        if (!isLoggedIn) {
-            setWatchlist([]); // clear watchlist if user logs out
-            return;
-        }
+        console.log("Fetching watchlist:", isLoggedIn);
+        //if (!isLoggedIn) {
+        //    setWatchlist([]); // clear watchlist if user logs out
+        //    return;
+        //}
 
         const fetchWatchlist = async () => {
             try {
@@ -82,10 +83,10 @@ const Discover = ({ onNewNotif }) => {
                 if (coreID) {
                     // fetch the entire watchlist for the user
                     const response = await axios.get(`${apiURL}/watchlist/${coreID}`);
-                    const result = response.data;
+                    const result = response.data.watchlist;
 
                     const data = Array.isArray(result) ? result : result.data || [];
-
+                    console.log("watchlist data:", data);
                     setWatchlist(data); // store the full watchlist array
                 }
             } catch (error) {

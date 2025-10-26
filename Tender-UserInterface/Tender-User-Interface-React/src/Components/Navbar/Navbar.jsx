@@ -5,7 +5,7 @@ import ProfileMenu from './ProfilePanel';
 import MenuIcon from './MobileMenu';
 import './Navbar.css';
 
-const Navbar = ({ isSignedIn, onLogoutSuccess, isAdmin }) => {
+const Navbar = ({ isSignedIn, onLogoutSuccess, isAdmin, isNotification }) => {
     const location = useLocation();
     const [menuOpen, setMenuOpen] = useState(false);
     const [showNotifications, setShowNotifications] = useState(false);
