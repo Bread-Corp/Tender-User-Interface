@@ -70,10 +70,10 @@ const Discover = ({ onNewNotif }) => {
     // fetch the watchlist when the user logs in
     useEffect(() => {
         console.log("Fetching watchlist:", isLoggedIn);
-        //if (!isLoggedIn) {
-        //    setWatchlist([]); // clear watchlist if user logs out
-        //    return;
-        //}
+        if (!isLoggedIn) {
+            setWatchlist([]); // clear watchlist if user logs out
+            return;
+        }
 
         const fetchWatchlist = async () => {
             try {

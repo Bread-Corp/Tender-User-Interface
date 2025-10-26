@@ -41,18 +41,12 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, onNewNotif,
     const displayedTitle =
         titleExpanded || !isLong ? title : title.slice(0, MAX_TITLE_LENGTH) + "...";
 
-
-    // prepping for saving logic
-    //useEffect(() => {
-    //    console.log(`Bookmark state for ${tender.tenderID}:`, bookmarked);
-    //}, [bookmarked, tender.tenderID]);
-
     // load initial bookmark state from the prop
     useEffect(() => {
-        //if (!isLoggedIn) {
-        //    setBookmarked(false); // ensure bookmarked is false if logged out
-        //    return;
-        //}
+        if (!isLoggedIn) {
+            setBookmarked(false); // ensure bookmarked is false if logged out
+            return;
+        }
 
         // check if the tender's ID is in the watchlist array prop
         const isAlreadyBookmarked = watchlistArray.some(

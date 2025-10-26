@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router-dom';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 import Navbar from "../../Components/Navbar/Navbar";
 import Home from "../Home/Home";
@@ -15,13 +15,27 @@ import ConfirmSignUp from '../Login/ConfirmSignUp';
 import Settings from "../Settings/Settings";
 import Analytics from "../Analytics/Analytics";
 import { ThemeProvider } from '../../context/ThemeContext.jsx';
+import { useAuth } from '../../context/AuthContext';
 
 function App() {
+
+    const { user } = useAuth();
 
     // manage authentication state
     const [isSignedIn, setIsSignedIn] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
     const [isNotification, setIsNotification] = useState(false);
+
+    useEffect(() => {
+        if (user === null || user === undefined) {
+            setIsSignedIn(false);
+            console.log("false");
+        } else {
+            setIsSignedIn(true);
+            localStorage.setItem("userToken", true); 
+            console.log("true");
+        }
+    }, [user]);
 
     // function to update state
     const handleLogin = () => {
