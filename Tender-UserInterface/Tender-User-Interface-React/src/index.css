@@ -16,6 +16,7 @@
     --home-bg: white;
     --card-bg: #EFF5FA;
     --feature-bg: white;
+    --notif-bg: rgba(255,255,255,0.5);
     --cta-bg: #d6e6f2;
     --tender-card-bg: #f0f6fc;
 
@@ -70,6 +71,7 @@ body.dark-mode {
     --home-bg: linear-gradient(135deg, #202b3a, #141a23);
     --card-bg: #20293E;
     --feature-bg: #2A344B;
+    --notif-bg: rgba(42, 52, 75, 0.2);
     --cta-bg: #20293E;
     --tender-card-bg: #20293E;
 
