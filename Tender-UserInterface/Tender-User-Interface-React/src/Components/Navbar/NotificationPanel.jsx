@@ -4,6 +4,7 @@ import NotificationCard from './NotificationCard';
 import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
 import axios from 'axios';
 import { fetchUserAttributes } from '@aws-amplify/auth';
+import { fetchNotifications } from '../../context/CoreLogicContext.js';
 
 const mockNotifications = [
     {
@@ -57,6 +58,27 @@ const NotificationPanel = ({ show, toggle, close }) => {
         if (show) {
             const fetchNotifications = async () => {
                 setIsLoading(true);
+
+                //get CoreID
+                let coreID = null;
+
+                try {
+                    const attributes = await fetchUserAttributes();
+
+                    coreID = attributes['custom:CoreID'];
+
+                } catch (error) {
+
+
+                    if (error.name === 'NotAuthorizedException') {
+                        navigate('/login');
+                    }
+                    setIsLoading(false);
+                    return;
+                }
+
+                //fetch from corelogiccontext
+                const notifs = await fetchNotifications(coreID)
 
                 await new Promise(resolve => setTimeout(resolve, 500));
                 setNotifications(mockNotifications);

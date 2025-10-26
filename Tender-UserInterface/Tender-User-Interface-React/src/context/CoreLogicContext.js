@@ -58,3 +58,15 @@ export const editUser = async (userID, editUserDTO) =>
         console.error('Internal error editting user: ', error);
     }
 }
+
+export const fetchNotifications = async (userID) =>
+{
+    try {
+        const res = await axios.get(`${apiURL}/notification/${userID}`)
+        console.log('Fethced user notifications at :', Date.now());
+        return res.data.notifications;
+    }
+    catch (error) {
+        console.error('Internal error editting user: ', error);
+    }
+}
