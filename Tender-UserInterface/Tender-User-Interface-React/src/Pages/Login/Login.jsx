@@ -5,6 +5,7 @@ import './Login.css';
 import { useLocation } from 'react-router-dom';
 import TenderToolGraphic from "../../Components/TenderToolGraphic";
 import { useAuth } from '../../context/AuthContext';
+import { fetchUserAttributes } from '@aws-amplify/auth';
 import { register, deleteUser } from '../../context/CoreLogicContext.js';
 import PasswordInput from '../../Components/PasswordInput';
 import ErrorMessage from '../../Components/ErrorMessage.jsx'
@@ -86,6 +87,7 @@ const Login = ({ onLoginSuccess, onAdminSuccess }) => {
 
                 const attributes = await fetchUserAttributes();
                 role = attributes['custom:Role'];
+                console.log("UserRole: ", role);
             } catch (attrError) {
                 console.error("Error fetching user attributes:", attrError);
             }

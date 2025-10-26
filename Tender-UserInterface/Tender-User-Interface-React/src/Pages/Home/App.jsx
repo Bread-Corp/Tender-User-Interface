@@ -18,14 +18,15 @@ import { ThemeProvider } from '../../context/ThemeContext.jsx';
 
 function App() {
 
-    const [isAdmin, setIsAdmin] = useState(false);
-
     // manage authentication state
     const [isSignedIn, setIsSignedIn] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [isNotification, setIsNotification] = useState(false);
 
     // function to update state
     const handleLogin = () => {
         setIsSignedIn(true);
+        console.log(isSignedIn);
     };
 
     const handleLogout = () => {
@@ -35,12 +36,22 @@ function App() {
 
     const handleAdmin = () => {
         setIsAdmin(true);
+        console.log(isAdmin);
+    }
+
+    const handleNewNotif = () => {
+        setIsNotification(true);
+        console.log(isNotification);
+    }
+
+    const handleReadNotif = () => {
+        setIsNotification(false);
     }
 
     return (
         <ThemeProvider>
             {/* pass state and handler to nav */}
-            <Navbar isSignedIn={isSignedIn} onLogoutSuccess={handleLogout} isAdmin={isAdmin} />
+            <Navbar isSignedIn={isSignedIn} onLogoutSuccess={handleLogout} isAdmin={isAdmin} isNotification={isNotification} />
             <Routes>
 
                 {/* Public Routes */ }
@@ -48,13 +59,13 @@ function App() {
                 <Route path="/login" element={<Login onLoginSuccess={handleLogin} onAdminSuccess={handleAdmin} />} />
                 <Route path="/confirm-signup" element={<ConfirmSignUp />} />
                 <Route path="/policy" element={<Policy />} />
-                <Route path="/discover" element={<Discover />} />
+                <Route path="/discover" element={<Discover onNewNotif={handleNewNotif} />} />
                 <Route path="/tender/:id" element={<TenderDetails />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/analytics" element={<Analytics />} />
 
                 {/* Protected Routes */ }          
-                <Route path="/tracking" element={<ProtectedRoute><Tracking /></ProtectedRoute>} />
+                <Route path="/tracking" element={<ProtectedRoute><Tracking onNewNotif={handleNewNotif} /></ProtectedRoute>} />
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                 <Route path="/settings" element={<Settings />} />/*Fix protection*/
             </Routes>

@@ -18,7 +18,7 @@ const apiURL = import.meta.env.VITE_API_URL;
 const max_visible_filters = 4;
 const pageSize = 10;
  
-const Discover = () => {
+const Discover = ({ onNewNotif }) => {
     const [showFilterOverlay, setShowFilterOverlay] = useState(false);
     const [filters, setFilters] = useState < string[] > (["New", "Programming", "Construction", "Emergency", "Green Energy"]);
     const [showAllFilters, setShowAllFilters] = useState(false);
@@ -55,6 +55,11 @@ const Discover = () => {
         setToastMessage(message);
         setTimeout(() => setToastMessage(null), duration);
     };
+
+    //hlper for new notif
+    const helpNewNotif = () => {
+        onNewNotif();
+    }
 
     // Apply dark mode from localStorage
     useEffect(() => {
@@ -320,6 +325,7 @@ const Discover = () => {
                                     key={tender.tenderID}
                                     tender={tender}
                                     isLoggedIn={isLoggedIn}
+                                    onNewNotif={helpNewNotif}
                                     watchlistArray={watchlist}
                                     onRequireLogin={() => setLoginModalOpen(true)}
                                     onBookmarkSuccess={(tenderTitle, isAdded) => {
