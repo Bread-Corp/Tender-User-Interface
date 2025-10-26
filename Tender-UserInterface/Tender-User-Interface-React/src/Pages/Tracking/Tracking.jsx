@@ -125,7 +125,7 @@ const Tracking = ({ onNewNotif }) => {
             const attributes = await fetchUserAttributes();
             coreID = attributes['custom:CoreID'];
         } catch (error) {
-            // onRequireLogin(); // This function wasn't defined
+
             if (error.name === 'NotAuthorizedException') {
                 navigate('/login');
             }

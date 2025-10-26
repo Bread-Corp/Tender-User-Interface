@@ -72,7 +72,7 @@ const Navbar = ({ isSignedIn, onLogoutSuccess, isAdmin, isNotification }) => {
                         toggle={() => setShowNotifications(prev => !prev)}
                         close={() => setShowNotifications(false)}
                     />
-
+            
                     <ProfileMenu
                         show={showProfileDropdown}
                         toggle={() => setShowProfileDropdown(prev => !prev)}

@@ -59,7 +59,7 @@ export const editUser = async (userID, editUserDTO) =>
     }
 }
 
-export const fetchNotifications = async (userID) =>
+export const fetchAllNotifications = async (userID) =>
 {
     try {
         const res = await axios.get(`${apiURL}/notification/${userID}`)

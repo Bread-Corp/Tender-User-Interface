@@ -16,6 +16,7 @@ import Settings from "../Settings/Settings";
 import Analytics from "../Analytics/Analytics";
 import { ThemeProvider } from '../../context/ThemeContext.jsx';
 import { useAuth } from '../../context/AuthContext';
+import { AlertUpdate } from '../../Components/Navbar/NotificationPanel'; 
 
 function App() {
 
@@ -24,7 +25,7 @@ function App() {
     // manage authentication state
     const [isSignedIn, setIsSignedIn] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
-    const [isNotification, setIsNotification] = useState(false);
+    const [isNotification, setIsNotification] = useState(true);
 
     useEffect(() => {
         if (user === null || user === undefined) {
@@ -36,6 +37,16 @@ function App() {
             console.log("true");
         }
     }, [user]);
+
+    useEffect(() => {
+        if (isNotification) {
+            AlertUpdate(true);
+            console.log("true");
+        } else {
+            AlertUpdate(false);
+            console.log("false");
+        }
+    }, [isNotification]);
 
     // function to update state
     const handleLogin = () => {
@@ -60,6 +71,12 @@ function App() {
 
     const handleReadNotif = () => {
         setIsNotification(false);
+    }
+
+    const toggleNotifications = () => {
+        if (!showNotifications) {
+            handleReadNotif();
+        }
     }
 
     return (
