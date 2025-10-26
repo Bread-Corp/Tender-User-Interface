@@ -5,9 +5,9 @@ import { Link } from "react-router-dom";
 import axios from 'axios';
 
 const Home = () => {
-    const [email, setEmail] = useState(null);
-    const [userName, setUserName] = useState(null);
-    const [message, setMessage] = useState(null);
+    const [email, setEmail] = useState("");
+    const [userName, setUserName] = useState("");
+    const [message, setMessage] = useState("");
 
     //contact us - handler
     const sendMessage = async (e) => {

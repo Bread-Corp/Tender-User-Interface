@@ -124,8 +124,8 @@ const TenderDetails: React.FC = () => {
             {/* Supporting Docs */}
             {tender.supportingDocs && (
                 <div className="tender-detail-card ">
-                    <h2>Supporting Documents</h2>
-                    <a href={tender.supportingDocs} target="_blank" rel="noreferrer" className="see-more-btn">
+                    <h2 style={{ marginBottom: '1.8rem' }}>Supporting Documents</h2>
+                    <a href={tender.supportingDocs} target="_blank" rel="noreferrer" className="btn-secondary-dark">
                         View Document
                     </a>
                 </div>
