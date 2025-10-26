@@ -18,6 +18,8 @@ import { ThemeProvider } from '../../context/ThemeContext.jsx';
 
 function App() {
 
+    const [isAdmin, setIsAdmin] = useState(false);
+
     // manage authentication state
     const [isSignedIn, setIsSignedIn] = useState(false);
 
@@ -28,17 +30,22 @@ function App() {
 
     const handleLogout = () => {
         setIsSignedIn(false);
+        setIsAdmin(false);
     };
+
+    const handleAdmin = () => {
+        setIsAdmin(true);
+    }
 
     return (
         <ThemeProvider>
             {/* pass state and handler to nav */}
-            <Navbar isSignedIn={isSignedIn} onLogoutSuccess={handleLogout} />
+            <Navbar isSignedIn={isSignedIn} onLogoutSuccess={handleLogout} isAdmin={isAdmin} />
             <Routes>
 
                 {/* Public Routes */ }
                 <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login onLoginSuccess={handleLogin} />} />
+                <Route path="/login" element={<Login onLoginSuccess={handleLogin} onAdminSuccess={handleAdmin} />} />
                 <Route path="/confirm-signup" element={<ConfirmSignUp />} />
                 <Route path="/policy" element={<Policy />} />
                 <Route path="/discover" element={<Discover />} />

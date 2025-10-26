@@ -9,7 +9,7 @@ import { register, deleteUser } from '../../context/CoreLogicContext.js';
 import PasswordInput from '../../Components/PasswordInput';
 import ErrorMessage from '../../Components/ErrorMessage.jsx'
 
-const Login = ({ onLoginSuccess }) => {
+const Login = ({ onLoginSuccess, onAdminSuccess }) => {
     const [activeForm, setActiveForm] = useState('login');
     const [registerPage, setRegisterPage] = useState(1); // for multi step registration
     const loginTabRef = useRef(null);
@@ -79,7 +79,22 @@ const Login = ({ onLoginSuccess }) => {
         e.preventDefault();
         setError('');
         try {
+            let role = null;
             await signIn(email, password);
+
+            try {
+
+                const attributes = await fetchUserAttributes();
+                role = attributes['custom:Role'];
+            } catch (attrError) {
+                console.error("Error fetching user attributes:", attrError);
+            }
+
+            if (role === 'SuperUser') {
+                onAdminSuccess();
+                console.log("Validated admin.");
+            }
+                        
             onLoginSuccess();
             navigate('/');
         } catch (err) {

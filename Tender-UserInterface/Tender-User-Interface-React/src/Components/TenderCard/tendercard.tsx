@@ -46,48 +46,22 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, watchlistAr
     //    console.log(`Bookmark state for ${tender.tenderID}:`, bookmarked);
     //}, [bookmarked, tender.tenderID]);
 
-    // Load initial bookmark state if logged in
+    // load initial bookmark state from the prop
     useEffect(() => {
-        console.log(`Bookmark prefetch for ${tender.tenderID}:`, bookmarked);
-        //if (!isLoggedIn) return;
+        if (!isLoggedIn) {
+            setBookmarked(false); // ensure bookmarked is false if logged out
+            return;
+        }
 
-        const fetchBookmarkState = async () => {
-            try {
-                const attributes = await fetchUserAttributes();
-                console.log("Attributes on page load:", attributes);
-                const coreID = attributes["custom:CoreID"];
-                if (!coreID) {
-                    console.warn("No CoreID found for user");
-                    return;
-                }
+        // check if the tender's ID is in the watchlist array prop
+        const isAlreadyBookmarked = watchlistArray.some(
+            (item) => item.tenderID === tender.tenderID
+        );
 
-                // Call the backend to get the watchlist entry for this tender
-                const response = await axios.get(`${apiURL}/watchlist/${coreID}`);
-                console.log(`GET watchlist response for user: ${coreID}:`, response.data);
+        setBookmarked(isAlreadyBookmarked);
 
-                const result = response.data;
-
-                // make sure the response data is akways an array
-                // if  API returns a single object, wrap it in an array
-                const data = Array.isArray(result) ? result : result.data || []
-
-                if (true) {
-                    watchlistArray.forEach((item) => {
-                        if (item.tenderID === tender.tenderID) {
-                            setBookmarked(true);
-                        }
-                    });
-                    
-                    console.log(`Fetched bookmark state for ${tender.tenderID}:`, bookmarked);
-                }
-
-            } catch (error) {
-                console.error("Failed to fetch initial bookmark state:", error);
-            }
-        };
-
-        fetchBookmarkState();
-    }, [bookmarked, isLoggedIn, tender.tenderID]);
+        // this effect runs only when the props change, not when the local state changes
+    }, [isLoggedIn, watchlistArray, tender.tenderID]);
 
 
     const handleBookmarkClick = async () => {

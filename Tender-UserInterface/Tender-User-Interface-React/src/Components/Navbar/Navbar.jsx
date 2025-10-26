@@ -5,7 +5,7 @@ import ProfileMenu from './ProfilePanel';
 import MenuIcon from './MobileMenu';
 import './Navbar.css';
 
-const Navbar = ({ isSignedIn, onLogoutSuccess }) => {
+const Navbar = ({ isSignedIn, onLogoutSuccess, isAdmin }) => {
     const location = useLocation();
     const [menuOpen, setMenuOpen] = useState(false);
     const [showNotifications, setShowNotifications] = useState(false);
@@ -34,23 +34,35 @@ const Navbar = ({ isSignedIn, onLogoutSuccess }) => {
                             Home
                         </NavLink>
                     </li>
-                    <li>
-                        <NavLink to="/discover" className={({ isActive }) => (isActive ? 'active' : '')}>
-                            Discover
-                        </NavLink>
-                    </li>
+
+                    {!isAdmin && (
+                        <li>
+                            <NavLink to="/discover" className={({ isActive }) => (isActive ? 'active' : '')}>
+                                Discover
+                            </NavLink>
+                        </li>
+                    )}
+
                     <li>
                         <NavLink to="/analytics" className={({ isActive }) => (isActive ? 'active' : '')}>
                             Analytics
                         </NavLink>
                     </li>
 
-                    {isSignedIn && (
+                    {isSignedIn && !isAdmin && (
                     <li>
                         <NavLink to="/tracking" className={({ isActive }) => (isActive ? 'active' : '')}>
                             Watchlist
                         </NavLink>
                     </li>
+                    )}
+
+                    {isAdmin && (
+                        <li>
+                            <NavLink to="/dashboard" className={({ isActive }) => (isActive ? 'active' : '')}>
+                                Dashboard
+                            </NavLink>
+                        </li>
                     )}
                 </ul>
 
