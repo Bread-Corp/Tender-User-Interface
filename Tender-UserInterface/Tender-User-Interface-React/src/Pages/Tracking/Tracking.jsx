@@ -110,30 +110,30 @@ const Tracking = () => {
     }, [page, filter, navigate]);// rerun when page or filter changes
 
 
-    //////handle remove bookmark
-    //const handleBookmarkClick = async (tenderID) => {
-    //    let coreID = null;
+    ////handle remove bookmark
+    const handleBookmarkClick = async (tenderID) => {
+        let coreID = null;
 
-    //    try {
-    //        const attributes = await fetchUserAttributes();
-    //        coreID = attributes['custom:CoreID'];
-    //    } catch (error) {
-    //        // onRequireLogin(); // This function wasn't defined
-    //        if (error.name === 'NotAuthorizedException') {
-    //            navigate('/login');
-    //        }
-    //        setIsLoading(false);
-    //        return;
-    //    }
+        try {
+            const attributes = await fetchUserAttributes();
+            coreID = attributes['custom:CoreID'];
+        } catch (error) {
+            // onRequireLogin(); // This function wasn't defined
+            if (error.name === 'NotAuthorizedException') {
+                navigate('/login');
+            }
+            setIsLoading(false);
+            return;
+        }
 
-    //    try {
-    //        const response = await axios.post(`${apiURL}/watchlist/togglewatch/${coreID}/${tenderID}`);
-    //        // This client-side removal is fine for a quick UI update.
-    //        setTenders(prev => prev.filter(t => t.tenderID !== tenderID));
-    //    } catch (err) {
-    //        console.error("Error removing bookmark:", err);
-    //    }
-    //};
+        try {
+            const response = await axios.post(`${apiURL}/watchlist/togglewatch/${coreID}/${tenderID}`);
+            // This client-side removal is fine for a quick UI update.
+            setTenders(prev => prev.filter(t => t.tenderID !== tenderID));
+        } catch (err) {
+            console.error("Error removing bookmark:", err);
+        }
+    };
 
     const PaginationControls = () => {
         if (totalPages <= 1) return null;

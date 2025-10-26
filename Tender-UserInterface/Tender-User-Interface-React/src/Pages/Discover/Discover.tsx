@@ -98,7 +98,7 @@ const Discover = () => {
             setIsLoading(true);
             try {
                 // fetch all data
-                const response = await axios.get(`${apiURL}/tender/fetch?pageSize=500&page=1`);
+                const response = await axios.get(`${apiURL}/tender/fetch?pageSize=10&page=1`);
                 const result = response.data;
 
                 // make sure the response data is always an array
