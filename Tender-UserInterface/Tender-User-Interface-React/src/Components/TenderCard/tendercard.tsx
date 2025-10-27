@@ -16,6 +16,7 @@ type WatchlistItem = {
 type TenderCardProps = {
     tender?: BaseTender;
     isLoggedIn: boolean;
+    onNewNotif;
     watchlistArray: WatchlistItem[];
     onRequireLogin: () => void;
     onBookmarkSuccess: (tenderTitle: string, isAdded: boolean) => void;
@@ -24,7 +25,7 @@ type TenderCardProps = {
 const MAX_TITLE_LENGTH = 100;
 const apiURL = import.meta.env.VITE_API_URL;
 
-const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, watchlistArray, onRequireLogin, onBookmarkSuccess }) => {
+const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, onNewNotif, watchlistArray, onRequireLogin, onBookmarkSuccess }) => {
     const navigate = useNavigate();
     const [expanded, setExpanded] = useState(false);
 
@@ -39,12 +40,6 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, watchlistAr
     const isLong = title.length > MAX_TITLE_LENGTH;
     const displayedTitle =
         titleExpanded || !isLong ? title : title.slice(0, MAX_TITLE_LENGTH) + "...";
-
-
-    // prepping for saving logic
-    //useEffect(() => {
-    //    console.log(`Bookmark state for ${tender.tenderID}:`, bookmarked);
-    //}, [bookmarked, tender.tenderID]);
 
     // load initial bookmark state from the prop
     useEffect(() => {
@@ -92,6 +87,13 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, watchlistAr
         try {
             const response = await axios.post(`${apiURL}/watchlist/togglewatch/${coreID}/${tender.tenderID}`);
             console.log("POST /togglewatch response:", response.data);
+
+            //if a user adds something to their watchlist, we simulate responsiveness in notifications
+            if (response.data.isWatched)
+            {
+                onNewNotif()
+                console.log("/togglewatch notification response:", response.data.isWatched);
+            }
 
             // placeholder + logs
             setBookmarked(prev => {

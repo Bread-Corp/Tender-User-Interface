@@ -15,7 +15,7 @@ const apiURL = import.meta.env.VITE_API_URL;
 
 const PAGE_SIZE = 10;
 
-const Tracking = () => {
+const Tracking = ({ onNewNotif }) => {
     const navigate = useNavigate();
 
     const [tenders, setTenders] = useState([]); // all fetched tenders
@@ -61,6 +61,13 @@ const Tracking = () => {
                 const result = response.data;
 
                 const data = Array.isArray(result) ? result : result.data || [];
+
+                //when a user accesses their watchlist, and tenders are closing soon, we simulate responsiveness in notifications
+                if (result.hasNotification)
+                {
+                    onNewNotif()
+                    console.log("closingSoon notification response:", response.data.hasNotification);
+                }
 
                 // map over each tender item to convert it into an instance of a class
                 const tenderObjects = data.map((item) => {
@@ -118,7 +125,7 @@ const Tracking = () => {
             const attributes = await fetchUserAttributes();
             coreID = attributes['custom:CoreID'];
         } catch (error) {
-            // onRequireLogin(); // This function wasn't defined
+
             if (error.name === 'NotAuthorizedException') {
                 navigate('/login');
             }
