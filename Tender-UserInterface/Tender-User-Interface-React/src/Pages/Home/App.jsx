@@ -16,7 +16,6 @@ import Settings from "../Settings/Settings";
 import Analytics from "../Analytics/Analytics";
 import { ThemeProvider } from '../../context/ThemeContext.jsx';
 import { useAuth } from '../../context/AuthContext';
-import { AlertUpdate } from '../../Components/Navbar/NotificationPanel'; 
 
 function App() {
 
@@ -37,16 +36,6 @@ function App() {
             console.log("true");
         }
     }, [user]);
-
-    useEffect(() => {
-        if (isNotification) {
-            AlertUpdate(true);
-            console.log("true");
-        } else {
-            AlertUpdate(false);
-            console.log("false");
-        }
-    }, [isNotification]);
 
     // function to update state
     const handleLogin = () => {
@@ -73,16 +62,10 @@ function App() {
         setIsNotification(false);
     }
 
-    const toggleNotifications = () => {
-        if (!showNotifications) {
-            handleReadNotif();
-        }
-    }
-
     return (
         <ThemeProvider>
             {/* pass state and handler to nav */}
-            <Navbar isSignedIn={isSignedIn} onLogoutSuccess={handleLogout} isAdmin={isAdmin} isNotification={isNotification} />
+            <Navbar isSignedIn={isSignedIn} onLogoutSuccess={handleLogout} isAdmin={isAdmin} isNotification={isNotification} onReadNotif={handleReadNotif} />
             <Routes>
 
                 {/* Public Routes */ }

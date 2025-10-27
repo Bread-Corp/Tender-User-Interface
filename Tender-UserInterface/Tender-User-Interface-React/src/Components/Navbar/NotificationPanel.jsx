@@ -6,26 +6,10 @@ import axios from 'axios';
 import { fetchUserAttributes } from '@aws-amplify/auth';
 import { fetchAllNotifications } from '../../context/CoreLogicContext.js';
 
-export const AlertUpdate = (update) => {
-    try {
-        if (update) {
-            setIsNotification(true);
-            console.log("true");
-        } else {
-            setIsNotification(false);
-            console.log("false");
-        }
-    }
-    catch (error) {
-        console.error('update error: ', error);
-    }
-} 
-
-const NotificationPanel = ({ show, toggle, close }) => {
+const NotificationPanel = ({ show, toggle, close, onReadNotif, isNotification }) => {
     const notificationRef = useRef(null);
     const [notifications, setNotifications] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [isNotification, setIsNotification] = useState(true); 
         
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -81,7 +65,7 @@ const NotificationPanel = ({ show, toggle, close }) => {
 
     return (
         <>
-            <div className="notification" onClick={toggle}>
+            <div className="notification" onClick={() => { toggle(); onReadNotif(); }}>
                 <FaBell />
                 {/* conditional dot */}
                 {isNotification && <div className="dot" />}

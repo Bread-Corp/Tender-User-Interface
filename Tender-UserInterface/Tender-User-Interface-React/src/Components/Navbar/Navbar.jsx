@@ -5,7 +5,7 @@ import ProfileMenu from './ProfilePanel';
 import MenuIcon from './MobileMenu';
 import './Navbar.css';
 
-const Navbar = ({ isSignedIn, onLogoutSuccess, isAdmin, isNotification }) => {
+const Navbar = ({ isSignedIn, onLogoutSuccess, isAdmin, isNotification, onReadNotif }) => {
     const location = useLocation();
     const [menuOpen, setMenuOpen] = useState(false);
     const [showNotifications, setShowNotifications] = useState(false);
@@ -18,6 +18,16 @@ const Navbar = ({ isSignedIn, onLogoutSuccess, isAdmin, isNotification }) => {
         const shouldHide = hideNavbarPaths.some(path => location.pathname.startsWith(path));
         setShowNavbar(!shouldHide);
     }, [location.pathname]);
+
+    //hlper for read notif
+    const helpReadNotif = () => {
+        onReadNotif();
+    }
+
+    //hlper for is notif
+    const helpIsNotif = () => {
+        return isNotification;
+    }
 
     if (!showNavbar) return null;
 
@@ -71,6 +81,8 @@ const Navbar = ({ isSignedIn, onLogoutSuccess, isAdmin, isNotification }) => {
                         show={showNotifications}
                         toggle={() => setShowNotifications(prev => !prev)}
                         close={() => setShowNotifications(false)}
+                        onReadNotif={helpReadNotif}
+                        isNotification={isNotification}
                     />
             
                     <ProfileMenu
