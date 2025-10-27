@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Dashboard.css';
 import SuperUserNavBar from '../../../Components/SuperUserNavBar/SuperUserNavBar';
+import AddSuperUser from '../../../Components/AddSuperUser/AddSuperUser';
 
 const scraperSources = ["Etenders", "Eskom", "SANRAL", "SARS", "Transnet"];
 
@@ -25,90 +26,109 @@ const Dashboard = () => {
     // update state when dropdown changes
     const handleScraperChange = (event) => {
         setSelectedScraper(event.target.value);
-        // fetchScraperLogs(event.target.value); 
+        // fetchScraperLogs(event.target.value);
     };
 
-    return (
-        <div className="dashboard-container">
-            <SuperUserNavBar />
+    //add super user modal state
+    const [showAddUser, setShowAddUser] = useState(false);
 
-            <div className="dashboard-banner">
+    const handleOpen = () => setShowAddUser(true);
+    const handleClose = () => setShowAddUser(false);
+    const handleSubmit = (data) => {
+        console.log('Submitted:', data);
+        setShowAddUser(false);
+    };
+
+        return (
+            <div className="dashboard-container">
+                <SuperUserNavBar />
+
+                <div className="dashboard-banner">
                     <h1>Welcome Super User</h1>
                     <p>You have full administrative access.</p>
-            </div>
-
-            <div className="dashboard-sections">
-                <div className="dashboard-row">
-                    {/* User Management */}
-                    <section className="dashboard-card user-management">
-                        <div className="card-header">
-                            <h2>User Management</h2>
-                        </div>
-                        <p>Active Users: 1233</p>
-                        <p>New Users (last 7 days): 15</p>
-                        <div className="dashboard-actions">
-                            <Link to="/superuser/manageusers" className="manage-btn">
-                                Manage Users
-                            </Link>
-                            <button className="add-btn">Add +</button>
-                        </div>
-                    </section>
-
-                    {/* System Health */}
-                    <section className="dashboard-card system-health">
-                        <div className="card-header">
-                            <h2>System Health</h2>
-                        </div>
-                        <p>Last successful scrap: 2025-07-26 SAST</p>
-                        <p>Error Count (24h): 3</p>
-                        <div className="dashboard-actions">
-
-                            <select
-                                className="scraper-select"
-                                value={selectedScraper}
-                                onChange={handleScraperChange}>
-                                {scraperSources.map(source => (
-                                    <option key={source} value={source}>
-                                        {source} Logs
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                        </section>
                 </div>
 
-                {/* scraper logs display section */}
-                <section className="dashboard-card scraper-logs-display">
-                    <div className="card-header">
-                        <h2>Logs: {selectedScraper}</h2>
+                <div className="dashboard-sections">
+                    <div className="dashboard-row">
+                        {/* User Management */}
+                        <section className="dashboard-card user-management">
+                            <div className="card-header">
+                                <h2>User Management</h2>
+                            </div>
+                            <p>Active Users: 1233</p>
+                            <p>New Users (last 7 days): 15</p>
+                            <div className="dashboard-actions">
+                                <Link to="/superuser/manageusers" className="manage-btn">
+                                    Manage Users
+                                </Link>
+                                <button className="add-btn" onClick={handleOpen}>Add +</button>
+                            </div>
+                        </section>
+
+                        {/* Modal Popup */}
+                        {showAddUser && (
+                            <div className="modal-overlay">
+                                <div className="modal-content">
+                                    <AddSuperUser onSubmit={handleSubmit} onCancel={handleClose} />
+                                </div>
+                            </div>
+                        )}
+
+                        {/* System Health */}
+                        <section className="dashboard-card system-health">
+                            <div className="card-header">
+                                <h2>System Health</h2>
+                            </div>
+                            <p>Last successful scrap: 2025-07-26 SAST</p>
+                            <p>Error Count (24h): 3</p>
+                            <div className="dashboard-actions">
+
+                                <select
+                                    className="scraper-select"
+                                    value={selectedScraper}
+                                    onChange={handleScraperChange}>
+                                    {scraperSources.map(source => (
+                                        <option key={source} value={source}>
+                                            {source} Logs
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        </section>
                     </div>
-                    {currentLogs.length > 0 ? (
+
+                    {/* scraper logs display section */}
+                    <section className="dashboard-card scraper-logs-display">
+                        <div className="card-header">
+                            <h2>Logs: {selectedScraper}</h2>
+                        </div>
+                        {currentLogs.length > 0 ? (
+                            <ul className="activity-list">
+                                {currentLogs.map((log, index) => (
+                                    <li key={index} className={log.includes("Failure") || log.includes("Error") || log.includes("CRITICAL") ? "critical" : ""}>
+                                        {log}
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>No recent logs found for {selectedScraper}.</p>
+                        )}
+                    </section>
+
+                    {/* recent activity */}
+                    <section className="dashboard-card recent-activity">
+                        <div className="card-header">
+                            <h2>Recent Activity</h2>
+                        </div>
                         <ul className="activity-list">
-                            {currentLogs.map((log, index) => (
-                                <li key={index} className={log.includes("Failure") || log.includes("Error") || log.includes("CRITICAL") ? "critical" : ""}>
-                                    {log}
-                                </li>
-                            ))}
+                            <li>14:30: Scraper task executed successfully.</li>
+                            <li>14:15: <span className="critical">CRITICAL:</span> Unhandled exception in Tender API</li>
+                            <li>14:00: New user registered</li>
                         </ul>
-                    ) : (
-                        <p>No recent logs found for {selectedScraper}.</p>
-                    )}
-                </section>
-
-                {/* recent activity */}
-                <section className="dashboard-card recent-activity">
-                    <div className="card-header">
-                        <h2>Recent Activity</h2>
-                    </div>
-                    <ul className="activity-list">
-                        <li>14:30: Scraper task executed successfully.</li>
-                        <li>14:15: <span className="critical">CRITICAL:</span> Unhandled exception in Tender API</li>
-                        <li>14:00: New user registered</li>
-                    </ul>
-                </section>
+                    </section>
+                </div>
             </div>
-        </div>
-    );
-};
+        );
+    };
 
-export default Dashboard;
+    export default Dashboard;

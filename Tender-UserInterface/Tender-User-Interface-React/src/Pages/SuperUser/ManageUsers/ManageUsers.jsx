@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './ManageUsers.css'; 
 import { FaUserEdit, FaTrash } from 'react-icons/fa';
+import AddSuperUser from '../../../Components/AddSuperUser/AddSuperUser';
 
 // MOCK DATA
 const MOCK_USERS = [
@@ -27,11 +28,30 @@ const ManageUsers = () => {
         }
     };
 
+    //add super user modal state
+    const [showAddUser, setShowAddUser] = useState(false);
+
+    const handleOpen = () => setShowAddUser(true);
+    const handleClose = () => setShowAddUser(false);
+    const handleSubmit = (data) => {
+        console.log('Submitted:', data);
+        setShowAddUser(false);
+    };
+
     return (
         <div className="user-management-container">
             <header className="page-header">
                 <h1>User Management ({users.length} Total)</h1>
-                <button className="add-user-btn">+ Add New User</button>
+                <button className="add-user-btn" onClick={handleOpen}>+ Add New User</button>
+
+                {/* Modal Popup */}
+                {showAddUser && (
+                    <div className="modal-overlay">
+                        <div className="modal-content">
+                            <AddSuperUser onSubmit={handleSubmit} onCancel={handleClose} />
+                        </div>
+                    </div>
+                )}
             </header>
 
             <div className="user-table-wrapper">
