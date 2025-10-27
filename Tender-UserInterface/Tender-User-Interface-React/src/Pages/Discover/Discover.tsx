@@ -114,7 +114,7 @@ const Discover = ({ onNewNotif }) => {
                     alphaSort : overlayFilters.alphabetical, //alphabetical sorting
                 };
 
-                const requestURL = `${apiURL}/tender/fetch?page=${page}&pageSize=${pageSize}`;
+                const requestURL = `${apiURL}/tender/fetchFiltered?page=${page}&pageSize=${pageSize}`;
                 const response = await axios.post(requestURL, filterDTO);
 
                 const result = response.data;
