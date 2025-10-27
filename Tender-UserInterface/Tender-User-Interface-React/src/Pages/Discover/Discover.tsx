@@ -107,6 +107,7 @@ const Discover = ({ onNewNotif }) => {
                 const filterDTO = {
                     page: page,
                     pageSize: pageSize,
+                    search: searchTerm,
                     sort: sortOption,
                     tags: filters,
                     dateFilter: overlayFilters.date,
@@ -147,16 +148,11 @@ const Discover = ({ onNewNotif }) => {
         };
 
         fetchTenders();
-    }, [page, sortOption, filters, overlayFilters]); 
+    }, [page, searchTerm, sortOption, filters, overlayFilters]); 
 
     const removeFilter = (index: number) => {
         setFilters(prev => prev.filter((_, i) => i !== index));
     };
-
-    const visibleTenders = tenders.filter((tender) => {
-        const title = tender.title || "";
-        return title.toLowerCase().includes(searchTerm.toLowerCase());
-    });
 
     const visibleFilters = filters.slice(0, max_visible_filters);
     const hiddenCount = filters.length - visibleFilters.length;
@@ -253,9 +249,9 @@ const Discover = ({ onNewNotif }) => {
                         {isLoading ? (
                             // show spinner while data being fetched
                             <LoadingSpinner text="Loading tenders..." />
-                        ) : visibleTenders.length > 0 ? (
+                        ) : tenders.length > 0 ? (
                             // show tenders if loading is false and we have results
-                            visibleTenders.map((tender) => (
+                            tenders.map((tender) => (
                                 <TenderCard
                                     key={tender.tenderID}
                                     tender={tender}
