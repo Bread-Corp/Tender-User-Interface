@@ -20,7 +20,7 @@ const pageSize = 10;
  
 const Discover = ({ onNewNotif }) => {
     const [showFilterOverlay, setShowFilterOverlay] = useState(false);
-    const [filters, setFilters] = useState < string[] > (["New", "Programming", "Construction", "Emergency", "Green Energy"]);
+    const [filters, setFilters] = useState<string[]>([]);
     const [showAllFilters, setShowAllFilters] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [sortOption, setSortOption] = useState("Popularity");
@@ -113,7 +113,7 @@ const Discover = ({ onNewNotif }) => {
                 // map over each tender item to convert it into an instance of a class
                 const tenderObjects: BaseTender[] = data.map((item: any) => {
                     const tagsArray: Tags[] = item.tags
-                        ? item.tags.map((t: any) => new Tags(t.id || "", t.name || ""))
+                        ? item.tags.map((t: any) => new Tags(t.tagOD || "", t.tagName || ""))
                         : [];
 
                     if (item.source === "Eskom") {
