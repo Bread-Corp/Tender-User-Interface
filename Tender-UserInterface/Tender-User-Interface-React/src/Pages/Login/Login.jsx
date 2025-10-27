@@ -39,9 +39,9 @@ const Login = ({ onLoginSuccess, onAdminSuccess }) => {
 
     const categorisedTags = {
         Province: ['Gauteng', 'KwaZulu-Natal', 'Western Cape', 'Eastern Cape', 'Limpopo', 'Mpumalanga', 'North West', 'Free State', 'Northern Cape'],
-        Source: ['Eskom', 'Etenders', 'Transnet', 'SANRAL', 'SARS'],
+        Source: ['Eskom', 'eTenders', 'Transnet', 'SANRAL', 'SARS'],
         Industry: ['Construction & Civil Engineering', 'IT & Software', 'Consulting & Professional Serivces', 'Maintenance & Repairs', 'Supply & Delivery',
-                   'Finance & Auditing Services', 'Logistics & Transport', 'Health, Safety & Environmental', 'General Services', 'Training & Development']
+                   'Financial & Auditing Services', 'Logistics & Transport', 'Health, Safety & Environmental', 'General Services', 'Training & Development']
     };
 
     // switch between login and register tabs and reset form state
