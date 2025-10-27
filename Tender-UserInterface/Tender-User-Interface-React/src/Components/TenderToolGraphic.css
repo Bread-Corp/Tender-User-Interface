@@ -13,29 +13,25 @@ html, body {
     flex-direction: column;
     justify-content: flex-start;
     gap: 20px;
-    transform: rotate(-45deg) translate(-25%);
+    transform: rotate(-45deg) translate(-30%);
 }
 
 .bar {
-    /* Your original styles */
-    height: 70px; /* <-- This will now work as expected */
+
+    height: 70px; 
     border-radius: 100px;
     opacity: 0.95;
-    /* My animation styles */
     transform-origin: left;
     transform: scaleX(0);
     animation-name: growBar;
     animation-fill-mode: forwards;
     animation-duration: 0.5s;
     animation-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
-    /* --- THE FIX --- */
-    flex-shrink: 0; /* <-- Add this line */
-    /* --- CSS Variables (unchanged) --- */
+    flex-shrink: 0; 
     width: var(--bar-width, 70%);
     animation-delay: var(--animation-delay, 0s);
 }
 
-/* --- Your original color classes --- */
 .red {
     background: #c94f7c;
 }
@@ -48,7 +44,7 @@ html, body {
     background: #d8df95;
 }
 
-/* --- Your text animation keyframes --- */
+/* text animation keyframes */
 @keyframes fadeSlideIn {
     from {
      opacity: 0;
@@ -62,25 +58,19 @@ html, body {
 }
 
 .tender-text {
-    /* --- Position in top right --- */
-    right: 40px; /* <-- Changed from left */
-    top: 40px; /* <-- Changed from bottom */
-    position: absolute; /* <-- Make sure this is present */
-    /* --- Other styles (unchanged) --- */
+    right: 40px; 
+    top: 40px; 
+    position: absolute;
     z-index: 1000;
     transform: rotate(0deg);
     opacity: 0;
     padding: 20px 25px;
-  
     border-radius: 12px;
-
     animation: fadeSlideIn 0.8s ease-out 0.4s forwards;
 }
 
     .tender-text h1 {
-        /* --- Align text to the right --- */
-        text-align: right; /* <-- Add this line */
-        /* --- Other styles (unchanged) --- */
+        text-align: right; 
         color: rgba(255,255,255,0.9);
         font-size: 110px;
         font-weight: bold;
@@ -88,7 +78,7 @@ html, body {
         font-family: 'Segoe UI', sans-serif;
     }
 
-/* --- Keyframe animation for the bar growing --- */
+/* animation for the bar growing */
 @keyframes growBar {
     from {
         transform: scaleX(0); /* Start at 0% width */
@@ -97,4 +87,26 @@ html, body {
     to {
         transform: scaleX(1); /* End at 100% of its set width */
     }
+}
+
+@media (max-width: 768px) {
+
+    .tender-container {
+        gap: 10px;
+        transform: rotate(-45deg) translate(-20%);
+    }
+
+    .bar {
+        height: 40px;
+    }
+
+    .tender-text {
+        right: 20px;
+        top: 20px;
+        padding: 15px 20px;
+    }
+
+        .tender-text h1 {
+            font-size: 40px;
+        }
 }
