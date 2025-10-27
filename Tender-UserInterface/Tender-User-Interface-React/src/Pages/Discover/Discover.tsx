@@ -105,18 +105,17 @@ const Discover = ({ onNewNotif }) => {
             try {
                 // DTO
                 const filterDTO = {
-                    page: page,
-                    pageSize: pageSize,
                     search: searchTerm,
-                    sort: sortOption,
+                    sort: sortOption, //sort dropdown options
                     tags: filters,
-                    dateFilter: overlayFilters.date,
-                    tagFilter: overlayFilters.tags,
-                    statusFilter: overlayFilters.status,
-                    alphaSort : overlayFilters.alphabetical,
+                    dateFilter: overlayFilters.date, // closing soon < 7 days
+                    tagFilter: overlayFilters.tags, // tags applied from overlay
+                    statusFilter: overlayFilters.status, // open or closed
+                    alphaSort : overlayFilters.alphabetical, //alphabetical sorting
                 };
 
-                const response = await axios.post(`${apiURL}/tender/fetch`, filterDTO);
+                const requestURL = `${apiURL}/tender/fetch?page=${page}&pageSize=${pageSize}`;
+                const response = await axios.post(requestURL, filterDTO);
 
                 const result = response.data;
 
