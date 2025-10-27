@@ -8,6 +8,6 @@ export class StandardUser extends TenderUser {
     constructor(data: any) {
         super(data); // pass common fields to TenderUser
         this.Address = data.Address ?? undefined;
-        this.Tags = data.Tags ? data.Tags.map((t: any) => new Tags(t.id, t.name)) : [];
+        this.Tags = data.Tags ? data.Tags.map((t: any) => new Tags(t.id ?? undefined, t.name ?? t)) : [];
     }
 }
