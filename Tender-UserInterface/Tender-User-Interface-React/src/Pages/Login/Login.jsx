@@ -7,7 +7,7 @@ import TenderToolGraphic from "../../Components/TenderToolGraphic";
 import { useAuth } from '../../context/AuthContext';
 import { register, deleteUser } from '../../context/CoreLogicContext.js';
 import PasswordInput from '../../Components/PasswordInput';
-import ErrorMessage from '../../Components/ErrorMessage.jsx'
+import ErrorMessage from '../../Components/ErrorMessage.jsx';
 
 const Login = () => {
     const [activeForm, setActiveForm] = useState('login');
@@ -86,7 +86,7 @@ const Login = () => {
         }
     };
 
-    // --- REPLACE THE ENTIRE handleRegisterSubmit FUNCTION WITH THIS ---
+    // handle register submit function
     const handleRegisterSubmit = async (e) => {
         e.preventDefault();
         setError('');

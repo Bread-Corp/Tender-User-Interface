@@ -51,8 +51,6 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    // RECONFIGURED SIGNUP FUNCTION
-    // The signature is simplified. We assume the 'username' is the 'email'.
     const signUp = async (email, password, name, surname, phoneNumber, address, id) => {
         try {
             return await amplifySignUp({
@@ -60,7 +58,7 @@ export const AuthProvider = ({ children }) => {
                 password,
                 options: {
                     userAttributes: {
-                        email, // The email attribute itself
+                        email, 
                         name,
                         phone_number: phoneNumber,
                         'custom:surname': surname,
@@ -71,6 +69,29 @@ export const AuthProvider = ({ children }) => {
             });
         } catch (error) {
             console.error("Error signing up:", error);
+            throw error;
+        }
+    };
+
+    // signUp for super user
+    const createSuperUser = async (email, name, surname, phoneNumber, organisation, id) => {
+        try {
+            return await amplifySignUp({
+                username: email,
+                password: 'admin123', // set admin password
+                options: {
+                    userAttributes: {
+                        email,
+                        name,
+                        phone_number: phoneNumber,
+                        'custom:surname': surname,
+                        'custom:organisation': organisation,
+                        'custom:CoreID': id
+                    },
+                },
+            });
+        } catch (error) {
+            console.error("Error creating super user:", error);
             throw error;
         }
     };
@@ -99,7 +120,7 @@ export const AuthProvider = ({ children }) => {
             await amplifyDeleteUser();
             return await signOut();
         }
-        catch {
+        catch (error) {
             console.error("Error deleting user:", error);
         }
     }
@@ -109,6 +130,7 @@ export const AuthProvider = ({ children }) => {
         loading,
         signIn,
         signUp,
+        createSuperUser,
         confirmSignUp,
         signOut,
         deleteCognitoUser,
