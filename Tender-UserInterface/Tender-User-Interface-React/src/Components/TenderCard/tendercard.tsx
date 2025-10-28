@@ -143,9 +143,9 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, onNewNotif,
                     tender.tag.map((tag: Tags, idx: number) => (
                         <span
                             key={idx}
-                            className={`tag ${tag.name === "New" ? "tag-new" : "tag-blue"}`}
+                            className={`tag ${tag.TagName === "New" ? "tag-new" : "tag-blue"}`}
                         >
-                            {tag.name}
+                            {tag.TagName}
                         </span>
                     ))
                 ) : (

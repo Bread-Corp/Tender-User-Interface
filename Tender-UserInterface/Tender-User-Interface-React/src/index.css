@@ -10,6 +10,7 @@
     --heading-color: #2A3C64;
     --subtext-color: #4a5a78;
     --analytics-subtext: #2A3C64;
+    --read-more: #5571A6;
 
     /* Backgrounds */
     --hero-bg: linear-gradient(135deg, #d6e6f2, #eaf3fb);
@@ -65,6 +66,8 @@ body.dark-mode {
     --heading-color: #f0f4ff;
     --subtext-color: #a6b2c5;
     --analytics-subtext: #e0e0e0;
+    --text-secondary: #e0e0e0;
+    --read-more: #b38f00;
 
     /* Backgrounds */
     --hero-bg: linear-gradient(135deg, #1b2431, #10151c);

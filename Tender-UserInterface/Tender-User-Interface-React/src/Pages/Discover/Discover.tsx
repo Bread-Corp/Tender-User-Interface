@@ -20,7 +20,7 @@ const pageSize = 10;
  
 const Discover = ({ onNewNotif }) => {
     const [showFilterOverlay, setShowFilterOverlay] = useState(false);
-    const [filters, setFilters] = useState < string[] > (["New", "Programming", "Construction", "Emergency", "Green Energy"]);
+    const [filters, setFilters] = useState<string[]>([]);
     const [showAllFilters, setShowAllFilters] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
     const [sortOption, setSortOption] = useState("Popularity");
@@ -72,33 +72,62 @@ const Discover = ({ onNewNotif }) => {
         console.log("Fetching watchlist:", isLoggedIn);
         if (!isLoggedIn) {
             setWatchlist([]); // clear watchlist if user logs out
+            setFilters([]);
             return;
         }
 
-        const fetchWatchlist = async () => {
+        const fetchUserData = async () => {
             try {
                 const attributes = await fetchUserAttributes();
                 const coreID = attributes["custom:CoreID"];
 
                 if (coreID) {
-                    // fetch the entire watchlist for the user
-                    const response = await axios.get(`${apiURL}/watchlist/${coreID}`);
-                    const result = response.data.watchlist;
 
-                    const data = Array.isArray(result) ? result : result.data || [];
-                    console.log("watchlist data:", data);
-                    setWatchlist(data); // store the full watchlist array
+                    const watchlistResponse = await axios.get(`${apiURL}/watchlist/${coreID}`);
+                    const watchlistResult = watchlistResponse.data.watchlist;
+                    const watchlistData = Array.isArray(watchlistResult) ? watchlistResult : watchlistResult.data || [];
+                    console.log("watchlist data:", watchlistData);
+                    setWatchlist(watchlistData);
+
+                    try {
+                        const tagsResponse = await axios.get(`${apiURL}/tenderuser/fetchtags/${coreID}`);
+
+                        const userTagList = tagsResponse.data.tags;
+
+                        const userTagObjects = (Array.isArray(userTagList) && userTagList.length > 0)
+                            ? userTagList[0]
+                            : [];
+
+                        const userTags = Array.isArray(userTagObjects)
+                            ? userTagObjects.map(tagObject => tagObject.tagName)
+                            : [];
+
+                        if (userTags.length > 0) {
+                            console.log("Setting user tags as filters:", userTags);
+                            setFilters(userTags); 
+                        } else {
+                            console.log("No user tags found, applying no filters.");
+                            setFilters([]);
+                        }
+                    } catch (tagError) {
+                        console.error("Failed to fetch user tags:", tagError);
+                        setFilters([]);
+                    }
+
+                } else {
+                    // no coreID found
+                    setFilters([]);
                 }
             } catch (error) {
-                console.error("Failed to fetch user watchlist:", error);
+                console.error("Failed to fetch user attributes or watchlist:", error);
+                setFilters([]);
             }
         };
 
-        fetchWatchlist();
+        fetchUserData();
         // run whenever the login state changes
-    }, [isLoggedIn]);
+    }, [isLoggedIn, apiURL]);
 
-    // the empty dependency array makes sure it only runs once when the component mounts
     useEffect(() => {
         const fetchAllTenders = async () => {
             setIsLoading(true);
@@ -112,8 +141,11 @@ const Discover = ({ onNewNotif }) => {
 
                 // map over each tender item to convert it into an instance of a class
                 const tenderObjects: BaseTender[] = data.map((item: any) => {
+
+                    console.log(`Tags for tender ${item.title}:`, item.tags);
+
                     const tagsArray: Tags[] = item.tags
-                        ? item.tags.map((t: any) => new Tags(t.id || "", t.name || ""))
+                        ? item.tags.map((t: any) => new Tags(t.tagOD || "", t.tagName || ""))
                         : [];
 
                     if (item.source === "Eskom") {
