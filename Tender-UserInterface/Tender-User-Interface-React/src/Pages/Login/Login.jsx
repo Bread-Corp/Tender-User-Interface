@@ -19,6 +19,7 @@ const Login = ({ onLoginSuccess, onAdminSuccess }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const [showPassword, setShowPassword] = useState(false); // toggle the password to text feature
+    const [selectedTags, setSelectedTags] = useState([]);
 
     // state for form inputs and errors
     const [id] = useState('');
@@ -33,9 +34,15 @@ const Login = ({ onLoginSuccess, onAdminSuccess }) => {
     const [nameError, setNameError] = useState('');
     const [surnameError, setSurnameError] = useState('');
 
-
     const { signIn, signUp } = useAuth();
-    const totalRegisterPages = 3;
+    const totalRegisterPages = 4;
+
+    const categorisedTags = {
+        Province: ['Gauteng', 'KwaZulu-Natal', 'Western Cape', 'Eastern Cape', 'Limpopo', 'Mpumalanga', 'North West', 'Free State', 'Northern Cape'],
+        Source: ['Eskom', 'eTenders', 'Transnet', 'SANRAL', 'SARS'],
+        Industry: ['Construction & Civil Engineering', 'IT & Software', 'Consulting & Professional Serivces', 'Maintenance & Repairs', 'Supply & Delivery',
+                   'Financial & Auditing Services', 'Logistics & Transport', 'Health, Safety & Environmental', 'General Services', 'Training & Development']
+    };
 
     // switch between login and register tabs and reset form state
     const switchTab = (tab) => {
@@ -47,6 +54,7 @@ const Login = ({ onLoginSuccess, onAdminSuccess }) => {
         setSurname('');
         setPhone('');
         setAddress('');
+        setSelectedTags([]);
         setRegisterPage(1);
         setActiveForm(tab);
     };
@@ -104,7 +112,25 @@ const Login = ({ onLoginSuccess, onAdminSuccess }) => {
         }
     };
 
-    // --- REPLACE THE ENTIRE handleRegisterSubmit FUNCTION WITH THIS ---
+    const handleTagClick = (tag) => {
+        setError('');
+        setSelectedTags(prevTags => {
+            if (prevTags.includes(tag)) {
+                // tag is already selected, so remove it
+                return prevTags.filter(t => t !== tag);
+            } else {
+                // tag is not selected, add it if under limit
+                if (prevTags.length < 8) {
+                    return [...prevTags, tag];
+                } else {
+                    // at limit, show error and don't add
+                    setError('You can select up to 8 tags only.');
+                    return prevTags;
+                }
+            }
+        });
+    };
+
     const handleRegisterSubmit = async (e) => {
         e.preventDefault();
         setError('');
@@ -136,7 +162,6 @@ const Login = ({ onLoginSuccess, onAdminSuccess }) => {
             formattedPhone = `+1${phone.replace(/\D/g, '')}`;
         }
 
-        // --- THIS IS THE MOST IMPORTANT STEP ---
         // Log the exact object we are about to send.
         const submissionData = {
             id,
@@ -145,10 +170,10 @@ const Login = ({ onLoginSuccess, onAdminSuccess }) => {
             name,
             surname,
             formattedPhone,
-            address
+            address,
+            tags: selectedTags
         };
         console.log("Submitting this data to AuthContext:", submissionData);
-        // ------------------------------------
 
         try {
             //Here we need to register the user in our database.
@@ -158,7 +183,8 @@ const Login = ({ onLoginSuccess, onAdminSuccess }) => {
                 submissionData.name +" "+ submissionData.surname,
                 submissionData.email,
                 submissionData.formattedPhone,
-                submissionData.address
+                submissionData.address,
+                submissionData.tags
             )
 
             //set the ID to pass through
@@ -230,7 +256,7 @@ const Login = ({ onLoginSuccess, onAdminSuccess }) => {
                             required
                         />
 
-                        {/* Display errors only once each */}
+                        {/* display errors only once each */}
                         {nameError && <ErrorMessage message={nameError} />}
                         {surnameError && <ErrorMessage message={surnameError} />}
                     </>
@@ -249,6 +275,60 @@ const Login = ({ onLoginSuccess, onAdminSuccess }) => {
                 );
 
             case 3:
+                return (
+                    <>
+                        <div className="selected-tags-tooltip-wrapper">
+                            <label className="form-label" style={{
+                                marginBottom: '8px', cursor: 'help', fontSize:'15.2px'}}>
+                                Your Selections ({selectedTags.length} / 8)
+                                <span style={{ fontSize: '15.2px', opacity: 0.8 }}> (hover to see)</span>
+                            </label>
+
+                            {/* tooltip box */}
+                            <div className="selected-tags-tooltip">
+                                {selectedTags.length === 0 ? (
+                                    <span className="no-tags-message">No tags selected yet.</span>
+                                ) : (
+                                    selectedTags.map(tag => (
+                                        <div
+                                            key={tag}
+                                            className="selected-tag-item-tooltip"
+                                            onClick={() => handleTagClick(tag)}>
+                                            {tag}
+                                            <span className="remove-tag-icon">×</span>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </div>
+
+                        {/* will contain all categories and be scrollable */}
+                        <div className="tag-selection-area">
+
+                            {/* loop through the categories in the object */}
+                            {Object.entries(categorisedTags).map(([category, tagsArray]) => (
+                                <div key={category} className="tag-category-section">
+
+                                    <label className="tag-category-header">{category}</label>
+
+                                    {/* tag container for category */}
+                                    <div className="tag-container">
+                                        {tagsArray.map(tag => (
+                                            <div
+                                                key={tag}
+                                                className={`tag-item ${selectedTags.includes(tag) ? 'selected' : ''}`}
+                                                onClick={() => handleTagClick(tag)}>
+                                                {tag}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </>
+                );
+
+            case 4:
                 return (
                     <>
                         <label className="form-label">Email*</label>
@@ -350,6 +430,11 @@ const Login = ({ onLoginSuccess, onAdminSuccess }) => {
                                 )}
                                 {registerPage === 3 && (
                                     <p>
+                                                <span className="highlight-text">Personalise</span> Select up to 8 tags in total to personalise your feed.
+                                    </p>
+                                )}
+                                {registerPage === 4 && (
+                                    <p>
                                         <span className="highlight-text">Almost Done!</span> Set up your email and password to complete the registration process.
                                     </p>
                                 )}
@@ -377,7 +462,6 @@ const Login = ({ onLoginSuccess, onAdminSuccess }) => {
                             <ErrorMessage message={error} />
 
                             <div className="form-options">
-                                <label><input type="checkbox" /> Remember me</label>
                                 <a href="#">Forgot password?</a>
                             </div>
 
@@ -395,6 +479,7 @@ const Login = ({ onLoginSuccess, onAdminSuccess }) => {
                                     <div className={`step-circle ${registerPage === 1 ? "active" : ""}`}></div>
                                     <div className={`step-circle ${registerPage === 2 ? "active" : ""}`}></div>
                                     <div className={`step-circle ${registerPage === 3 ? "active" : ""}`}></div>
+                                    <div className={`step-circle ${registerPage === 4 ? "active" : ""}`}></div>
                                 </div>
 
                                 {renderRegisterPage()}
