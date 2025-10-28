@@ -256,7 +256,7 @@ const Login = ({ onLoginSuccess, onAdminSuccess }) => {
                             required
                         />
 
-                        {/* Display errors only once each */}
+                        {/* display errors only once each */}
                         {nameError && <ErrorMessage message={nameError} />}
                         {surnameError && <ErrorMessage message={surnameError} />}
                     </>
@@ -277,18 +277,41 @@ const Login = ({ onLoginSuccess, onAdminSuccess }) => {
             case 3:
                 return (
                     <>
-                        
-                        {/* This new wrapper will contain all categories and be scrollable */}
+                        <div className="selected-tags-tooltip-wrapper">
+                            <label className="form-label" style={{
+                                marginBottom: '8px', cursor: 'help', fontSize:'15.2px'}}>
+                                Your Selections ({selectedTags.length} / 8)
+                                <span style={{ fontSize: '15.2px', opacity: 0.8 }}> (hover to see)</span>
+                            </label>
+
+                            {/* tooltip box */}
+                            <div className="selected-tags-tooltip">
+                                {selectedTags.length === 0 ? (
+                                    <span className="no-tags-message">No tags selected yet.</span>
+                                ) : (
+                                    selectedTags.map(tag => (
+                                        <div
+                                            key={tag}
+                                            className="selected-tag-item-tooltip"
+                                            onClick={() => handleTagClick(tag)}>
+                                            {tag}
+                                            <span className="remove-tag-icon">×</span>
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        </div>
+
+                        {/* will contain all categories and be scrollable */}
                         <div className="tag-selection-area">
 
-                            {/* Loop through the categories in the object */}
+                            {/* loop through the categories in the object */}
                             {Object.entries(categorisedTags).map(([category, tagsArray]) => (
                                 <div key={category} className="tag-category-section">
 
-                                    {/* Category Header */}
                                     <label className="tag-category-header">{category}</label>
 
-                                    {/* Tag container for this category */}
+                                    {/* tag container for category */}
                                     <div className="tag-container">
                                         {tagsArray.map(tag => (
                                             <div
