@@ -92,7 +92,12 @@ const Discover = ({ onNewNotif }) => {
                     try {
                         const tagsResponse = await axios.get(`${apiURL}/tenderuser/fetchtags/${coreID}`);
 
-                        const userTagObjects = tagsResponse.data.tags;
+                        const userTagList = tagsResponse.data.tags;
+
+                        const userTagObjects = (Array.isArray(userTagList) && userTagList.length > 0)
+                            ? userTagList[0]
+                            : [];
+
                         const userTags = Array.isArray(userTagObjects)
                             ? userTagObjects.map(tagObject => tagObject.tagName)
                             : [];
@@ -136,6 +141,9 @@ const Discover = ({ onNewNotif }) => {
 
                 // map over each tender item to convert it into an instance of a class
                 const tenderObjects: BaseTender[] = data.map((item: any) => {
+
+                    console.log(`Tags for tender ${item.title}:`, item.tags);
+
                     const tagsArray: Tags[] = item.tags
                         ? item.tags.map((t: any) => new Tags(t.tagOD || "", t.tagName || ""))
                         : [];
