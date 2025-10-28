@@ -23,7 +23,7 @@ const Discover = ({ onNewNotif }) => {
     const [filters, setFilters] = useState < string[] > (["New", "Programming", "Construction", "Emergency", "Green Energy"]);
     const [showAllFilters, setShowAllFilters] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
-    const [sortOption, setSortOption] = useState("Popularity");
+    const [sortOption, setSortOption] = useState("Descending");
 
     // pagination state
     const [page, setPage] = useState(1);
@@ -118,6 +118,8 @@ const Discover = ({ onNewNotif }) => {
                     statusFilter: overlayFilters.status, // open or closed
                     alphaSort : overlayFilters.alphabetical, //alphabetical sorting
                 };
+
+                console.log("Sending to API:", filterDTO);
 
                 const requestURL = `${apiURL}/tender/fetchFiltered?page=${page}&pageSize=${pageSize}`;
                 const response = await axios.post(requestURL, filterDTO);
