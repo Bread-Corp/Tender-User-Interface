@@ -42,7 +42,7 @@ const Discover = ({ onNewNotif }) => {
         date: string | null;
         tags: string[];
         alphabetical: string | null;
-        status: string | null;
+        status: boolean | null;
     }>({
         date: null,
         tags: [],
@@ -103,6 +103,11 @@ const Discover = ({ onNewNotif }) => {
         const fetchTenders = async () => {
             setIsLoading(true);
             try {
+
+                const statusString = overlayFilters.status === true
+                    ? "Open"
+                    : (overlayFilters.status === false ? "Closed" : null);
+
                 // DTO
                 const filterDTO = {
                     search: searchTerm,
@@ -231,14 +236,13 @@ const Discover = ({ onNewNotif }) => {
             <section className="discovery-cards-section">
                 {/* Sorting */}
                 <div className="sort-container">
-                    <label className="sort-label">Sort by</label>
+                    <label className="sort-label">Sort by Date</label>
                     <select
                         className="sort-select"
                         value={sortOption}
                         onChange={(e) => setSortOption(e.target.value)}>
-                        <option>Popularity</option>
-                        <option>Date</option>
-                        <option>Region</option>
+                        <option>Ascending</option>
+                        <option>Descending</option>
                     </select>
                 </div>
 

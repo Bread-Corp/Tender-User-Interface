@@ -8,7 +8,7 @@ interface FilterOverlayProps {
         date: string | null;
         tags: string[];
         alphabetical: string | null;
-        status: string | null;
+        status: boolean | null;
     }) => void;
     showToast: (message: string) => void
 }
@@ -20,7 +20,7 @@ const FilterOverlay: React.FC<FilterOverlayProps> = ({ onClose, onApply, showToa
     const [date, setDate] = useState<string | null>(null);
     const [tags, setTags] = useState<string[]>([]);
     const [alphabetical, setAlphabetical] = useState<string | null>(null);
-    const [status, setStatus] = useState<string | null>(null);
+    const [status, setStatus] = useState<boolean | null>(null);
 
     const handleApply = () => {
         onApply({ date, tags, alphabetical, status }); // send filters to parent
@@ -78,18 +78,9 @@ const FilterOverlay: React.FC<FilterOverlayProps> = ({ onClose, onApply, showToa
                             type="radio"
                             name="date"
                             checked={date === "Closing Soon"}
-                            onChange={() => setDate("Closing Soon")}
+                            onChange={() => setDate(date === "Closing Soon" ? null : "Closing Soon")}
                         />
                         Closing Soon
-                    </label>
-                    <label>
-                        <input
-                            type="radio"
-                            name="date"
-                            checked={date === "Newly Added"}
-                            onChange={() => setDate("Newly Added")}
-                        />
-                        Newly Added
                     </label>
                 </div>
 
@@ -122,7 +113,7 @@ const FilterOverlay: React.FC<FilterOverlayProps> = ({ onClose, onApply, showToa
                             type="radio"
                             name="alphabetical"
                             checked={alphabetical === "A-Z"}
-                            onChange={() => setAlphabetical("A-Z")}
+                            onChange={() => setAlphabetical(alphabetical === "A-Z" ? null : "A-Z")}
                         />
                         A - Z
                     </label>
@@ -131,7 +122,7 @@ const FilterOverlay: React.FC<FilterOverlayProps> = ({ onClose, onApply, showToa
                             type="radio"
                             name="alphabetical"
                             checked={alphabetical === "Z-A"}
-                            onChange={() => setAlphabetical("Z-A")}
+                            onChange={() => setAlphabetical(alphabetical === "Z-A" ? null : "Z-A")}
                         />
                         Z - A
                     </label>
@@ -144,8 +135,8 @@ const FilterOverlay: React.FC<FilterOverlayProps> = ({ onClose, onApply, showToa
                         <input
                             type="radio"
                             name="status"
-                            checked={status === "Open"}
-                            onChange={() => setStatus("Open")}
+                            checked={status === true}
+                            onChange={() => setStatus(status === true ? null : true)}
                         />
                         Open
                     </label>
@@ -153,8 +144,8 @@ const FilterOverlay: React.FC<FilterOverlayProps> = ({ onClose, onApply, showToa
                         <input
                             type="radio"
                             name="status"
-                            checked={status === "Closed"}
-                            onChange={() => setStatus("Closed")}
+                            checked={status === false}
+                            onChange={() => setStatus(status === false ? null : false)}
                         />
                         Closed
                     </label>
