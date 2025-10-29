@@ -6,25 +6,32 @@ html, body {
 .tender-container {
     width: 100vw;
     height: 100vh;
-    padding: 30px;
+    padding: 10px;
     box-sizing: border-box;
     position: relative;
-    overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     gap: 20px;
-    transform: rotate(-45deg);
+    transform: rotate(-45deg) translate(-30%);
 }
 
 .bar {
-    width: 300px;
-    height: 60px;
+
+    height: 70px; 
     border-radius: 100px;
     opacity: 0.95;
+    transform-origin: left;
+    transform: scaleX(0);
+    animation-name: growBar;
+    animation-fill-mode: forwards;
+    animation-duration: 0.5s;
+    animation-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
+    flex-shrink: 0; 
+    width: var(--bar-width, 70%);
+    animation-delay: var(--animation-delay, 0s);
 }
 
-/* color classes */
 .red {
     background: #c94f7c;
 }
@@ -37,31 +44,69 @@ html, body {
     background: #d8df95;
 }
 
+/* text animation keyframes */
 @keyframes fadeSlideIn {
     from {
-        opacity: 0;
-        transform: translateY(30px);
+     opacity: 0;
+     transform: translateY(30px);
     }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
+     to {
+     opacity: 1;
+     transform: translateY(0);
     }
 }
 
 .tender-text {
-    left: 40px;
-    bottom: 40px;
+    right: 40px; 
+    top: 40px; 
+    position: absolute;
     z-index: 1000;
     transform: rotate(0deg);
-    animation: fadeSlideIn 1.2s ease-out forwards;
-    opacity: 0; /* initial state before animation */
+    opacity: 0;
+    padding: 20px 25px;
+    border-radius: 12px;
+    animation: fadeSlideIn 0.8s ease-out 0.4s forwards;
 }
+
     .tender-text h1 {
-        color: white;
-        font-size: 40px;
+        text-align: right; 
+        color: rgba(255,255,255,0.9);
+        font-size: 110px;
         font-weight: bold;
         line-height: 1;
-        text-shadow: 3px 3px #2e3d72;
         font-family: 'Segoe UI', sans-serif;
     }
+
+/* animation for the bar growing */
+@keyframes growBar {
+    from {
+        transform: scaleX(0); /* Start at 0% width */
+    }
+
+    to {
+        transform: scaleX(1); /* End at 100% of its set width */
+    }
+}
+
+@media (max-width: 768px) {
+
+    .tender-container {
+        gap: 10px;
+        transform: rotate(-45deg) translate(-20%);
+    }
+
+    .bar {
+        height: 40px;
+    }
+
+    .tender-text {
+        right: 20px;
+        top: 20px;
+        padding: 15px 20px;
+    }
+
+        .tender-text h1 {
+            font-size: 40px;
+        }
+}

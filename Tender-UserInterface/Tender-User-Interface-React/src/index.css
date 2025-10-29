@@ -9,12 +9,15 @@
     --text-color: #1F2B4A;
     --heading-color: #2A3C64;
     --subtext-color: #4a5a78;
+    --analytics-subtext: #2A3C64;
+    --read-more: #5571A6;
 
     /* Backgrounds */
     --hero-bg: linear-gradient(135deg, #d6e6f2, #eaf3fb);
     --home-bg: white;
     --card-bg: #EFF5FA;
     --feature-bg: white;
+    --notif-bg: rgba(255,255,255,0.5);
     --cta-bg: #d6e6f2;
     --tender-card-bg: #f0f6fc;
 
@@ -47,6 +50,7 @@
 
     /* Hero Text */
     --home-heading: #e0e6f1;
+    --analytics-color: #33497d;
 
     /* Contact us*/
     --contact-us-bg: #2A3C64;
@@ -61,12 +65,16 @@ body.dark-mode {
     --text-color: #dce3ed;
     --heading-color: #f0f4ff;
     --subtext-color: #a6b2c5;
+    --analytics-subtext: #e0e0e0;
+    --text-secondary: #e0e0e0;
+    --read-more: #b38f00;
 
     /* Backgrounds */
     --hero-bg: linear-gradient(135deg, #1b2431, #10151c);
     --home-bg: linear-gradient(135deg, #202b3a, #141a23);
     --card-bg: #20293E;
     --feature-bg: #2A344B;
+    --notif-bg: rgba(42, 52, 75, 0.2);
     --cta-bg: #20293E;
     --tender-card-bg: #20293E;
 
@@ -98,6 +106,7 @@ body.dark-mode {
 
     /* Hero Text */
     --home-heading: #f0f6ff;
+    --analytics-color: #5571A6;
 
     /* Contact us */
     --contact-us-bg: #1c2636;

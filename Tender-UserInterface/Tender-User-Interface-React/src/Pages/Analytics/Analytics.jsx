@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { FaChartLine, FaMapMarkerAlt, FaRegClock, FaExclamationTriangle } from "react-icons/fa";
+import { FaChartLine, FaMapMarkerAlt, FaRegClock, FaExclamationTriangle, FaChevronDown, FaChevronRight } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 import "./Analytics.css";
 import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
+import axios from 'axios';
+import { fetchUserAttributes } from '@aws-amplify/auth';
 import {
     PieChart,
     Pie,
@@ -22,18 +24,75 @@ const Analytics = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    useEffect(() => {
-        const fetchAnalytics = async () => {
-            try {
-                // fallback to general endpoint
-                const endpoint = user?.coreId
-                    ? `https://vaon5sbbdk.execute-api.us-east-1.amazonaws.com/analytics/user/${userId}` //doesnt work - placeholder
-                    : `https://vaon5sbbdk.execute-api.us-east-1.amazonaws.com/analytics`;
+    const CollapsibleSection = ({ title, subtitle, children, defaultOpen = true }) => {
+        // each section manages its own open/closed state
+        const [isOpen, setIsOpen] = useState(defaultOpen);
 
+        return (
+
+            <div className="analytics-section">
+                {/* Clickable Header */}
+                <div
+                    className="section-header" 
+                    onClick={() => setIsOpen(!isOpen)}
+                    style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer' }} // Basic inline styles
+                    role="button"
+                    aria-expanded={isOpen}>
+                    {/* Title and Subtitle */}
+                    <div>
+                        <h2 className="section-title">{title}</h2>
+                        {subtitle && <p className="section-subtitle">{subtitle}</p>}
+                    </div>
+                    {/* Arrow Icon */}
+                    <span className="collapse-icon">
+                        {isOpen ? <FaChevronDown /> : <FaChevronRight />}
+                    </span>
+                </div>
+
+                <div className={`section-content ${isOpen ? 'open' : ''}`}>
+                    <div className="content-inner-wrapper">
+                        {children}
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    useEffect(() => {
+
+        const fetchAnalytics = async () => {
+            setLoading(true);
+            let coreId = null;
+
+            try {
+
+                if (user) {
+                    try {
+
+                        const attributes = await fetchUserAttributes();
+                        coreId = attributes['custom:CoreID']; 
+                        if (!coreId) {
+                            console.log("CoreID not found for logged-in user. Fetching public analytics.");
+                        }
+                    } catch (attrError) {
+                        console.error("Error fetching user attributes:", attrError);
+                    }
+                }
+
+                // all users have this base endpoint
+                const endpoint = `https://vaon5sbbdk.execute-api.us-east-1.amazonaws.com/analytics`;
+
+                const headers = {
+                    'Content-Type': 'application/json',
+                };
+
+                if (coreId) {
+                    headers['X-User-ID'] = coreId;
+                }
+
+                // request with the endpoint and headers
                 const response = await fetch(endpoint, {
-                    headers: user?.token
-                        ? { Authorization: `Bearer ${user.token}` }
-                        : {},
+                    headers: headers,
                 });
 
                 if (!response.ok) {
@@ -41,9 +100,10 @@ const Analytics = () => {
                 }
 
                 const data = await response.json();
+
                 setAnalytics(data);
             } catch (err) {
-                console.error("Error fetching analytics:", err);
+
                 setError(err.message || "Unknown error");
             } finally {
                 setLoading(false);
@@ -95,7 +155,17 @@ const Analytics = () => {
         );
     }
 
-    const { totalTenders, openTenders, closedTenders, openRatio, statusBreakdown, tendersByProvince } = analytics;
+    const {
+        totalTenders,
+        openTenders,
+        closedTenders,
+        openRatio,
+        statusBreakdown,
+        tendersBySource,
+        tendersByProvince,
+        standardUserAnalytics, // this will be undefined for guests/admins
+        superUserAnalytics   // this will be undefined for guests/standard users
+    } = analytics;
 
     const mostActiveProvince =
         tendersByProvince?.length > 0
@@ -103,12 +173,13 @@ const Analytics = () => {
             : "N/A";
 
     const COLORS = ["#81C784", "#CD4F6E"];
+    const SOURCE_COLORS = ['#3B82F6', '#F59E0B', '#10B981', '#EF4444', '#8B5CF6'];
 
     return (
         <div className="analytics-container">
             {/* Page Header */}
             <div className="tracking-header">
-                <h1 className="tracking-title">{user ? `${user.name}'s Analytics` : "Analytics"}</h1>
+                <h1 className="tracking-title">{user ? `${user.username.split('@')[0]}'s Analytics` : "Analytics"}</h1>
                 <p className="tracking-subtitle">
                     {user
                         ? "Insights tailored to your tender activity"
@@ -117,16 +188,23 @@ const Analytics = () => {
             </div>
 
             {/* Quick Info Section */}
-            <div className="analytics-section">
-                <h2 className="section-title">Quick Insights</h2>
-                <p className="section-subtitle">A glance at your most important tender stats</p>
+            <CollapsibleSection
+                title="Quick Insights"
+                subtitle="A glance at your most important tender stats">
                 <div className="info-cards">
                     <div className="info-card">
                         <span className="info-icon"><FaChartLine /></span>
                         <p>
                             {user ? (
-                                <>You currently have <strong>{openTenders}</strong> open tenders out of <strong>{totalTenders}</strong> total.</>
+                                standardUserAnalytics ? (
+                                    // Standard User View
+                                    <>You are tracking <strong>{standardUserAnalytics.openUserTenders}</strong> open tenders out of <strong>{standardUserAnalytics.totalUserTenders}</strong> total.</>
+                                ) : (
+                                    // Super User View (or user w/o personal stats)
+                                    <>You currently have <strong>{openTenders}</strong> open tenders out of <strong>{totalTenders}</strong> total.</>
+                                )
                             ) : (
+                                // Guest View
                                 <>There are currently <strong>{openTenders}</strong> open tenders out of <strong>{totalTenders}</strong> tenders tracked.</>
                             )}
                         </p>
@@ -134,6 +212,9 @@ const Analytics = () => {
                     <div className="info-card">
                         <span className="info-icon"><FaMapMarkerAlt /></span>
                         <p>
+                            {/* NOTE: This stat is not personalized because 'standardUserAnalytics'
+                          doesn't provide a personal 'mostActiveProvince'. 
+                        */}
                             {user ? (
                                 <>Your most active province is <strong>{mostActiveProvince}</strong>.</>
                             ) : (
@@ -145,24 +226,91 @@ const Analytics = () => {
                         <span className="info-icon"><FaRegClock /></span>
                         <p>
                             {user ? (
-                                <>Overall, <strong>{openRatio}%</strong> of tenders remain open.</>
+                                standardUserAnalytics ? (
+                                    // Standard User View
+                                    <><strong>{standardUserAnalytics.userOpenRatio}%</strong> of your tracked tenders remain open.</>
+                                ) : (
+                                    // Super User View
+                                    <>Overall, <strong>{openRatio}%</strong> of tenders remain open.</>
+                                )
                             ) : (
+                                // Guest View
                                 <>Currently, <strong>{openRatio}%</strong> of tenders are open.</>
                             )}
                         </p>
                     </div>
                 </div>
-            </div>
+        </CollapsibleSection>
+                    
+            {/* this block will only render if 'standardUserAnalytics' exists */}
+            {standardUserAnalytics && (
+                <CollapsibleSection
+                    title="Your Personal Activity"
+                    subtitle="Stats based on the tenders you are personally tracking">
+                    <div className="analytics-summary">
+                        <div className="summary-card">
+                            <h3>Your Tenders</h3>
+                            <p>{standardUserAnalytics.totalUserTenders}</p>
+                            <small>Total tenders you are tracking</small>
+                        </div>
+                        <div className="summary-card">
+                            <h3>Your Open Tenders</h3>
+                            <p>{standardUserAnalytics.openUserTenders}</p>
+                            <small>Your tracked tenders that are open</small>
+                        </div>
+                        <div className="summary-card">
+                            <h3>Your Open Ratio</h3>
+                            <p>{standardUserAnalytics.userOpenRatio}%</p>
+                            <small>Percentage of your tenders that are open</small>
+                        </div>
+                        <div className="summary-card">
+                            <h3>Closing Soon</h3>
+                            <p>{standardUserAnalytics.closingSoon}</p>
+                            <small>Your tracked tenders closing soon</small>
+                        </div>
+                    </div>
+                </CollapsibleSection>
+            )}
+
+            {/* this block will only render if 'superUserAnalytics' exists */}
+            {superUserAnalytics && (
+                <CollapsibleSection
+                    title="Admin Overview"
+                    subtitle="Platform-wide user statistics">
+                    <div className="analytics-summary">
+                        <div className="summary-card">
+                            <h3>Total Users</h3>
+                            <p>{superUserAnalytics.totalUsers}</p>
+                            <small>All registered users</small>
+                        </div>
+                        <div className="summary-card">
+                            <h3>Standard Users</h3>
+                            <p>{superUserAnalytics.standardUsers}</p>
+                            <small>Standard user accounts</small>
+                        </div>
+                        <div className="summary-card">
+                            <h3>Admin Users</h3>
+                            <p>{superUserAnalytics.superUsers}</p>
+                            <small>Users with admin privileges</small>
+                        </div>
+                        <div className="summary-card">
+                            <h3>New This Month</h3>
+                            <p>{superUserAnalytics.newRegistrationsThisMonth}</p>
+                            <small>New users this month</small>
+                        </div>
+                    </div>
+                </CollapsibleSection>
+            )}
 
             {/* Summary Cards Section */}
-            <div className="analytics-section">
-                <h2 className="section-title">Tender Summary</h2>
-                <p className="section-subtitle">Detailed numbers to help you track tender activity</p>
+            <CollapsibleSection
+                title="Platform Stats"
+                subtitle="Overall statistics for the tender tool">
                 <div className="analytics-summary">
                     <div className="summary-card">
                         <h3>Total Tenders</h3>
                         <p>{totalTenders}</p>
-                        <small>Total tenders currently being tracked</small>
+                        <small>Total tenders on tender tool</small>
                     </div>
                     <div className="summary-card">
                         <h3>Open</h3>
@@ -180,12 +328,12 @@ const Analytics = () => {
                         <small>Percentage of tenders that remain open</small>
                     </div>
                 </div>
-            </div>
+            </CollapsibleSection>
 
             {/* Charts Section */}
-            <div className="analytics-section">
-                <h2 className="section-title">Tender Analytics</h2>
-                <p className="section-subtitle">Visual breakdowns for better decision making</p>
+            <CollapsibleSection
+                title="Analytics Charts"
+                subtitle="Visual breakdowns for better decision making">
                 <div className="charts-grid">
 
                     {/* Pie Chart */}
@@ -211,6 +359,23 @@ const Analytics = () => {
                         </ResponsiveContainer>
                     </div>
 
+                    {tendersBySource && tendersBySource.length > 0 && (
+                        <div className="chart-section">
+                            <h3>Tenders by Source</h3>
+                            <p className="chart-subtitle">Shows the proportion of tenders from each source</p>
+                            <ResponsiveContainer width="100%" height={250}>
+                                <PieChart>
+                                    <Pie data={tendersBySource} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
+                                        {tendersBySource.map((entry, index) => (
+                                            <Cell key={`cell-${index}`} fill={SOURCE_COLORS[index % SOURCE_COLORS.length]} />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip />
+                                </PieChart>
+                            </ResponsiveContainer>
+                        </div>
+                    )}
+
                     {/* Bar Chart */}
                     <div className="chart-section">
                         <h3>Tenders by Province</h3>
@@ -227,7 +392,7 @@ const Analytics = () => {
                     </div>
                                    
                 </div>
-            </div>
+            </CollapsibleSection>
         </div>
     );
 };

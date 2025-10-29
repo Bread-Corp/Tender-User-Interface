@@ -16,6 +16,7 @@ type WatchlistItem = {
 type TenderCardProps = {
     tender?: BaseTender;
     isLoggedIn: boolean;
+    onNewNotif;
     watchlistArray: WatchlistItem[];
     onRequireLogin: () => void;
     onBookmarkSuccess: (tenderTitle: string, isAdded: boolean) => void;
@@ -24,7 +25,7 @@ type TenderCardProps = {
 const MAX_TITLE_LENGTH = 100;
 const apiURL = import.meta.env.VITE_API_URL;
 
-const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, watchlistArray, onRequireLogin, onBookmarkSuccess }) => {
+const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, onNewNotif, watchlistArray, onRequireLogin, onBookmarkSuccess }) => {
     const navigate = useNavigate();
     const [expanded, setExpanded] = useState(false);
 
@@ -40,54 +41,22 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, watchlistAr
     const displayedTitle =
         titleExpanded || !isLong ? title : title.slice(0, MAX_TITLE_LENGTH) + "...";
 
-
-    // prepping for saving logic
-    //useEffect(() => {
-    //    console.log(`Bookmark state for ${tender.tenderID}:`, bookmarked);
-    //}, [bookmarked, tender.tenderID]);
-
-    // Load initial bookmark state if logged in
+    // load initial bookmark state from the prop
     useEffect(() => {
-        console.log(`Bookmark prefetch for ${tender.tenderID}:`, bookmarked);
-        //if (!isLoggedIn) return;
+        if (!isLoggedIn) {
+            setBookmarked(false); // ensure bookmarked is false if logged out
+            return;
+        }
 
-        const fetchBookmarkState = async () => {
-            try {
-                const attributes = await fetchUserAttributes();
-                console.log("Attributes on page load:", attributes);
-                const coreID = attributes["custom:CoreID"];
-                if (!coreID) {
-                    console.warn("No CoreID found for user");
-                    return;
-                }
+        // check if the tender's ID is in the watchlist array prop
+        const isAlreadyBookmarked = watchlistArray.some(
+            (item) => item.tenderID === tender.tenderID
+        );
 
-                // Call the backend to get the watchlist entry for this tender
-                const response = await axios.get(`${apiURL}/watchlist/${coreID}`);
-                console.log(`GET watchlist response for user: ${coreID}:`, response.data);
+        setBookmarked(isAlreadyBookmarked);
 
-                const result = response.data;
-
-                // make sure the response data is akways an array
-                // if  API returns a single object, wrap it in an array
-                const data = Array.isArray(result) ? result : result.data || []
-
-                if (true) {
-                    watchlistArray.forEach((item) => {
-                        if (item.tenderID === tender.tenderID) {
-                            setBookmarked(true);
-                        }
-                    });
-                    
-                    console.log(`Fetched bookmark state for ${tender.tenderID}:`, bookmarked);
-                }
-
-            } catch (error) {
-                console.error("Failed to fetch initial bookmark state:", error);
-            }
-        };
-
-        fetchBookmarkState();
-    }, [bookmarked, isLoggedIn, tender.tenderID]);
+        // this effect runs only when the props change, not when the local state changes
+    }, [isLoggedIn, watchlistArray, tender.tenderID]);
 
 
     const handleBookmarkClick = async () => {
@@ -118,6 +87,13 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, watchlistAr
         try {
             const response = await axios.post(`${apiURL}/watchlist/togglewatch/${coreID}/${tender.tenderID}`);
             console.log("POST /togglewatch response:", response.data);
+
+            //if a user adds something to their watchlist, we simulate responsiveness in notifications
+            if (response.data.isWatched)
+            {
+                onNewNotif()
+                console.log("/togglewatch notification response:", response.data.isWatched);
+            }
 
             // placeholder + logs
             setBookmarked(prev => {
@@ -167,9 +143,9 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, watchlistAr
                     tender.tag.map((tag: Tags, idx: number) => (
                         <span
                             key={idx}
-                            className={`tag ${tag.name === "New" ? "tag-new" : "tag-blue"}`}
+                            className={`tag ${tag.TagName === "New" ? "tag-new" : "tag-blue"}`}
                         >
-                            {tag.name}
+                            {tag.TagName}
                         </span>
                     ))
                 ) : (

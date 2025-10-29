@@ -63,7 +63,33 @@ export const AuthProvider = ({ children }) => {
                         phone_number: phoneNumber,
                         'custom:surname': surname,
                         'custom:address': address,
-                        'custom:CoreID': id
+                        'custom:CoreID': id,
+                        'custom:Role': 'StandardUser'
+                    },
+                },
+            });
+        } catch (error) {
+            console.error("Error signing up:", error);
+            throw error;
+        }
+    };
+
+    // RECONFIGURED SIGNUP FUNCTION -- FOR ADMIN
+    // The signature is simplified. We assume the 'username' is the 'email'.
+    const adminSignUp = async (email, password, name, surname, phoneNumber, address, id) => {
+        try {
+            return await amplifySignUp({
+                username: email, // Use email as the username for sign-up
+                password,
+                options: {
+                    userAttributes: {
+                        email, // The email attribute itself
+                        name,
+                        phone_number: phoneNumber,
+                        'custom:surname': surname,
+                        'custom:address': address,
+                        'custom:CoreID': id,
+                        'custom:Role': 'SuperUser'
                     },
                 },
             });
@@ -131,6 +157,7 @@ export const AuthProvider = ({ children }) => {
         signIn,
         signUp,
         createSuperUser,
+        adminSignUp,
         confirmSignUp,
         signOut,
         deleteCognitoUser,

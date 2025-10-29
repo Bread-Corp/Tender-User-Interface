@@ -15,12 +15,12 @@ const apiURL = import.meta.env.VITE_API_URL;
 
 const PAGE_SIZE = 10;
 
-const Tracking = () => {
+const Tracking = ({ onNewNotif }) => {
     const navigate = useNavigate();
 
     const [tenders, setTenders] = useState([]); // all fetched tenders
     const [page, setPage] = useState(1);
-    const [totalPages, setTotalPages] = useState(0) 
+    const [totalPages, setTotalPages] = useState(1) 
     const [filter, setFilter] = useState("All"); //state to check which status filter is active
     const [expanded, setExpanded] = useState([]); // state to track which tenders are currently expanded
     const [isLoading, setIsLoading] = useState(true);
@@ -31,18 +31,6 @@ const Tracking = () => {
             prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
         );
     };
-
-    //filters tenders based on status dropdown
-    const filteredTenders =
-        filter === "All"
-            ? tenders
-            : tenders.filter((t) => t.status.toLowerCase() === filter.toLowerCase());
-
-    // slice the filtered array for the current page
-    const paginatedTenders = filteredTenders.slice(
-        (page - 1) * PAGE_SIZE,
-        page * PAGE_SIZE
-    );
 
     //method to get user watchlist
     useEffect(() => {
@@ -66,17 +54,24 @@ const Tracking = () => {
                 return;
             }
 
-            const requestURL = `${apiURL}/watchlist/${coreID}`;
+            const requestURL = `${apiURL}/watchlist/${coreID}?page=${page}&pageSize=${PAGE_SIZE}`;
 
             try {
                 const response = await axios.get(requestURL);
                 const result = response.data;
 
-                const data = Array.isArray(result) ? result : result.watchlist || [];
+                const data = Array.isArray(result) ? result : result.data || [];
+
+                //when a user accesses their watchlist, and tenders are closing soon, we simulate responsiveness in notifications
+                if (result.hasNotification)
+                {
+                    onNewNotif()
+                    console.log("closingSoon notification response:", response.data.hasNotification);
+                }
 
                 // map over each tender item to convert it into an instance of a class
                 const tenderObjects = data.map((item) => {
-
+                                       
                     // Explicitly resolve the ID as a fallback
                     const id = item.tenderID || item.TenderID || item.id;
 
@@ -105,11 +100,13 @@ const Tracking = () => {
                     }
                 }); 
 
-                 setTenders(tenderObjects);
+                setTenders(tenderObjects);
+                setTotalPages(result.totalPages || 1);
             }
             catch (err) {
-
+                console.error("Error fetching watchlist:", err);
                 setTenders([]);
+                setTotalPages(1); // reset on error
             }
             finally {
                 setIsLoading(false);
@@ -117,42 +114,36 @@ const Tracking = () => {
         };
 
         fetchWatchlist();
-    }, []);// empty dependency array so this runs only once on component mount
+    }, [page, filter, navigate]);// rerun when page or filter changes
 
-    useEffect(() => {
-        const newTotalPages = Math.ceil(filteredTenders.length / PAGE_SIZE);
-        setTotalPages(newTotalPages === 0 ? 1 : newTotalPages);
 
-        if (page > newTotalPages && newTotalPages > 0) {
-            setPage(1);
-        }
-
-    }, [filteredTenders, filter, page]);
-
-    //handle remove bookmark
+    ////handle remove bookmark
     const handleBookmarkClick = async (tenderID) => {
         let coreID = null;
 
         try {
             const attributes = await fetchUserAttributes();
             coreID = attributes['custom:CoreID'];
-
         } catch (error) {
-            onRequireLogin();
+
+            if (error.name === 'NotAuthorizedException') {
+                navigate('/login');
+            }
             setIsLoading(false);
             return;
         }
 
         try {
             const response = await axios.post(`${apiURL}/watchlist/togglewatch/${coreID}/${tenderID}`);
-
+            // This client-side removal is fine for a quick UI update.
             setTenders(prev => prev.filter(t => t.tenderID !== tenderID));
         } catch (err) {
+            console.error("Error removing bookmark:", err);
         }
     };
 
     const PaginationControls = () => {
-        if (totalPages <= 1 && filteredTenders.length <= PAGE_SIZE) return null;
+        if (totalPages <= 1) return null;
 
         const pages = [];
         for (let i = 1; i <= totalPages; i++) {
@@ -233,7 +224,7 @@ const Tracking = () => {
                         <LoadingSpinner text="Loading your tracked tenders..." />
                     </div>
                 ) :
-                    filteredTenders.length === 0 ? (
+                    tenders.length === 0 ? (
                         <div className="empty-state-message">
                             <span className="empty-state-icon">
                                 <FaRegFolderOpen />
@@ -246,7 +237,7 @@ const Tracking = () => {
                             </button>
                         </div>
                     ) : (
-                        paginatedTenders.map((tender) => (
+                            tenders.map((tender) => (
                             <div
                                 className="tracking-tender-card"
                                 key={tender.tenderID}>

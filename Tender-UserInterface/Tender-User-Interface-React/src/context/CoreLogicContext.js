@@ -4,9 +4,9 @@ import { StandardUser } from '../Models/UserModels/StandardUser.js';
 //const apiURL = import.meta.env.VITE_API_URL;
 const apiURL = import.meta.env.VITE_API_URL;
 
-export const register = async (FullName, Email, PhoneNumber, Address)  =>
+export const register = async (FullName, Email, PhoneNumber, Address, Tags)  =>
 {
-    console.log(FullName, Email, PhoneNumber, Address);
+    console.log(FullName, Email, PhoneNumber, Address, Tags);
 
     try {
         const standardUser = new StandardUser({
@@ -14,6 +14,7 @@ export const register = async (FullName, Email, PhoneNumber, Address)  =>
             Email: Email,
             PhoneNumber: PhoneNumber,
             Address: Address,
+            Tags: Tags.map(tag => ({name: tag}))
         });
         console.log('StandarrdUser:', standardUser);
 
@@ -22,7 +23,7 @@ export const register = async (FullName, Email, PhoneNumber, Address)  =>
                 .then(response => {
                     const userID = response.data.value;
                     console.log('User created at :', Date.now());
-                    console.log('USerID:', userID);
+                    console.log('UserID:', userID);
                     return userID
                 })
                 .catch(error => {
@@ -53,6 +54,18 @@ export const editUser = async (userID, editUserDTO) =>
         const res = await axios.post(`${apiURL}/tenderuser/edit/${userID}`, editUserDTO)
         console.log('User editted at :', Date.now());
         return res.data;
+    }
+    catch (error) {
+        console.error('Internal error editting user: ', error);
+    }
+}
+
+export const fetchAllNotifications = async (userID) =>
+{
+    try {
+        const res = await axios.get(`${apiURL}/notification/${userID}`)
+        console.log('Fethced user notifications at :', Date.now());
+        return res.data.notifications;
     }
     catch (error) {
         console.error('Internal error editting user: ', error);
