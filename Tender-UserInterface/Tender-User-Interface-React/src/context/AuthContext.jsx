@@ -51,8 +51,6 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    // RECONFIGURED SIGNUP FUNCTION
-    // The signature is simplified. We assume the 'username' is the 'email'.
     const signUp = async (email, password, name, surname, phoneNumber, address, id) => {
         try {
             return await amplifySignUp({
@@ -60,7 +58,7 @@ export const AuthProvider = ({ children }) => {
                 password,
                 options: {
                     userAttributes: {
-                        email, // The email attribute itself
+                        email, 
                         name,
                         phone_number: phoneNumber,
                         'custom:surname': surname,
@@ -76,27 +74,26 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    // RECONFIGURED SIGNUP FUNCTION -- FOR ADMIN
-    // The signature is simplified. We assume the 'username' is the 'email'.
-    const adminSignUp = async (email, password, name, surname, phoneNumber, address, id) => {
+    // signUp for super user
+    const createSuperUser = async (email, name, surname, phoneNumber, organisation, id) => {
         try {
             return await amplifySignUp({
-                username: email, // Use email as the username for sign-up
-                password,
+                username: email,
+                password: 'admin@tt', // set admin password
                 options: {
                     userAttributes: {
-                        email, // The email attribute itself
+                        email,
                         name,
                         phone_number: phoneNumber,
                         'custom:surname': surname,
-                        'custom:address': address,
+                        'custom:organisation': organisation,
                         'custom:CoreID': id,
                         'custom:Role': 'SuperUser'
                     },
                 },
             });
         } catch (error) {
-            console.error("Error signing up:", error);
+            console.error("Error creating super user:", error);
             throw error;
         }
     };
@@ -125,7 +122,7 @@ export const AuthProvider = ({ children }) => {
             await amplifyDeleteUser();
             return await signOut();
         }
-        catch {
+        catch (error) {
             console.error("Error deleting user:", error);
         }
     }
@@ -135,7 +132,7 @@ export const AuthProvider = ({ children }) => {
         loading,
         signIn,
         signUp,
-        adminSignUp,
+        createSuperUser,
         confirmSignUp,
         signOut,
         deleteCognitoUser,
