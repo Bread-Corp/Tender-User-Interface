@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Dashboard.css';
-import SuperUserNavBar from '../../../Components/SuperUserNavBar/SuperUserNavBar';
 import AddSuperUser from '../../../Components/AddSuperUser/AddSuperUser';
 
 const scraperSources = ["Etenders", "Eskom", "SANRAL", "SARS", "Transnet"];
@@ -41,7 +40,6 @@ const Dashboard = () => {
 
         return (
             <div className="dashboard-container">
-                <SuperUserNavBar />
 
                 <div className="dashboard-banner">
                     <h1>Welcome Super User</h1>

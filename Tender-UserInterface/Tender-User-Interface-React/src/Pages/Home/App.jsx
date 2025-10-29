@@ -16,6 +16,7 @@ import { ThemeProvider } from '../../context/ThemeContext.jsx';
 import Dashboard from '../SuperUser/Dashboard/Dashboard';
 import ManageUsers from '../SuperUser/ManageUsers/ManageUsers';
 import MainLayout from '../../Components/Layout/MainLayout'; 
+import Navbar from '../../Components/Navbar/Navbar';
 
 import { useAuth } from '../../context/AuthContext';
 

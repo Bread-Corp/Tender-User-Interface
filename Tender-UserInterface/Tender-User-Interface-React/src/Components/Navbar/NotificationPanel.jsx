@@ -44,7 +44,7 @@ const NotificationPanel = ({ show, toggle, close, onReadNotif, isNotification })
 
 
                     if (error.name === 'NotAuthorizedException') {
-                        navigate('/login');
+                   
                     }
                     setIsLoading(false);
                     return;
