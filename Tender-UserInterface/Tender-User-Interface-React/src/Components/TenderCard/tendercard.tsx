@@ -179,8 +179,8 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, onNewNotif,
                     </div>
 
                     <div className="tender-info-row">
-                        <span className="tender-info-label">Description:</span>
-                        <span className="tender-info-value">{tender.description || "N/A"}</span>
+                        <span className="tender-info-label">AI Summary:</span>
+                        <span className="tender-info-value">{tender.aiSummary || "N/A"}</span>
                     </div>
 
                     <Link to={`/tender/${tender.tenderID}`} className="see-more-btn">

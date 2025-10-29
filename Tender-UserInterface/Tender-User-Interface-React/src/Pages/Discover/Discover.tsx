@@ -23,14 +23,14 @@ const Discover = ({ onNewNotif }) => {
     const [filters, setFilters] = useState<string[]>([]);
     const [showAllFilters, setShowAllFilters] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
-    const [sortOption, setSortOption] = useState("Popularity");
+    const [sortOption, setSortOption] = useState("Descending");
 
     // pagination state
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
 
-    const [allTenders, setAllTenders] = useState<(EskomTender | ETender)[]>([]);
+    const [tenders, setTenders] = useState<(EskomTender | ETender)[]>([]);
     const [watchlist, setWatchlist] = useState<WatchlistItem[]>([]);
 
     const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -43,11 +43,13 @@ const Discover = ({ onNewNotif }) => {
         tags: string[];
         alphabetical: string | null;
         status: string | null;
+        sources: string[];
     }>({
         date: null,
         tags: [],
         alphabetical: null,
         status: null,
+        sources: [],
     });
 
     // hlper for toast message
@@ -129,15 +131,34 @@ const Discover = ({ onNewNotif }) => {
     }, [isLoggedIn, apiURL]);
 
     useEffect(() => {
-        const fetchAllTenders = async () => {
+        const fetchTenders = async () => {
             setIsLoading(true);
             try {
-                // fetch all data
-                const response = await axios.get(`${apiURL}/tender/fetch?pageSize=10&page=1`);
+
+                // DTO
+                const filterDTO = {
+                    search: searchTerm,
+                    sort: sortOption, //sort dropdown options
+                    tags: filters,
+                    dateFilter: overlayFilters.date, // closing soon < 7 days
+                    tagFilter: overlayFilters.tags, // tags applied from overlay
+                    statusFilter: overlayFilters.status ? overlayFilters.status.toLowerCase() : null, // open or closed
+                    alphaSort: overlayFilters.alphabetical, //alphabetical sorting
+                    sources: overlayFilters.sources,
+                };
+
+                console.log("Sending to API:", filterDTO);
+
+                const requestURL = `${apiURL}/tender/fetchFiltered?page=${page}&pageSize=${pageSize}`;
+                const response = await axios.post(requestURL, filterDTO);
+
                 const result = response.data;
 
-                // make sure the response data is always an array
-                const data = Array.isArray(result) ? result : result.data || [];
+                // Get the array from result.data, or default to an empty array
+                const data = Array.isArray(result.data) ? result.data : [];
+
+                console.log("API Result:", result);
+                console.log("Extracted Data for Mapping:", data)
 
                 // map over each tender item to convert it into an instance of a class
                 const tenderObjects: BaseTender[] = data.map((item: any) => {
@@ -155,106 +176,23 @@ const Discover = ({ onNewNotif }) => {
                     }
                 });
 
-                setAllTenders(tenderObjects);
-                // setTotalPages will be handled by the logic below based on filteredTenders
+                setTenders(tenderObjects);
+                setTotalPages(result.totalPages || 0);
             } catch (err) {
                 console.error("Failed to fetch all tenders:", err);
-                setAllTenders([]);
+                setTenders([]);
+                setTotalPages(0);
             } finally {
                 setIsLoading(false);
             }
         };
 
-        fetchAllTenders();
-    }, []); // empty dependency array so this runs only once on component mount
+        fetchTenders();
+    }, [page, searchTerm, sortOption, filters, overlayFilters]); 
 
     const removeFilter = (index: number) => {
         setFilters(prev => prev.filter((_, i) => i !== index));
     };
-
-    // FILTERING logic
-    const isWithinDays = (dateInput: string | Date, days: number, fromPast = false) => {
-        const today = new Date();
-        const date = dateInput instanceof Date ? dateInput : new Date(dateInput);
-        const diffDays = (date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24);
-        return fromPast ? diffDays >= 0 && diffDays <= days : diffDays <= days;
-    };
-
-    const startsWithLetter = (str: string) => /^[A-Za-z]/.test(str);
-
-    const filteredTenders = allTenders
-        .filter((tender) => {
-            const title = tender.title || "";
-            const titleMatch = title.toLowerCase().includes(searchTerm.toLowerCase());
-
-            if (!titleMatch) return false;
-
-            // tag pills
-            if (filters.length > 0 && !tender.tag.some((t) => filters.includes(t.name))) {
-                return false;
-            }
-
-            // overlay status
-            if (overlayFilters.status && tender.status !== overlayFilters.status) {
-                return false;
-            }
-
-            // overlay tags
-            if (
-                overlayFilters.tags.length > 0 &&
-                !overlayFilters.tags.some((t) =>
-                    tender.tag.map((tag) => tag.name).includes(t)
-                )
-            ) {
-                return false;
-            }
-
-            // overlay date
-            if (overlayFilters.date === "Closing Soon" && !isWithinDays(tender.closingDate, 7)) {
-                return false;
-            }
-            if (overlayFilters.date === "Newly Added" && !isWithinDays(tender.publishedDate, 7, true)) {
-                return false;
-            }
-
-            return true;
-        })
-        .sort((a, b) => {
-            const aTitle = a.title || "";
-            const bTitle = b.title || "";
-
-            if (overlayFilters.alphabetical === "A-Z") {
-                return aTitle.localeCompare(bTitle, undefined, { sensitivity: "base" });
-            }
-            if (overlayFilters.alphabetical === "Z-A") {
-                return bTitle.localeCompare(aTitle, undefined, { sensitivity: "base" });
-            }
-
-            return 0;
-        });
-
-    const pageSize = 10;
-
-    // update totalPages whenever filteredTenders changes
-    useEffect(() => {
-        // recalc total pages based on the length of the filtered results
-        const newTotalPages = Math.ceil(filteredTenders.length / pageSize);
-        setTotalPages(newTotalPages);
-
-        // reset page to 1 if the current page is out of bounds after filtering
-        if (page > newTotalPages && newTotalPages > 0) {
-            setPage(1);
-        } else if (newTotalPages === 0) {
-            setPage(1); // keep page at 1 if no results
-        }
-
-    }, [filteredTenders, page]); // Rerun when filteredTenders array changes
-
-    // slice the filtered array for the current page
-    const paginatedTenders = filteredTenders.slice(
-        (page - 1) * pageSize,
-        page * pageSize
-    );
 
     const visibleFilters = filters.slice(0, max_visible_filters);
     const hiddenCount = filters.length - visibleFilters.length;
@@ -324,7 +262,9 @@ const Discover = ({ onNewNotif }) => {
                                     setOverlayFilters(filters)
                                     showToast("Filters applied!");
                                 }}
-                                showToast={showToast}/>
+                                showToast={showToast}
+                                availableTags={filters}
+                            />
                         )}
                     </div>
                 </div> 
@@ -334,14 +274,13 @@ const Discover = ({ onNewNotif }) => {
             <section className="discovery-cards-section">
                 {/* Sorting */}
                 <div className="sort-container">
-                    <label className="sort-label">Sort by</label>
+                    <label className="sort-label">Sort by Date</label>
                     <select
                         className="sort-select"
                         value={sortOption}
                         onChange={(e) => setSortOption(e.target.value)}>
-                        <option>Popularity</option>
-                        <option>Date</option>
-                        <option>Region</option>
+                        <option>Ascending</option>
+                        <option>Descending</option>
                     </select>
                 </div>
 
@@ -351,9 +290,9 @@ const Discover = ({ onNewNotif }) => {
                         {isLoading ? (
                             // show spinner while data being fetched
                             <LoadingSpinner text="Loading tenders..." />
-                        ) : paginatedTenders.length > 0 ? (
+                        ) : tenders.length > 0 ? (
                             // show tenders if loading is false and we have results
-                            paginatedTenders.map((tender) => (
+                            tenders.map((tender) => (
                                 <TenderCard
                                     key={tender.tenderID}
                                     tender={tender}
@@ -383,7 +322,7 @@ const Discover = ({ onNewNotif }) => {
                         )}
 
                         {/* only show pagination when there are tenders */}
-                        {paginatedTenders.length > 0 && (
+                        {tenders.length > 0 && (
                             <div className="pagination">
                                 {/* Previous button */}
                                 <button

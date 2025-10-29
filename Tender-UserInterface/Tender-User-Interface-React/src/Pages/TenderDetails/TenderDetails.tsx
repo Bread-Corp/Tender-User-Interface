@@ -21,7 +21,7 @@ const TenderDetails: React.FC = () => {
                 const item = response.data;
 
                 const tagsArray: Tags[] = item.tags
-                    ? item.tags.map((t: any) => new Tags(t.id || "", t.name || ""))
+                    ? item.tags.map((t: any) => new Tags(t.tagID || "", t.tagName || ""))
                     : [];
 
                 const tenderObj =
@@ -85,7 +85,7 @@ const TenderDetails: React.FC = () => {
                 <div className="tags-container">
                     {tender.tag.map((t: Tags) => (
                         <span key={t.id} className="tag">
-                            {t.name}
+                            {t.TagName}
                         </span>
                     ))}
                 </div>
@@ -122,12 +122,22 @@ const TenderDetails: React.FC = () => {
             )}
 
             {/* Supporting Docs */}
-            {tender.supportingDocs && (
+            {Array.isArray(tender.supportingDocs) && tender.supportingDocs.length > 0 && (
                 <div className="tender-detail-card ">
                     <h2 style={{ marginBottom: '1.8rem' }}>Supporting Documents</h2>
-                    <a href={tender.supportingDocs} target="_blank" rel="noreferrer" className="btn-secondary-dark">
-                        View Document
-                    </a>
+                    {/* --- Map over the array --- */}
+                    {tender.supportingDocs.map((doc) => (
+                        // Use doc.supportingDocID or doc.url as the key
+                        <a
+                            key={doc.supportingDocID}
+                            href={doc.url} // Use the doc's URL
+                            target="_blank"
+                            rel="noreferrer"
+                            className="btn-secondary-dark supporting-doc-link" // Add a class for potential styling
+                        >
+                            {doc.name} {/* Use the doc's name as the link text */}
+                        </a>
+                    ))}
                 </div>
             )}
         </div>

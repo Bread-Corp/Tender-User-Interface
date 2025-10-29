@@ -77,21 +77,22 @@ const Navbar = ({ isSignedIn, onLogoutSuccess, isAdmin, isNotification, onReadNo
                 </ul>
 
                 <div className="navbar-right">
-                    <Notification
-                        show={showNotifications}
-                        toggle={() => setShowNotifications(prev => !prev)}
-                        close={() => setShowNotifications(false)}
-                        onReadNotif={helpReadNotif}
-                        isNotification={isNotification}
-                    />
-            
-                    <ProfileMenu
-                        show={showProfileDropdown}
-                        toggle={() => setShowProfileDropdown(prev => !prev)}
-                        close={() => setShowProfileDropdown(false)}
-                        isSignedIn={isSignedIn}
-                        onLogoutSuccess={onLogoutSuccess}
-                    />
+                    {isSignedIn && (
+                        <Notification
+                            show={showNotifications}
+                            toggle={() => setShowNotifications(prev => !prev)}
+                            close={() => setShowNotifications(false)}
+                            onReadNotif={helpReadNotif}
+                            isNotification={isNotification}
+                        />
+                    )}
+                        <ProfileMenu
+                            show={showProfileDropdown}
+                            toggle={() => setShowProfileDropdown(prev => !prev)}
+                            close={() => setShowProfileDropdown(false)}
+                            isSignedIn={isSignedIn}
+                            onLogoutSuccess={onLogoutSuccess}
+                        />
 
                     <MenuIcon open={menuOpen} toggle={() => setMenuOpen(prev => !prev)} />
                 </div>
