@@ -8,7 +8,7 @@ import { useAuth } from '../../context/AuthContext';
 import { fetchUserAttributes } from '@aws-amplify/auth';
 import { register, deleteUser } from '../../context/CoreLogicContext.js';
 import PasswordInput from '../../Components/PasswordInput';
-import ErrorMessage from '../../Components/ErrorMessage.jsx'
+import ErrorMessage from '../../Components/ErrorMessage.jsx';
 
 const Login = ({ onLoginSuccess, onAdminSuccess }) => {
     const [activeForm, setActiveForm] = useState('login');
@@ -131,6 +131,7 @@ const Login = ({ onLoginSuccess, onAdminSuccess }) => {
         });
     };
 
+    // handle register submit function
     const handleRegisterSubmit = async (e) => {
         e.preventDefault();
         setError('');

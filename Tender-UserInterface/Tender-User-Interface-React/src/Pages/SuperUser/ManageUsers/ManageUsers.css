@@ -1,0 +1,144 @@
+.user-management-container {
+    padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+    max-width: 1300px;
+    margin: 0 auto;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+    .page-header h1 {
+        font-size: 28px;
+        color: #2c3e50;
+    }
+
+.add-user-btn {
+    padding: 10px 20px;
+    background-color: #4B659A;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s;
+}
+
+    .add-user-btn:hover {
+        background-color: #5571A6;
+    }
+
+/* TABLES N STUFF */
+.user-table-wrapper {
+    overflow-x: auto; 
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+thead {
+    background-color: #ecf0f1;
+    color: #7f8c8d;
+    text-transform: uppercase;
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #f1f1f1;
+}
+
+tbody tr:hover {
+    background-color: #f9fbfd;
+}
+
+/* STASTUS + TAGS */
+.role-tag {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+    .role-tag.role-superuser {
+        background-color: #4B659A;
+        color: white;
+    }
+
+    .role-tag.role-standard {
+    background-color: #d1d8e0; 
+    color: #353b48;
+}
+
+.role-tag.role-basic {
+    background-color: #e6e6e6;
+    color: #4a4a4a;
+}
+
+/* BTNS */
+.action-cells {
+    white-space: nowrap;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin: 0 5px;
+    padding: 5px;
+    font-size: 16px;
+    transition: color 0.2s;
+}
+
+    .icon-btn.edit-btn {
+        color: #2980b9;
+    }
+
+        .icon-btn.edit-btn:hover {
+            color: #3498db;
+        }
+
+    .icon-btn.delete-btn {
+        color: #c0392b;
+    }
+
+        .icon-btn.delete-btn:hover {
+            color: #e74c3c;
+        }
+
+/* Add Super User pop  up */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    border: 1px solid #33497D;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    width: 90%;
+}

@@ -1,11 +1,9 @@
 import { Routes, Route } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import Navbar from "../../Components/Navbar/Navbar";
 import Home from "../Home/Home";
 import Login from "../Login/Login";
 import Policy from "../Policy/Policy";
-import Dashboard from "../Dashboard/Dashboard";
 import Discover from "../Discover/Discover";
 import Tracking from "../Tracking/Tracking";
 import Profile from "../Profile/Profile";
@@ -15,6 +13,10 @@ import ConfirmSignUp from '../Login/ConfirmSignUp';
 import Settings from "../Settings/Settings";
 import Analytics from "../Analytics/Analytics";
 import { ThemeProvider } from '../../context/ThemeContext.jsx';
+import Dashboard from '../SuperUser/Dashboard/Dashboard';
+import ManageUsers from '../SuperUser/ManageUsers/ManageUsers';
+import MainLayout from '../../Components/Layout/MainLayout'; 
+
 import { useAuth } from '../../context/AuthContext';
 
 function App() {
@@ -64,6 +66,7 @@ function App() {
 
     return (
         <ThemeProvider>
+            <MainLayout>
             {/* pass state and handler to nav */}
             <Navbar isSignedIn={isSignedIn} onLogoutSuccess={handleLogout} isAdmin={isAdmin} isNotification={isNotification} onReadNotif={handleReadNotif} />
             <Routes>
@@ -75,14 +78,18 @@ function App() {
                 <Route path="/policy" element={<Policy />} />
                 <Route path="/discover" element={<Discover onNewNotif={handleNewNotif} />} />
                 <Route path="/tender/:id" element={<TenderDetails />} />
-                <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/analytics" element={<Analytics />} />
 
                 {/* Protected Routes */ }          
                 <Route path="/tracking" element={<ProtectedRoute><Tracking onNewNotif={handleNewNotif} /></ProtectedRoute>} />
                 <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
                 <Route path="/settings" element={<Settings />} />/*Fix protection*/
-            </Routes>
+
+                {/* SuperUser Routes */}
+                <Route path="/superuser/dashboard" element={<Dashboard />} />
+                <Route path="/superuser/manageusers" element={<ManageUsers />} />
+                </Routes>
+            </MainLayout>
         </ThemeProvider>
     );
 }
