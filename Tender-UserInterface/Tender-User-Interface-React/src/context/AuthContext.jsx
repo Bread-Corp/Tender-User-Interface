@@ -74,37 +74,12 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    // RECONFIGURED SIGNUP FUNCTION -- FOR ADMIN
-    // The signature is simplified. We assume the 'username' is the 'email'.
-    const adminSignUp = async (email, password, name, surname, phoneNumber, address, id) => {
-        try {
-            return await amplifySignUp({
-                username: email, // Use email as the username for sign-up
-                password,
-                options: {
-                    userAttributes: {
-                        email, // The email attribute itself
-                        name,
-                        phone_number: phoneNumber,
-                        'custom:surname': surname,
-                        'custom:address': address,
-                        'custom:CoreID': id,
-                        'custom:Role': 'SuperUser'
-                    },
-                },
-            });
-        } catch (error) {
-            console.error("Error signing up:", error);
-            throw error;
-        }
-    };
-
     // signUp for super user
     const createSuperUser = async (email, name, surname, phoneNumber, organisation, id) => {
         try {
             return await amplifySignUp({
                 username: email,
-                password: 'admin123', // set admin password
+                password: 'admin@tt', // set admin password
                 options: {
                     userAttributes: {
                         email,
@@ -112,7 +87,8 @@ export const AuthProvider = ({ children }) => {
                         phone_number: phoneNumber,
                         'custom:surname': surname,
                         'custom:organisation': organisation,
-                        'custom:CoreID': id
+                        'custom:CoreID': id,
+                        'custom:Role': 'SuperUser'
                     },
                 },
             });
@@ -157,7 +133,6 @@ export const AuthProvider = ({ children }) => {
         signIn,
         signUp,
         createSuperUser,
-        adminSignUp,
         confirmSignUp,
         signOut,
         deleteCognitoUser,

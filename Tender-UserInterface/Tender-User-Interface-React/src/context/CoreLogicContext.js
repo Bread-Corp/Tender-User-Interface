@@ -37,6 +37,39 @@ export const register = async (FullName, Email, PhoneNumber, Address, Tags)  =>
     }
 }
 
+export const registerAdmin = async (FullName, Email, PhoneNumber, Address, Organisation)  =>
+{
+    console.log(FullName, Email, PhoneNumber, Address, Organisation);
+
+    try {
+        const superUser = {
+            FullName: FullName,
+            Email: Email,
+            PhoneNumber: PhoneNumber,
+            Address: Address,
+            Organisation: Organisation
+        };
+        console.log('SuperUser:', superUser);
+
+        const res =
+            await axios.post(`${apiURL}/tenderuser/superuser/register`, superUser)
+                .then(response => {
+                    const userID = response.data.value;
+                    console.log('User created at :', Date.now());
+                    console.log('UserID:', userID);
+                    return userID
+                })
+                .catch(error => {
+                    console.error('Error posting user: ', error);
+                });
+
+        return res;
+    }
+    catch (error) {
+        console.error('Internal error creating user: ', error);
+    }
+}
+
 export const deleteUser = async (userID) =>
 {
     try {

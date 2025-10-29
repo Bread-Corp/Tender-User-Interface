@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './AddSuperUser.css';
 import { useAuth } from '../../context/AuthContext.jsx';
+import { registerAdmin, deleteUser } from '../../context/CoreLogicContext.js';
 
 const AddSuperUser = ({ onCancel }) => {
+    const navigate = useNavigate();
+    const [id] = useState('');
     const [formData, setFormData] = useState({
         firstName: '',
         lastName: '',
@@ -33,7 +37,6 @@ const AddSuperUser = ({ onCancel }) => {
         setError('');
 
         const { email, phone, firstName, lastName, organisation } = formData;
-        const id = crypto.randomUUID();
 
         // Format the phone number
         let formattedPhone = phone;
@@ -52,31 +55,55 @@ const AddSuperUser = ({ onCancel }) => {
         };
         console.log("Submitting this data to AuthContext:", submissionData);
 
-        //try append to cognito
         try {
-            // We are using the variables from the object above
-            await createSuperUser(
+            //Here we need to register the user in our database.
+            //The database returns a uniqueID that we need for filtering
+            //We can then append this ID to cognito for easier fetching.
+            const response = await registerAdmin(
+                submissionData.name + " " + submissionData.surname,
                 submissionData.email,
-                submissionData.name,
-                submissionData.surname,
                 submissionData.formattedPhone,
+                submissionData.address,
                 submissionData.organisation,
-                submissionData.id,
-            );
+            )
 
-            showToast("Super User registered succesfully");
+            //set the ID to pass through
+            submissionData.id = response;
 
-            setFormData({
-                firstName: '',
-                lastName: '',
-                email: '',
-                phone: '',
-                organisation: '',
-            });
-        }
-        catch (err) {
-            console.error("Sign-up failed:", err);
-            setError('Failed to create super user. Please try again.');
+            //try append to cognito, if fails -- delete from database
+            try {
+                // We are using the variables from the object above
+                await createSuperUser(
+                    submissionData.email,
+                    submissionData.name,
+                    submissionData.surname,
+                    submissionData.formattedPhone,
+                    submissionData.organisation,
+                    submissionData.id,
+                );
+
+                showToast("Super User registered succesfully");
+                //navigate(`/confirm-signup?username=${email}`);
+
+                setFormData({
+                    firstName: '',
+                    lastName: '',
+                    email: '',
+                    phone: '',
+                    organisation: '',
+                });
+            }
+            catch (err) {
+                //delete from database
+                await deleteUser(submissionData.id);
+
+                console.error("Sign-up failed:", err);
+                setError('Failed to create super user. Please try again.');
+            }
+
+        } catch (err) {
+            setError(err.message);
+            console.error("Registration failed with error:", err);
         }
     };
 
