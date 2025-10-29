@@ -42,12 +42,14 @@ const Discover = ({ onNewNotif }) => {
         date: string | null;
         tags: string[];
         alphabetical: string | null;
-        status: boolean | null;
+        status: string | null;
+        sources: string[];
     }>({
         date: null,
         tags: [],
         alphabetical: null,
         status: null,
+        sources: [],
     });
 
     // hlper for toast message
@@ -133,10 +135,6 @@ const Discover = ({ onNewNotif }) => {
             setIsLoading(true);
             try {
 
-                const statusString = overlayFilters.status === true
-                    ? "Open"
-                    : (overlayFilters.status === false ? "Closed" : null);
-
                 // DTO
                 const filterDTO = {
                     search: searchTerm,
@@ -144,8 +142,9 @@ const Discover = ({ onNewNotif }) => {
                     tags: filters,
                     dateFilter: overlayFilters.date, // closing soon < 7 days
                     tagFilter: overlayFilters.tags, // tags applied from overlay
-                    statusFilter: overlayFilters.status, // open or closed
-                    alphaSort : overlayFilters.alphabetical, //alphabetical sorting
+                    statusFilter: overlayFilters.status ? overlayFilters.status.toLowerCase() : null, // open or closed
+                    alphaSort: overlayFilters.alphabetical, //alphabetical sorting
+                    sources: overlayFilters.sources,
                 };
 
                 console.log("Sending to API:", filterDTO);
@@ -155,8 +154,11 @@ const Discover = ({ onNewNotif }) => {
 
                 const result = response.data;
 
-                // make sure the response data is always an array
-                const data = Array.isArray(result.data) ? result : result.data || [];
+                // Get the array from result.data, or default to an empty array
+                const data = Array.isArray(result.data) ? result.data : [];
+
+                console.log("API Result:", result);
+                console.log("Extracted Data for Mapping:", data)
 
                 // map over each tender item to convert it into an instance of a class
                 const tenderObjects: BaseTender[] = data.map((item: any) => {
@@ -260,7 +262,9 @@ const Discover = ({ onNewNotif }) => {
                                     setOverlayFilters(filters)
                                     showToast("Filters applied!");
                                 }}
-                                showToast={showToast}/>
+                                showToast={showToast}
+                                availableTags={filters}
+                            />
                         )}
                     </div>
                 </div> 
