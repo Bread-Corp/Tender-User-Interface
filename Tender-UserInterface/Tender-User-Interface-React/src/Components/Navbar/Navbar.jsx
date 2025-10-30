@@ -69,7 +69,7 @@ const Navbar = ({ isSignedIn, onLogoutSuccess, isAdmin, isNotification, onReadNo
 
                     {isAdmin && (
                         <li>
-                            <NavLink to="/dashboard" className={({ isActive }) => (isActive ? 'active' : '')}>
+                            <NavLink to="/superuser/dashboard" className={({ isActive }) => (isActive ? 'active' : '')}>
                                 Dashboard
                             </NavLink>
                         </li>
