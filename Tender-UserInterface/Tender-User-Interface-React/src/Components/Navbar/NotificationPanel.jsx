@@ -28,6 +28,10 @@ const NotificationPanel = ({ show, toggle, close, onReadNotif, isNotification })
     }, [show, close]);
 
     useEffect(() => {
+        if (!show) return;
+
+        let isMounted = true; //to avoid setting state on unmount
+
         if (show) {
             const fetchNotifications = async () => {
                 setIsLoading(true);
@@ -40,26 +44,30 @@ const NotificationPanel = ({ show, toggle, close, onReadNotif, isNotification })
 
                     coreID = attributes['custom:CoreID'];
 
-                } catch (error) {
+                    //fetch from corelogiccontext
+                    const notifs = await fetchAllNotifications(coreID)
 
+                    await new Promise(resolve => setTimeout(resolve, 500));
+
+                    if (isMounted) setNotifications(notifs);
+
+
+                } catch (error) {
+                    console.error('NotificationPanel error:', error);
 
                     if (error.name === 'NotAuthorizedException') {
-                   
+                        console.error('NotAuthorizedException error:', error);
+                        return;
                     }
-                    setIsLoading(false);
-                    return;
+                    
+                } finally {
+                    if (isMounted) setIsLoading(false);
                 }
-
-                //fetch from corelogiccontext
-                const notifs = await fetchAllNotifications(coreID)
-
-                await new Promise(resolve => setTimeout(resolve, 500));
-                setNotifications(notifs);
-
-                setIsLoading(false);
             };
 
             fetchNotifications();
+
+            return () => { isMounted = false; }; //cleanup
         }
     }, [show]);
 

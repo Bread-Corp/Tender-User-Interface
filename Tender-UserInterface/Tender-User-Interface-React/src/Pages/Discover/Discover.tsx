@@ -168,7 +168,11 @@ const Discover = ({ onNewNotif }) => {
                 console.log("Sending to API:", filterDTO);
 
                 const requestURL = `${apiURL}/tender/fetchFiltered?page=${page}&pageSize=${pageSize}`;
-                const response = await axios.post(requestURL, filterDTO);
+                const response = await axios.post(requestURL, filterDTO, {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
 
                 const result = response.data;
 
