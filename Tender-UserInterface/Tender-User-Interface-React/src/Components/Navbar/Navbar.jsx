@@ -5,7 +5,7 @@ import ProfileMenu from './ProfilePanel';
 import MenuIcon from './MobileMenu';
 import './Navbar.css';
 
-const Navbar = () => {
+const Navbar = ({ isSignedIn, onLogoutSuccess, isAdmin, isNotification, onReadNotif }) => {
     const location = useLocation();
     const [menuOpen, setMenuOpen] = useState(false);
     const [showNotifications, setShowNotifications] = useState(false);
@@ -18,6 +18,16 @@ const Navbar = () => {
         const shouldHide = hideNavbarPaths.some(path => location.pathname.startsWith(path));
         setShowNavbar(!shouldHide);
     }, [location.pathname]);
+
+    //hlper for read notif
+    const helpReadNotif = () => {
+        onReadNotif();
+    }
+
+    //hlper for is notif
+    const helpIsNotif = () => {
+        return isNotification;
+    }
 
     if (!showNavbar) return null;
 
@@ -34,35 +44,55 @@ const Navbar = () => {
                             Home
                         </NavLink>
                     </li>
-                    <li>
-                        <NavLink to="/discover" className={({ isActive }) => (isActive ? 'active' : '')}>
-                            Discover
-                        </NavLink>
-                    </li>
+
+                    {!isAdmin && (
+                        <li>
+                            <NavLink to="/discover" className={({ isActive }) => (isActive ? 'active' : '')}>
+                                Discover
+                            </NavLink>
+                        </li>
+                    )}
+
                     <li>
                         <NavLink to="/analytics" className={({ isActive }) => (isActive ? 'active' : '')}>
                             Analytics
                         </NavLink>
                     </li>
+
+                    {isSignedIn && !isAdmin && (
                     <li>
                         <NavLink to="/tracking" className={({ isActive }) => (isActive ? 'active' : '')}>
-                            Tracking
+                            Watchlist
                         </NavLink>
                     </li>
+                    )}
+
+                    {isAdmin && (
+                        <li>
+                            <NavLink to="/superuser/dashboard" className={({ isActive }) => (isActive ? 'active' : '')}>
+                                Dashboard
+                            </NavLink>
+                        </li>
+                    )}
                 </ul>
 
                 <div className="navbar-right">
-                    <Notification
-                        show={showNotifications}
-                        toggle={() => setShowNotifications(prev => !prev)}
-                        close={() => setShowNotifications(false)}
-                    />
-
-                    <ProfileMenu
-                        show={showProfileDropdown}
-                        toggle={() => setShowProfileDropdown(prev => !prev)}
-                        close={() => setShowProfileDropdown(false)}
-                    />
+                    {isSignedIn && (
+                        <Notification
+                            show={showNotifications}
+                            toggle={() => setShowNotifications(prev => !prev)}
+                            close={() => setShowNotifications(false)}
+                            onReadNotif={helpReadNotif}
+                            isNotification={isNotification}
+                        />
+                    )}
+                        <ProfileMenu
+                            show={showProfileDropdown}
+                            toggle={() => setShowProfileDropdown(prev => !prev)}
+                            close={() => setShowProfileDropdown(false)}
+                            isSignedIn={isSignedIn}
+                            onLogoutSuccess={onLogoutSuccess}
+                        />
 
                     <MenuIcon open={menuOpen} toggle={() => setMenuOpen(prev => !prev)} />
                 </div>

@@ -1,9 +1,16 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { FaBell, FaTimes } from 'react-icons/fa';
+import NotificationCard from './NotificationCard'; 
+import LoadingSpinner from '../LoadingSpinner/LoadingSpinner';
+import axios from 'axios';
+import { fetchUserAttributes } from '@aws-amplify/auth';
+import { fetchAllNotifications } from '../../context/CoreLogicContext.js';
 
-const NotificationPanel = ({ show, toggle, close }) => {
+const NotificationPanel = ({ show, toggle, close, onReadNotif, isNotification }) => {
     const notificationRef = useRef(null);
-
+    const [notifications, setNotifications] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+        
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (notificationRef.current && !notificationRef.current.contains(event.target)) {
@@ -20,11 +27,56 @@ const NotificationPanel = ({ show, toggle, close }) => {
         };
     }, [show, close]);
 
+    useEffect(() => {
+        if (!show) return;
+
+        let isMounted = true; //to avoid setting state on unmount
+
+        if (show) {
+            const fetchNotifications = async () => {
+                setIsLoading(true);
+
+                //get CoreID
+                let coreID = null;
+
+                try {
+                    const attributes = await fetchUserAttributes();
+
+                    coreID = attributes['custom:CoreID'];
+
+                    //fetch from corelogiccontext
+                    const notifs = await fetchAllNotifications(coreID)
+
+                    await new Promise(resolve => setTimeout(resolve, 500));
+
+                    if (isMounted) setNotifications(notifs);
+
+
+                } catch (error) {
+                    console.error('NotificationPanel error:', error);
+
+                    if (error.name === 'NotAuthorizedException') {
+                        console.error('NotAuthorizedException error:', error);
+                        return;
+                    }
+                    
+                } finally {
+                    if (isMounted) setIsLoading(false);
+                }
+            };
+
+            fetchNotifications();
+
+            return () => { isMounted = false; }; //cleanup
+        }
+    }, [show]);
+
     return (
         <>
-            <div className="notification" onClick={toggle}>
+            <div className="notification" onClick={() => { toggle(); onReadNotif(); }}>
                 <FaBell />
-                <div className="dot" />
+                {/* conditional dot */}
+                {isNotification && <div className="dot" />}
             </div>
 
             <div className={`notification-panel ${show ? 'open' : ''}`} ref={notificationRef}>
@@ -35,8 +87,24 @@ const NotificationPanel = ({ show, toggle, close }) => {
                     </div>
                     <FaTimes className="close-btn" onClick={close} />
                 </div>
+
                 <div className="notification-content">
-                    <p>No new notifications</p>
+                    {isLoading ? (
+                        <div style={{ padding: '20px' }}>
+                            <LoadingSpinner text="Loading..." />
+                        </div>
+                    ) : notifications.length === 0 ? (
+                        <p className="no-notifications-msg">No new notifications</p>
+                    ) : (
+                        notifications.map(notif => (
+                            <NotificationCard
+                                key = { notif.notificationID } 
+                                notification = { notif }
+                                onCardClick = { close }
+                            />
+                        ))
+                    )}
+                    
                 </div>
             </div>
         </>

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "./Profile.css";
-import { FaUserCircle, FaMoon, FaSun } from "react-icons/fa"; // Import new icons
+import { FaUserCircle, FaMoon, FaSun } from "react-icons/fa"; 
 import {
     fetchUserAttributes,
     updateUserAttributes,
     signOut
 } from '@aws-amplify/auth';
 import { useNavigate } from "react-router-dom";
+import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
 
 const Profile = () => {
     // --- State Declarations ---
@@ -18,7 +19,7 @@ const Profile = () => {
     const [initialFormData, setInitialFormData] = useState({});
     const [formData, setFormData] = useState({});
     const [hasChanges, setHasChanges] = useState(false);
-    const [editingField, setEditingField] = useState(null);
+    const [isEditing, setIsEditing] = useState(false);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
@@ -83,24 +84,32 @@ const Profile = () => {
         }
     };
 
+    const handleEdit = () => {
+        setIsEditing(true);
+    }
+
     const handleSave = async () => {
         try {
+            // Use '?? ""' to provide an empty string if any value is null/undefined
+            const attributesToUpdate = {
+                name: formData.name ?? "",
+                phone_number: formData.phone_number ?? "", // Specifically fixes the error
+                'custom:surname': formData.surname ?? "",
+                'custom:address': formData.address ?? ""
+            };
+
             await updateUserAttributes({
-                userAttributes: {
-                    name: formData.name,
-                    phone_number: formData.phone_number,
-                    'custom:surname': formData.surname,
-                    'custom:address': formData.address,
-                }
+                userAttributes: attributesToUpdate // Send the safe object
             });
 
             setInitialFormData({ ...formData });
             setHasChanges(false);
-            setEditingField(null);
+            setIsEditing(false);
             alert("Profile saved successfully!");
         } catch (error) {
             console.error("Error saving profile:", error);
-            alert("Error saving profile. Please check the console for details.");
+            // Show a more specific error message from Cognito
+            alert(`Error saving profile: ${error.message}`);
         }
     };
 
@@ -108,7 +117,7 @@ const Profile = () => {
         setFormData({ ...initialFormData });
         setProfileImage(null);
         setHasChanges(false);
-        setEditingField(null);
+        setIsEditing(false);
     };
 
     const handleLogout = async () => {
@@ -121,7 +130,11 @@ const Profile = () => {
     };
 
     if (loading) {
-        return <div className="loading-container">Loading profile...</div>;
+        return (
+        <div className="loading-overlay">
+            <LoadingSpinner text="Fetching user profile data..." />
+            </div>
+        );
     }
 
     // --- JSX Rendering ---
@@ -130,11 +143,9 @@ const Profile = () => {
             <div className="profile-container">
                 <section className="profile-section profile-card">
                     <div className="card">
-                        {/* START: DARK MODE TOGGLE FIX */}
                         <div className="profile-header">
-                            <h2>Profile</h2>
+                            <h2>Profile</h2>                    
                         </div>
-                        {/* END: DARK MODE TOGGLE FIX */}
 
                         <div className="avatar-wrapper">
                             {profileImage ? (
@@ -167,29 +178,38 @@ const Profile = () => {
                                         type={type}
                                         value={formData[key] || ''}
                                         onChange={handleInputChange}
-                                        readOnly={editingField !== key || key === 'email'}
-                                    />
-                                    {key !== 'email' && (
-                                        editingField !== key ? (
-                                            <button
-                                                className="info-edit-btn"
-                                                onClick={() => setEditingField(key)}
-                                            >
-                                                Edit
-                                            </button>
-                                        ) : (
-                                            <span className="editing-label">Editing</span>
-                                        )
-                                    )}
+                                        readOnly={!isEditing || key === 'email'}/>
                                 </div>
                             ))}
                         </div>
 
-                        <div className="button-group">
+                        <div className="bottom-action-bar">
 
-                            <button className="cancel-btn" onClick={handleCancel} disabled={!hasChanges}>Cancel</button>
-                            <button className="save-btn" onClick={handleSave} disabled={!hasChanges}>Save</button>
+                            {!isEditing && (
+                                <button
+                                    className="edit-profile-btn bottom-only"
+                                    onClick={handleEdit}>
+                                    Edit Profile
+                                </button>
+                            )}
 
+                        {/*conditional rendering - only show when the user is editing*/}
+                            {isEditing && (
+                                <div className="button-group">
+
+                                    {/* cancel button should be enabled when editing starts */}
+                                    <button
+                                        className="cancel-btn"
+                                        onClick={handleCancel}
+                                        disabled={!isEditing}>Cancel
+                                    </button>
+
+                                    {/* Save Button */}
+                                    <button className="save-btn" onClick={handleSave} disabled={!hasChanges}>
+                                        Save Changes
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </section>

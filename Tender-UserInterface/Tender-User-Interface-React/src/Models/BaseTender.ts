@@ -10,6 +10,7 @@ export abstract class BaseTender {
     source: string;
     tag: Tags[];
     description?: string;
+    aiSummary?: string;
     supportingDocs?: string;
 
     // fallbacks where necessary
@@ -25,6 +26,7 @@ export abstract class BaseTender {
         this.source = data.source ?? "Unknown source";
         this.tag = data.tag ?? [];
         this.description = data.description;
+        this.aiSummary = data.aiSummary;
         this.supportingDocs = data.supportingDocs;
     }
 

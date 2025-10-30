@@ -3,6 +3,7 @@ import {
     signIn as amplifySignIn,
     signUp as amplifySignUp,
     signOut as amplifySignOut,
+    deleteUser as amplifyDeleteUser,
     confirmSignUp as amplifyConfirmSignUp,
     getCurrentUser
 } from '@aws-amplify/auth';
@@ -50,8 +51,6 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-    // RECONFIGURED SIGNUP FUNCTION
-    // The signature is simplified. We assume the 'username' is the 'email'.
     const signUp = async (email, password, name, surname, phoneNumber, address, id) => {
         try {
             return await amplifySignUp({
@@ -59,17 +58,42 @@ export const AuthProvider = ({ children }) => {
                 password,
                 options: {
                     userAttributes: {
-                        email, // The email attribute itself
+                        email, 
                         name,
                         phone_number: phoneNumber,
                         'custom:surname': surname,
                         'custom:address': address,
-                        'custom:CoreID': id
+                        'custom:CoreID': id,
+                        'custom:Role': 'StandardUser'
                     },
                 },
             });
         } catch (error) {
             console.error("Error signing up:", error);
+            throw error;
+        }
+    };
+
+    // signUp for super user
+    const createSuperUser = async (email, name, surname, phoneNumber, organisation, id) => {
+        try {
+            return await amplifySignUp({
+                username: email,
+                password: 'admin@tt', // set admin password
+                options: {
+                    userAttributes: {
+                        email,
+                        name,
+                        phone_number: phoneNumber,
+                        'custom:surname': surname,
+                        'custom:organisation': organisation,
+                        'custom:CoreID': id,
+                        'custom:Role': 'SuperUser'
+                    },
+                },
+            });
+        } catch (error) {
+            console.error("Error creating super user:", error);
             throw error;
         }
     };
@@ -93,13 +117,25 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
+    const deleteCognitoUser = async() => {
+        try {
+            await amplifyDeleteUser();
+            return await signOut();
+        }
+        catch (error) {
+            console.error("Error deleting user:", error);
+        }
+    }
+
     const value = {
         user,
         loading,
         signIn,
         signUp,
+        createSuperUser,
         confirmSignUp,
         signOut,
+        deleteCognitoUser,
     };
 
     return (

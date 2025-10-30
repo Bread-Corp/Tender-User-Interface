@@ -9,11 +9,23 @@ interface FilterOverlayProps {
         tags: string[];
         alphabetical: string | null;
         status: string | null;
+        sources: string[];
     }) => void;
     showToast: (message: string) => void
+    availableTags: string[];
 }
 
-const FilterOverlay: React.FC<FilterOverlayProps> = ({ onClose, onApply, showToast }) => {
+const sourceOptions = ['Eskom', 'eTenders', 'Transnet', 'SANRAL', 'SARS'];
+
+const industryTags = [
+    'Construction & Civil Engineering', 'IT & Software',
+    'Consulting & Professional Serivces', 'Maintenance & Repairs',
+    'Supply & Delivery', 'Financial & Auditing Services',
+    'Logistics & Transport', 'Health, Safety & Environmental',
+    'General Services', 'Training & Development'
+];
+
+const FilterOverlay: React.FC<FilterOverlayProps> = ({ onClose, onApply, showToast, availableTags }) => {
     const [closing, setClosing] = useState(false); // tracks closing animation
 
     // local state for each filter section
@@ -21,9 +33,10 @@ const FilterOverlay: React.FC<FilterOverlayProps> = ({ onClose, onApply, showToa
     const [tags, setTags] = useState<string[]>([]);
     const [alphabetical, setAlphabetical] = useState<string | null>(null);
     const [status, setStatus] = useState<string | null>(null);
+    const [selectedSources, setSelectedSources] = useState<string[]>([]);
 
     const handleApply = () => {
-        onApply({ date, tags, alphabetical, status }); // send filters to parent
+        onApply({ date, tags, alphabetical, status, sources: selectedSources }); // send filters to parent
         handleClose(); // then close overlay
     };
 
@@ -36,8 +49,23 @@ const FilterOverlay: React.FC<FilterOverlayProps> = ({ onClose, onApply, showToa
         setTags([]);
         setAlphabetical(null);
         setStatus(null);
+        setSelectedSources([]);
         showToast("Filters cleared!");
     };
+
+    const handleSourceChange = (source: string, isChecked: boolean) => {
+        setSelectedSources(prev => {
+            if (isChecked) {
+                return [...prev, source]; // Add source
+            } else {
+                return prev.filter(s => s !== source); // Remove source
+            }
+        });
+    };
+
+    useEffect(() => {
+        setTags(availableTags); // set the initial checked state based on passed-in tags
+    }, [availableTags]);
 
     // effect to actually call onClose() after the closing animation
     useEffect(() => {
@@ -78,40 +106,37 @@ const FilterOverlay: React.FC<FilterOverlayProps> = ({ onClose, onApply, showToa
                             type="radio"
                             name="date"
                             checked={date === "Closing Soon"}
-                            onChange={() => setDate("Closing Soon")}
+                            onChange={() => setDate(date === "Closing Soon" ? null : "Closing Soon")}
                         />
                         Closing Soon
                     </label>
-                    <label>
-                        <input
-                            type="radio"
-                            name="date"
-                            checked={date === "Newly Added"}
-                            onChange={() => setDate("Newly Added")}
-                        />
-                        Newly Added
-                    </label>
                 </div>
 
-                {/* tag filters - not sure hwo this is going to work yet */}
                 <div className="filter-section">
-                    <h3>Tags</h3>
-                    {["IT & Software", "Construction", "Healthcare", "Finance"].map((tag) => (
-                        <label key={tag}>
-                            <input
-                                type="checkbox"
-                                checked={tags.includes(tag)} // reflects selected tags
-                                onChange={(e) => {
-                                    if (e.target.checked) {
-                                        setTags([...tags, tag]); // add tag
-                                    } else {
-                                        setTags(tags.filter((t) => t !== tag)); // remove tag
-                                    }
-                                }}
-                            />
-                            {tag}
-                        </label>
-                    ))}
+                    <h3>Industry Tags</h3> 
+                    <div className="tag-list">
+                        {industryTags.map((tag) => (
+                            <label key={tag}>
+                                <input
+                                    type="checkbox"
+                                    // checked still uses the 'tags' state
+                                    checked={tags.includes(tag)}
+                                    onChange={(e) => {
+                                        // Update the 'tags' state
+                                        const isChecked = e.target.checked;
+                                        setTags(prev => {
+                                            if (isChecked) {
+                                                return [...prev, tag];
+                                            } else {
+                                                return prev.filter(t => t !== tag);
+                                            }
+                                        });
+                                    }}
+                                />
+                                {tag}
+                            </label>
+                        ))}
+                    </div>
                 </div>
 
                 {/* alphanetical filters */}
@@ -122,7 +147,7 @@ const FilterOverlay: React.FC<FilterOverlayProps> = ({ onClose, onApply, showToa
                             type="radio"
                             name="alphabetical"
                             checked={alphabetical === "A-Z"}
-                            onChange={() => setAlphabetical("A-Z")}
+                            onChange={() => setAlphabetical(alphabetical === "A-Z" ? null : "A-Z")}
                         />
                         A - Z
                     </label>
@@ -131,7 +156,7 @@ const FilterOverlay: React.FC<FilterOverlayProps> = ({ onClose, onApply, showToa
                             type="radio"
                             name="alphabetical"
                             checked={alphabetical === "Z-A"}
-                            onChange={() => setAlphabetical("Z-A")}
+                            onChange={() => setAlphabetical(alphabetical === "Z-A" ? null : "Z-A")}
                         />
                         Z - A
                     </label>
@@ -145,7 +170,7 @@ const FilterOverlay: React.FC<FilterOverlayProps> = ({ onClose, onApply, showToa
                             type="radio"
                             name="status"
                             checked={status === "Open"}
-                            onChange={() => setStatus("Open")}
+                            onChange={() => setStatus(status === "Open" ? null : "Open")}
                         />
                         Open
                     </label>
@@ -154,10 +179,24 @@ const FilterOverlay: React.FC<FilterOverlayProps> = ({ onClose, onApply, showToa
                             type="radio"
                             name="status"
                             checked={status === "Closed"}
-                            onChange={() => setStatus("Closed")}
+                            onChange={() => setStatus(status === "Closed" ? null : "Closed")}
                         />
                         Closed
                     </label>
+                </div>
+
+                <div className="filter-section">
+                    <h3>Sources</h3>
+                    {sourceOptions.map((source) => (
+                        <label key={source}>
+                            <input
+                                type="checkbox"
+                                checked={selectedSources.includes(source)}
+                                onChange={(e) => handleSourceChange(source, e.target.checked)}
+                            />
+                            {source}
+                        </label>
+                    ))}
                 </div>
 
                 {/* Action Buttons */}

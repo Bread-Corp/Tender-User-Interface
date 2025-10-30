@@ -28,7 +28,7 @@
 }
 
 .features {
-    background-color: var(--card-bg);
+    background-color: var(--feature-bg);
     text-align: center;
     padding: 3.2rem 2rem;
     color: var(--text-color);
@@ -59,7 +59,8 @@
 }
 
 .feature-card {
-    background-color: var(--tender-card-bg);
+    background-color: var(--card-bg);
+    border: 1px solid var(--tender-card-border);
     padding: 2rem;
     border-radius: 15px;
     width: 250px;
@@ -158,6 +159,13 @@
         pointer-events: none;
     }
 
+textarea {
+    resize: vertical;
+    max-width: 100%; 
+    width: 100%; 
+    box-sizing: border-box; 
+}
+
 .footer {
     background-color: var(--card-bg);
     text-align: center;
@@ -205,3 +213,4 @@
         width: 90%;
     }
 }
+

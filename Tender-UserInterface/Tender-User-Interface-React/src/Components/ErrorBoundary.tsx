@@ -1,17 +1,24 @@
-// src/Components/ErrorBoundary.jsx
-import React from "react";
+import React, { ReactNode } from "react";
 
-class ErrorBoundary extends React.Component {
-    constructor(props) {
+interface ErrorBoundaryProps {
+    children: ReactNode;
+}
+
+interface ErrorBoundaryState {
+    hasError: boolean;
+}
+
+class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+    constructor(props: ErrorBoundaryProps) {
         super(props);
         this.state = { hasError: false };
     }
 
-    static getDerivedStateFromError(error) {
+    static getDerivedStateFromError(_: Error): ErrorBoundaryState {
         return { hasError: true };
     }
 
-    componentDidCatch(error, errorInfo) {
+    componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
         console.error("ErrorBoundary caught an error", error, errorInfo);
     }
 
@@ -23,6 +30,7 @@ class ErrorBoundary extends React.Component {
                 </div>
             );
         }
+
         return this.props.children;
     }
 }

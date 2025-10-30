@@ -3,7 +3,7 @@ import { FaUserCircle, FaChevronDown } from 'react-icons/fa';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { signOut } from '@aws-amplify/auth';
 
-const ProfilePanel = ({ show, toggle, close }) => {
+const ProfilePanel = ({ show, toggle, close, isSignedIn, onLogoutSuccess }) => {
     const profileRef = useRef(null);
     const navigate = useNavigate();
 
@@ -11,6 +11,7 @@ const ProfilePanel = ({ show, toggle, close }) => {
     const handleLogout = async () => {
         try {
             await signOut();
+            onLogoutSuccess();
             navigate('/login');
         } catch (error) {
             console.error('Error signing out: ', error);
@@ -42,21 +43,29 @@ const ProfilePanel = ({ show, toggle, close }) => {
             </div>
 
             <div className={`profile-dropdown ${show ? 'show' : ''}`}>
-                <NavLink to="/login" className="dropdown-link">Login</NavLink>
-                <NavLink to={{ pathname: '/login', search: '?tab=register' }} className="dropdown-link">Register</NavLink>
-                <NavLink to="/settings" className="dropdown-link">Settings</NavLink>
-                <NavLink to="/profile" className="dropdown-link">Profile</NavLink>
-                {/* logout as NavLink but calls handleLogout */}
-                <NavLink
-                    to="/login"
-                    className="dropdown-link logout-link"
-                    onClick={(e) => {
-                        e.preventDefault(); // stop default navigation
-                        handleLogout();
-                    }}
-                >
-                    Logout
-                </NavLink>
+                {isSignedIn ? (
+                    // --- Show these when SIGNED IN ---
+                    <>
+                        <NavLink to="/settings" className="dropdown-link">Settings</NavLink>
+                        <NavLink
+                            to="/login"
+                            className="dropdown-link logout-link"
+                            onClick={(e) => {
+                                e.preventDefault(); // stop default navigation
+                                handleLogout();
+                            }}
+                        >
+                            Logout
+                        </NavLink>
+                    </>
+                ) : (
+                    // --- Show these when SIGNED OUT ---
+                    <>
+                        <NavLink to="/login" className="dropdown-link">Login</NavLink>
+                        <NavLink to={{ pathname: '/login', search: '?tab=register' }} className="dropdown-link">Register</NavLink>
+                        <NavLink to="/settings" className="dropdown-link">Settings</NavLink>
+                    </>
+                )}
             </div>
         </div>
     );

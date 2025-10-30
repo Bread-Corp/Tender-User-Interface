@@ -18,7 +18,7 @@
     width: 320px;
     max-width: 85%;
     height: 100%;
-    padding: 80px 24px 24px 24px; /* top padding = header height + gap */
+    padding: 80px 24px 24px 24px;
     box-shadow: -6px 0 20px rgba(0,0,0,0.15);
     border-top-left-radius: 16px;
     border-bottom-left-radius: 16px;
@@ -27,7 +27,7 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    position: relative; /* so header can be positioned absolutely within it */
+    position: relative;
 }
 
 /* Animations */
@@ -67,7 +67,7 @@
 
 /* Header Bar as an extension above the main panel */
 .filter-header-bar {
-    position: absolute; /* sit above the panel content */
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -151,15 +151,46 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    margin-bottom: 20px;
 }
 
-    .filter-section h3 {
-        font-size: 14px;
-        font-weight: 600;
-        color: #33497D;
-        margin-bottom: 8px;
+    .filter-section .tag-list {
+        max-height: 160px; 
+        overflow-y: auto; 
+        border: 1px solid #e0e0e0;
+        border-radius: 4px;
+        padding: 8px;
+        margin-top: 5px;
+        text-align: left;
     }
+
+        .filter-section .tag-list label {
+            display: block;
+            margin-bottom: 5px;
+            cursor: pointer;
+        }
+
+            .filter-section .tag-list label input {
+                margin-right: 8px;
+            }
+
+        /* Optional: Scrollbar styles */
+        .filter-section .tag-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .filter-section .tag-list::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+
+        .filter-section .tag-list::-webkit-scrollbar-thumb {
+            background-color: #aaa;
+            border-radius: 3px;
+        }
+
+            .filter-section .tag-list::-webkit-scrollbar-thumb:hover {
+                background: #888;
+            }
 
     /* Radio buttons styled with spacing */
     .filter-section label {
@@ -225,7 +256,7 @@
     font-weight: 600;
     text-align:left;
     color: #33497D; 
-    margin-bottom: 8px;
+    margin-bottom: 5px;
 }
 
 .filter-header-bar h2 {
@@ -243,3 +274,4 @@
     cursor: pointer;
     color: #111827; /* dark gray text for readability */
 }
+
