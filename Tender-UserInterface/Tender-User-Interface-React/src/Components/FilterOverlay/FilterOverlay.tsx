@@ -64,7 +64,14 @@ const FilterOverlay: React.FC<FilterOverlayProps> = ({ onClose, onApply, showToa
     };
 
     useEffect(() => {
-        setTags(availableTags); // set the initial checked state based on passed-in tags
+        // filter the incoming tags to find which ones are sources
+        const initialSources = availableTags.filter(tag => sourceOptions.includes(tag));
+        setSelectedSources(initialSources);
+
+        // filter the incoming tags to find which ones are industry tags
+        const initialIndustryTags = availableTags.filter(tag => industryTags.includes(tag));
+        setTags(initialIndustryTags);
+
     }, [availableTags]);
 
     // effect to actually call onClose() after the closing animation

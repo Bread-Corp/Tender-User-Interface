@@ -48,7 +48,6 @@
         display: block;
     }
 
-/* --- NEW STYLES FOR CODE INPUTS --- */
 .code-inputs-container {
     display: flex;
     justify-content: space-between; 

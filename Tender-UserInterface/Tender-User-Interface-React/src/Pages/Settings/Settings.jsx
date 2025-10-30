@@ -311,13 +311,7 @@ const Settings = () => {
                                                 <label>Change Password</label>
                                                 <button className="edit-profile-btn">Update</button>
                                             </div>
-                                            <div className="setting-row">
-                                                <label>Notifications</label>
-                                                <div className="toggle-group">
-                                                    <label><input type="checkbox" /> Email</label>
-                                                    <label><input type="checkbox" /> SMS</label>
-                                                </div>
-                                            </div>
+                                            
                                             <div className="setting-row delete-row">
                                                 <label>Delete Account</label>
                                                 <button className="cancel-btn" onClick={deleteAccount}>Delete</button>

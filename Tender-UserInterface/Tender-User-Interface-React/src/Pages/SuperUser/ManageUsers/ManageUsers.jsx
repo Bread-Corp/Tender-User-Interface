@@ -79,10 +79,10 @@ const ManageUsers = () => {
                                 <td>{user.registered}</td>
                                 <td>{user.lastLogin}</td>
                                 <td className="action-cells">
-                                    <button onClick={() => handleEdit(user.id)} className="icon-btn edit-btn">
-                                        <FaUserEdit />
-                                    </button>
-                                    <button onClick={() => handleDelete(user.id)} className="icon-btn delete-btn">
+                                    <button
+                                        onClick={() => handleDelete(user.id)}
+                                        className="icon-btn delete-btn"
+                                        disabled={user.role === 'SuperUser'}>
                                         <FaTrash />
                                     </button>
                                 </td>

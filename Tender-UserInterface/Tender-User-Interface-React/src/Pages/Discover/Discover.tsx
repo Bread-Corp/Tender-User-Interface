@@ -84,45 +84,63 @@ const Discover = ({ onNewNotif }) => {
                 const coreID = attributes["custom:CoreID"];
 
                 if (coreID) {
+                    // run calls in parallel
+                    const [watchlistResult, tagsResult] = await Promise.allSettled([
+                        axios.get(`${apiURL}/watchlist/${coreID}`),
+                        axios.get(`${apiURL}/tenderuser/fetchtags/${coreID}`)
+                    ]);
 
-                    const watchlistResponse = await axios.get(`${apiURL}/watchlist/${coreID}`);
-                    const watchlistResult = watchlistResponse.data.watchlist;
-                    const watchlistData = Array.isArray(watchlistResult) ? watchlistResult : watchlistResult.data || [];
-                    console.log("watchlist data:", watchlistData);
-                    setWatchlist(watchlistData);
+                    if (watchlistResult.status === 'fulfilled') {
+                        const watchlistResponse = watchlistResult.value;
+                        const watchlistResultData = watchlistResponse.data.watchlist;
+                        const watchlistData = Array.isArray(watchlistResultData) ? watchlistResultData : watchlistResultData.data || [];
+                        console.log("Watchlist data:", watchlistData);
+                        setWatchlist(watchlistData);
+                    } else {
+                        console.error("Failed to fetch watchlist:", watchlistResult.reason);
+                        setWatchlist([]); // Clear watchlist on error
+                    }
 
-                    try {
-                        const tagsResponse = await axios.get(`${apiURL}/tenderuser/fetchtags/${coreID}`);
+                    if (tagsResult.status === 'fulfilled') {
+                        const tagsResponse = tagsResult.value;
+                        console.log("--- 1. RAW TAGS RESPONSE ---", JSON.stringify(tagsResponse.data, null, 2));
 
                         const userTagList = tagsResponse.data.tags;
+                        console.log("--- 2. 'userTagList' ---", userTagList);
 
                         const userTagObjects = (Array.isArray(userTagList) && userTagList.length > 0)
                             ? userTagList[0]
                             : [];
+                        console.log("--- Extracted 'userTagObjects' ---", userTagObjects);
 
-                        const userTags = Array.isArray(userTagObjects)
+                        const userTags = (Array.isArray(userTagObjects) && userTagObjects.length > 0)
                             ? userTagObjects.map(tagObject => tagObject.tagName)
                             : [];
+                        console.log("--- 3. Final 'userTags' ---", userTags);
 
                         if (userTags.length > 0) {
                             console.log("Setting user tags as filters:", userTags);
-                            setFilters(userTags); 
+                            setFilters(userTags);
+                            
                         } else {
                             console.log("No user tags found, applying no filters.");
                             setFilters([]);
                         }
-                    } catch (tagError) {
-                        console.error("Failed to fetch user tags:", tagError);
+                    } else {
+                        console.error("Failed to fetch user tags:", tagsResult.reason);
                         setFilters([]);
                     }
 
                 } else {
                     // no coreID found
+                    console.log("No coreID found, clearing filters.");
                     setFilters([]);
+                    setWatchlist([]);
                 }
             } catch (error) {
-                console.error("Failed to fetch user attributes or watchlist:", error);
+                console.error("Failed to fetch user attributes:", error);
                 setFilters([]);
+                setWatchlist([]);
             }
         };
 
@@ -162,8 +180,6 @@ const Discover = ({ onNewNotif }) => {
 
                 // map over each tender item to convert it into an instance of a class
                 const tenderObjects: BaseTender[] = data.map((item: any) => {
-
-                    console.log(`Tags for tender ${item.title}:`, item.tags);
 
                     const tagsArray: Tags[] = item.tags
                         ? item.tags.map((t: any) => new Tags(t.tagOD || "", t.tagName || ""))

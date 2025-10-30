@@ -44,15 +44,6 @@
     margin-top: 1rem;
 }
 
-.cancel-btn {
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    padding: 0.6rem 1.2rem;
-    border-radius: 6px;
-    cursor: pointer;
-}
-
 .submit-btn {
     background-color: #3498db;
     color: white;
