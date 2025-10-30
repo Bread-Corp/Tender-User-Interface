@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext'; 
-import './confirmsignup.css';
+import './ConfirmSignUp.css';
 
 const ConfirmSignUp = () => {
     const [code, setCode] = useState('');
