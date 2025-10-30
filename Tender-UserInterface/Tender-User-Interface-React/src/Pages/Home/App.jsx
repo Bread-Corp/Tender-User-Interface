@@ -28,7 +28,7 @@ function App() {
     // manage authentication state
     const [isSignedIn, setIsSignedIn] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
-    const [isNotification, setIsNotification] = useState(true);
+    const [isNotification, setIsNotification] = useState(false);
 
     useEffect(() => {
         const checkStates = async () => {
