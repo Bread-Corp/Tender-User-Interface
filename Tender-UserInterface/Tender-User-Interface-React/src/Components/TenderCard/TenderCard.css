@@ -212,3 +212,7 @@
     .icon.binoculars.rotated {
         transform: rotate(90deg); /* rotate when expanded */
     }
+
+.tender-icons .icon-delete:hover {
+    color: #f44336;
+}

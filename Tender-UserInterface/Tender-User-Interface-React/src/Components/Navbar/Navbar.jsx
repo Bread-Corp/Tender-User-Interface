@@ -45,6 +45,14 @@ const Navbar = ({ isSignedIn, onLogoutSuccess, isAdmin, isNotification, onReadNo
                         </NavLink>
                     </li>
 
+                    {isAdmin && (
+                        <li>
+                            <NavLink to="/superuser/dashboard" className={({ isActive }) => (isActive ? 'active' : '')}>
+                                Dashboard
+                            </NavLink>
+                        </li>
+                    )}
+
                     {!isAdmin && (
                         <li>
                             <NavLink to="/discover" className={({ isActive }) => (isActive ? 'active' : '')}>
@@ -66,11 +74,11 @@ const Navbar = ({ isSignedIn, onLogoutSuccess, isAdmin, isNotification, onReadNo
                         </NavLink>
                     </li>
                     )}
-
+                                      
                     {isAdmin && (
                         <li>
-                            <NavLink to="/superuser/dashboard" className={({ isActive }) => (isActive ? 'active' : '')}>
-                                Dashboard
+                            <NavLink to="/superuser/archive" className={({ isActive }) => (isActive ? 'active' : '')}>
+                                Archive
                             </NavLink>
                         </li>
                     )}
