@@ -39,11 +39,14 @@ const Navbar = ({ isSignedIn, onLogoutSuccess, isAdmin, isNotification, onReadNo
                 </div>
 
                 <ul className={`navbar-center ${menuOpen ? 'open' : ''}`}>
-                    <li>
-                        <NavLink to="/" className={({ isActive }) => (isActive ? 'active' : '')}>
-                            Home
-                        </NavLink>
-                    </li>
+
+                    {!isAdmin && (
+                        <li>
+                            <NavLink to="/" className={({ isActive }) => (isActive ? 'active' : '')}>
+                                Home
+                            </NavLink>
+                        </li>
+                    )}
 
                     {isAdmin && (
                         <li>
