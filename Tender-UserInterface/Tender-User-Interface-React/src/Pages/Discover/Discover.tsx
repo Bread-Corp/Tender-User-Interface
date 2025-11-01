@@ -8,6 +8,8 @@ import ErrorBoundary from "../../Components/ErrorBoundary.js";
 import FilterOverlay from "../../Components/FilterOverlay/FilterOverlay.js";
 import { EskomTender } from "../../Models/EskomTender.js";
 import { ETender } from "../../Models/ETender.js";
+import { TransnetTender } from "../../Models/TransnetTender.js";
+import { SanralTender } from "../../Models/SanralTender.js";
 import { BaseTender } from "../../Models/BaseTender.js";
 import { Tags } from "../../Models/Tags.js";
 import Modal from "../../Components/Modal/Modal.jsx";
@@ -30,7 +32,7 @@ const Discover = ({ onNewNotif }) => {
     const [totalPages, setTotalPages] = useState(0);
     const [isLoading, setIsLoading] = useState(true);
 
-    const [tenders, setTenders] = useState<(EskomTender | ETender)[]>([]);
+    const [tenders, setTenders] = useState<(EskomTender | ETender | SanralTender | TransnetTender)[]>([]);
     const [watchlist, setWatchlist] = useState<WatchlistItem[]>([]);
 
     const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -183,7 +185,7 @@ const Discover = ({ onNewNotif }) => {
                 console.log("Extracted Data for Mapping:", data)
 
                 // map over each tender item to convert it into an instance of a class
-                const tenderObjects: BaseTender[] = data.map((item: any) => {
+                const tenderObjects: (EskomTender | ETender | SanralTender | TransnetTender)[] = data.map((item: any) => {
 
                     const tagsArray: Tags[] = item.tags
                         ? item.tags.map((t: any) => new Tags(t.tagOD || "", t.tagName || ""))

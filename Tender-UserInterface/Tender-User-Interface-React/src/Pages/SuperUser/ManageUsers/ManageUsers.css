@@ -59,10 +59,17 @@ table {
 }
 
 thead {
-    background-color: #ecf0f1;
-    color: #7f8c8d;
+    color: var(--color-text-secondary);
+    background: var(--tender-card-bg);
     text-transform: uppercase;
     font-size: 12px;
+    font-weight: 600; 
+}
+
+th {
+    padding: 16px 15px;
+    text-align: left;
+    border-bottom: 2px solid #ccc;
 }
 
 th, td {
@@ -74,19 +81,35 @@ th, td {
     text-overflow: ellipsis;
 }
 
-    th:nth-child(1), /* ID */
-    th:nth-child(2), /* CoreID */
-    th:nth-child(5), /* Role */
-    th:nth-child(8) /* Actions */ {
+    /* 1. User ID */
+    th:nth-child(1) {
         width: 10%;
     }
 
+    /* 2. Name */
+    th:nth-child(2) {
+        width: 15%;
+    }
+
+    /* 3. Email */
     th:nth-child(3) {
         width: 15%;
     }
-    /* Name */
+
+    /* 4. Role */
     th:nth-child(4) {
-        width: 25%;
+        width: 10%;
+    }
+
+    /* 5. Registered */
+    th:nth-child(5) {
+        width: 10%;
+    }
+
+    /* 6. Actions */
+    th:nth-child(6) {
+        width: 10%;
+        text-align: center;
     }
 
 tbody tr:hover {
@@ -114,11 +137,12 @@ tbody tr:hover {
 
 /* ACTION BTNS */
 .action-cells {
-    white-space: nowrap;
-    width: 90px;
     display: flex;
-    justify-content: center; 
+    justify-content: center;
     align-items: center;
+    gap: 0.5rem; 
+    white-space: nowrap;
+    width: 100%; 
 }
 
 .icon-btn {
@@ -183,12 +207,3 @@ tbody tr:hover {
     animation: fadeIn 0.2s ease-out;
 }
 
-.modal-content {
-    background: white;
-    border-radius: 12px;
-    padding: 2rem;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-    max-width: 600px;
-    width: 90%;
-    animation: scaleUp 0.3s ease-out;
-}
