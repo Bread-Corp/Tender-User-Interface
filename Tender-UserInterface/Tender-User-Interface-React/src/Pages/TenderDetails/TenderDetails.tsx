@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { EskomTender } from "../../Models/EskomTender.js";
-import { ETender } from "../../Models/ETender.js";
+import { ETender } from "../../Models/eTender.js";
 import { SanralTender } from "../../Models/SanralTender.js";
 import { TransnetTender } from "../../Models/TransnetTender.js";
 import { Tags } from "../../Models/Tags.js";

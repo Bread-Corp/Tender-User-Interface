@@ -7,7 +7,7 @@ import { FaSearch, FaFilter } from "react-icons/fa";
 import ErrorBoundary from "../../Components/ErrorBoundary.js";
 import FilterOverlay from "../../Components/FilterOverlay/FilterOverlay.js";
 import { EskomTender } from "../../Models/EskomTender.js";
-import { ETender } from "../../Models/ETender.js";
+import { ETender } from "../../Models/eTender.js";
 import { TransnetTender } from "../../Models/TransnetTender.js";
 import { SanralTender } from "../../Models/SanralTender.js";
 import { BaseTender } from "../../Models/BaseTender.js";
