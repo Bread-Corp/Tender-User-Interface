@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
 import { deleteUser, editUser } from '../../context/CoreLogicContext.js';
 import { useTheme } from '../../context/ThemeContext.jsx';
+import UpdatePassword from '../../Components/Password/UpdatePassword'
 
 const Settings = () => {
     // profile states
@@ -28,6 +29,10 @@ const Settings = () => {
     const [activeView, setActiveView] = useState('settings'); // profile or settings
 
     const { darkMode, toggleDarkMode } = useTheme(); // get dark mode state + toggle function from global context
+
+    // update password 
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+
     const { deleteCognitoUser } = useAuth();
     const navigate = useNavigate();
 
@@ -309,7 +314,7 @@ const Settings = () => {
                                             <h3 className="settings-heading">Account</h3>
                                             <div className="setting-row">
                                                 <label>Change Password</label>
-                                                <button className="edit-profile-btn">Update</button>
+                                                    <button className="edit-profile-btn" onClick={() => setShowPasswordModal(true)}>Update</button>
                                             </div>
                                             
                                             <div className="setting-row delete-row">
@@ -365,6 +370,14 @@ const Settings = () => {
                     </section>
                 )}
             </div>
+
+            {showPasswordModal && (
+                <div className="modal-overlay">
+                    
+                        <UpdatePassword onClose={() => setShowPasswordModal(false)} />
+                    
+                </div>
+            )}
         </div>
     );
 };
