@@ -49,7 +49,7 @@ const NotificationPanel = ({ show, toggle, close, onReadNotif, isNotification })
 
                     await new Promise(resolve => setTimeout(resolve, 500));
 
-                    if (isMounted) setNotifications(notifs);
+                    if (isMounted) setNotifications(notifs || []);
 
 
                 } catch (error) {

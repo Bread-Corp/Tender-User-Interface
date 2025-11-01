@@ -6,7 +6,7 @@ const Policy = () => {
     const navigate = useNavigate();
 
     const handleRedirect = () => {
-        navigate('/login'); // redirect to login or wherever you want
+        navigate('/login'); 
     };
 
     return (
@@ -72,7 +72,7 @@ const Policy = () => {
                 <section>
                     <h2>8. Contact Us</h2>
                     <p>
-                        If you have any questions regarding this Privacy Policy, please contact us at <a href="mailto:support@tendertool.com">support@tendertool.com</a>.
+                        If you have any questions regarding this Privacy Policy, please contact us at <a href="mailto:tendertoolteam@gmail.com">tendertoolteam@gmail.com</a>.
                     </p>
                 </section>
             </div>
