@@ -105,19 +105,7 @@ const FilterOverlay: React.FC<FilterOverlayProps> = ({ onClose, onApply, showToa
                     </button>
                 </div>
 
-                {/* date filters */}
-                <div className="filter-section">
-                    <h3>Date</h3>
-                    <label>
-                        <input
-                            type="radio"
-                            name="date"
-                            checked={date === "Closing Soon"}
-                            onChange={() => setDate(date === "Closing Soon" ? null : "Closing Soon")}
-                        />
-                        Closing Soon
-                    </label>
-                </div>
+                <div className="filter-content-scrollable">             
 
                 <div className="filter-section">
                     <h3>Industry Tags</h3> 
@@ -144,6 +132,20 @@ const FilterOverlay: React.FC<FilterOverlayProps> = ({ onClose, onApply, showToa
                             </label>
                         ))}
                     </div>
+                </div>
+
+                {/* date filters */}
+                <div className="filter-section">
+                    <h3>Date</h3>
+                    <label>
+                        <input
+                            type="radio"
+                            name="date"
+                            checked={date === "Closing Soon"}
+                            onChange={() => setDate(date === "Closing Soon" ? null : "Closing Soon")}
+                        />
+                        Closing Soon
+                    </label>
                 </div>
 
                 {/* alphanetical filters */}
@@ -205,7 +207,7 @@ const FilterOverlay: React.FC<FilterOverlayProps> = ({ onClose, onApply, showToa
                         </label>
                     ))}
                 </div>
-
+            </div>
                 {/* Action Buttons */}
                 <div className="filter-actions">
                     {/* clear button resets selections but keeps overlay open */}

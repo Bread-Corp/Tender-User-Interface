@@ -289,14 +289,6 @@ const Settings = () => {
                                         </select>
                                     </div>
                                  
-                                    <div className="setting-row">
-                                        <label>Default View</label>
-                                        <select className="settings-dropdown">
-                                            <option>Dashboard</option>
-                                            <option>Discovery</option>
-                                            <option>Tracking</option>
-                                        </select>
-                                    </div>
                                     <h3 className="settings-heading">Appearance</h3>
                                     <div className="setting-row">
                                         <label>Theme</label>
@@ -346,14 +338,7 @@ const Settings = () => {
                                     <option value="yyyy-mm-dd">yyyy-mm-dd</option>
                                 </select>
                             </div>
-                            <div className="setting-row">
-                                <label>Default View</label>
-                                <select className="settings-dropdown">
-                                    <option>Dashboard</option>
-                                    <option>Discovery</option>
-                                    <option>Tracking</option>
-                                </select>
-                            </div>
+                            
                             <h3 className="settings-heading">Appearance</h3>
                             <div className="setting-row">
                                 <label>Theme</label>

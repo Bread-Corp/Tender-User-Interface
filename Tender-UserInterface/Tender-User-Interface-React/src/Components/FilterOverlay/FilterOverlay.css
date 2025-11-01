@@ -12,6 +12,12 @@
     transition: background 0.3s ease;
 }
 
+.filter-content-scrollable {
+    flex-grow: 1; 
+    overflow-y: auto; 
+    padding: 0 8px; 
+}
+
 /* Adjust panel padding to avoid overlapping header */
 .filter-overlay-panel {
     background: #fdfdfd;
@@ -63,6 +69,11 @@
     to {
         background: rgba(0,0,0,0);
     }
+}
+
+.filter-header-bar,
+.filter-actions {
+    flex-shrink: 0;
 }
 
 /* Header Bar as an extension above the main panel */
@@ -150,7 +161,7 @@
 .filter-section {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 }
 
     .filter-section .tag-list {
@@ -160,6 +171,7 @@
         border-radius: 4px;
         padding: 8px;
         margin-top: 5px;
+        margin-bottom: 10px;
         text-align: left;
     }
 
@@ -257,6 +269,7 @@
     text-align:left;
     color: #33497D; 
     margin-bottom: 5px;
+    margin-top: 12px;
 }
 
 .filter-header-bar h2 {

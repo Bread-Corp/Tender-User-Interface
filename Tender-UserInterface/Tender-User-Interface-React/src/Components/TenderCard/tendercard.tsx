@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { fetchUserAttributes } from '@aws-amplify/auth';
 import { useNavigate } from 'react-router-dom';
-import { FaMapMarkerAlt, FaRegClock, FaRegBookmark, FaBookmark, FaBinoculars } from "react-icons/fa";
+import { FaMapMarkerAlt, FaRegClock, FaRegBookmark, FaBookmark, FaBinoculars, FaTrash } from "react-icons/fa";
 import "./TenderCard.css";
 import { BaseTender } from "../../Models/BaseTender.js";
 import { Tags } from "../../Models/Tags.js";
@@ -20,12 +20,16 @@ type TenderCardProps = {
     watchlistArray: WatchlistItem[];
     onRequireLogin: () => void;
     onBookmarkSuccess: (tenderTitle: string, isAdded: boolean) => void;
+
+    isAdminView?: boolean;
+    onDeleteSuccess?: (tenderID: string, tenderTitle: string) => void;
 };
 
 const MAX_TITLE_LENGTH = 100;
 const apiURL = import.meta.env.VITE_API_URL;
 
-const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, onNewNotif, watchlistArray, onRequireLogin, onBookmarkSuccess }) => {
+const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, onNewNotif, watchlistArray, onRequireLogin,
+    onBookmarkSuccess, isAdminView = false, onDeleteSuccess }) => {
     const navigate = useNavigate();
     const [expanded, setExpanded] = useState(false);
 
@@ -58,6 +62,15 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, onNewNotif,
         // this effect runs only when the props change, not when the local state changes
     }, [isLoggedIn, watchlistArray, tender.tenderID]);
 
+    const handleDeleteClick = async (e) => {
+        e.stopPropagation(); // Stop navigation click
+        if (!tender) return;
+
+        // confirmation logic is in discover, so just call the onDeleteSuccess callback
+        if (onDeleteSuccess) {
+            onDeleteSuccess(tender.tenderID, tender.title);
+        }
+    };
 
     const handleBookmarkClick = async () => {
         //get coreID from auth context
@@ -195,10 +208,34 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, onNewNotif,
                 <FaBinoculars className={`icon binoculars ${expanded ? "rotated" : ""}`}
                     onClick={() => { const newState = !expanded; setExpanded(newState); setTitleExpanded(newState); }} // expand and collapse details + title if cut off
                     style={{ cursor: "pointer" }} />
-                {bookmarked
-                    ? <FaBookmark className="icon bookmarked" onClick={handleBookmarkClick} style={{ cursor: "pointer" }} />
-                    : <FaRegBookmark className="icon" onClick={handleBookmarkClick} style={{ cursor: "pointer" }} />
-                }
+                {isAdminView ? (
+                    // IF admin, show Delete button
+                    <FaTrash
+                        className="icon icon-delete" 
+                        onClick={handleDeleteClick}
+                        style={{ cursor: "pointer" }}/>
+                ) : (
+                    // ELSE, show Bookmark button
+                    bookmarked
+                        ? <FaBookmark
+                            className="icon bookmarked"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleBookmarkClick();
+                            }}
+                            style={{ cursor: "pointer" }}/>
+                        : <FaRegBookmark
+                            className="icon"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                if (isLoggedIn) {
+                                    handleBookmarkClick();
+                                } else if (onRequireLogin) {
+                                    onRequireLogin();
+                                }
+                            }}
+                            style={{ cursor: "pointer" }}/>
+                )}
             </div>
         </div>
     );

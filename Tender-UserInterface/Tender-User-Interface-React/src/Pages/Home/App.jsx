@@ -14,6 +14,7 @@ import Settings from "../Settings/Settings";
 import Analytics from "../Analytics/Analytics";
 import { ThemeProvider } from '../../context/ThemeContext.jsx';
 import Dashboard from '../SuperUser/Dashboard/Dashboard';
+import Archive from '../SuperUser/Archive/Archive';
 import ManageUsers from '../SuperUser/ManageUsers/ManageUsers';
 import MainLayout from '../../Components/Layout/MainLayout'; 
 import Navbar from '../../Components/Navbar/Navbar';
@@ -109,6 +110,7 @@ function App() {
                 {/* SuperUser Routes */}
                 <Route path="/superuser/dashboard" element={<Dashboard />} />
                 <Route path="/superuser/manageusers" element={<ManageUsers />} />
+                <Route path="/superuser/archive" element={<Archive />} />
                 </Routes>
             </MainLayout>
         </ThemeProvider>

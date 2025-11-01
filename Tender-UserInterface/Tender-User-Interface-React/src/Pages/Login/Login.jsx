@@ -103,10 +103,13 @@ const Login = ({ onLoginSuccess, onAdminSuccess }) => {
             if (role === 'SuperUser') {
                 onAdminSuccess();
                 console.log("Validated admin.");
+                // redirect admin to dashboard
+                navigate('/superuser/dashboard');
+            } else {
+                // redirect standard users to home
+                onLoginSuccess();
+                navigate('/');
             }
-                        
-            onLoginSuccess();
-            navigate('/');
         } catch (err) {
             setError(err.message);
         }
