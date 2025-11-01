@@ -676,3 +676,17 @@ body {
             font-size: 1.1rem;
         }
 }
+
+/* Forgot Password link */
+.forgot-link {
+    background: none;
+    border: none;
+    color: #3d5ea9;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+    .forgot-link:hover {
+        color: #2b3b66;
+    }

@@ -32,7 +32,7 @@ const UpdatePassword = ({ onClose }) => {
             setNewPassword("");
             setConfirmPassword("");
 
-            // Optional: close popup automatically after success
+            // close popup automatically after success
             setTimeout(() => {
                 if (onClose) onClose();
             }, 1500);
