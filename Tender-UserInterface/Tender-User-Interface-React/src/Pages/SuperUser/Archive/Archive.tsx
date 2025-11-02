@@ -66,7 +66,7 @@ const Archive = ({ onNewNotif }) => {
             return;
         }
         try {
-            await axios.delete(`${apiURL}/tender/delete/${tenderID}`);
+            await axios.post(`${apiURL}/tender/deletetender/${tenderID}`);
             setTenders(prevTenders => prevTenders.filter(t => t.tenderID !== tenderID));
             // Show a success message
             showToast(`'${tenderTitle}' has been deleted.`, 3000);

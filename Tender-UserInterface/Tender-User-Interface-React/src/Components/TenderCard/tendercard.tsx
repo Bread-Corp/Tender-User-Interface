@@ -7,6 +7,7 @@ import "./TenderCard.css";
 import { BaseTender } from "../../Models/BaseTender.js";
 import { Tags } from "../../Models/Tags.js";
 import { Link } from "react-router-dom";
+import ReactMarkdown from 'react-markdown';
 
 type WatchlistItem = {
     tenderID: string;
@@ -192,8 +193,14 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, onNewNotif,
                     </div>
 
                     <div className="tender-info-row">
-                        <span className="tender-info-label">AI Summary:</span>
-                        <span className="tender-info-value">{tender.aiSummary || "N/A"}</span>
+                        <span className="tender-info-label ai-summary-label">AI Summary:</span>
+                        <div className="tender-info-value markdown-summary"> {/* Changed to div */}
+                            {tender.aiSummary ? (
+                                <ReactMarkdown>{tender.aiSummary}</ReactMarkdown>
+                            ) : (
+                                "N/A"
+                            )}
+                        </div>
                     </div>
 
                     <Link to={`/tender/${tender.tenderID}`} className="see-more-btn">

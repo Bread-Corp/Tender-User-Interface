@@ -497,9 +497,9 @@ const Login = ({ onLoginSuccess, onAdminSuccess }) => {
                                 )}
 
                                     {registerPage < totalRegisterPages ? (
-                                    <button type="button" onClick={() => setRegisterPage(registerPage + 1)}>Continue</button>
+                                    <button type="button" className="btn-register-primary" onClick={() => setRegisterPage(registerPage + 1)}>Continue</button>
                                 ) : (
-                                    <button type="submit">Complete</button>
+                                    <button type="submit" className="btn-register-primary" >Complete</button>
                                     )}
 
                                 </div>

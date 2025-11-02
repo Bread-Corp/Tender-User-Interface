@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './Dashboard.css';
 import AddSuperUser from '../../../Components/AddSuperUser/AddSuperUser';
+import { fetchUserAttributes } from '@aws-amplify/auth';
+import LoadingSpinner from '../../../Components/LoadingSpinner/LoadingSpinner';
+import { FaExclamationTriangle } from 'react-icons/fa';
 
 const scraperSources = ["Etenders", "Eskom", "SANRAL", "SARS", "Transnet"];
 
@@ -15,6 +18,12 @@ const placeholderLogs = {
 };
 
 const Dashboard = () => {
+
+    const [totalUsers, setTotalUsers] = useState(0);
+    const [userLoading, setUserLoading] = useState(true);
+    const [userError, setUserError] = useState(null);
+    const navigate = useNavigate();
+    const apiURL = import.meta.env.VITE_API_URL;
 
     // chekc which scraper should be displayed
     const [selectedScraper, setSelectedScraper] = useState(scraperSources[0]);
@@ -38,6 +47,73 @@ const Dashboard = () => {
         setShowAddUser(false);
     };
 
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                setUserLoading(true);
+                setUserError(null);
+
+                const attributes = await fetchUserAttributes();
+                const currentAdminID = attributes['custom:CoreID'];
+
+                if (!currentAdminID) {
+                    throw new Error("Admin CoreID not found. You may not have permission.");
+                }
+
+                const response = await fetch(`${apiURL}/TenderUser/fetch/${currentAdminID}`);
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    if (errorData.message === 'Invalid User') {
+                        throw new Error("You do not have permission to view this data.");
+                    }
+                    throw new Error(errorData.message || 'Failed to fetch users');
+                }
+
+                const data = await response.json();
+                const allUsers = data.allUsers || [];
+
+                setTotalUsers(allUsers.length);
+
+            } catch (err) {
+                if (err.name === 'NotAuthorizedException') {
+                    navigate('/login');
+                }
+                setUserError(err.message);
+                console.error('Error fetching users:', err);
+            } finally {
+                setUserLoading(false);
+            }
+        };
+
+        fetchUsers();
+    }, [navigate, apiURL]);
+
+    if (userLoading) {
+        return (
+            <div className="loading-overlay">
+                <LoadingSpinner text="Loading dashboard data..." />
+            </div>
+        );
+    }
+
+    if (userError) {
+        return (
+
+            <div className="dashboard-container">
+                <div className="analytics-state-wrapper">
+                    <div className="error-state-message">
+                        <span className="error-state-icon">
+                            <FaExclamationTriangle />
+                        </span>
+                        <h2>Error Loading Dashboard</h2>
+                        <p>{userError}</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
         return (
             <div className="dashboard-container">
 
@@ -53,8 +129,7 @@ const Dashboard = () => {
                             <div className="card-header">
                                 <h2>User Management</h2>
                             </div>
-                            <p>Active Users: 1233</p>
-                            <p>New Users (last 7 days): 15</p>
+                            <p>New Users (last 7 days): {totalUsers}</p>
                             <div className="dashboard-actions">
                                 <Link to="/superuser/manageusers" className="manage-btn">
                                     Manage Users
@@ -66,9 +141,7 @@ const Dashboard = () => {
                         {/* Modal Popup */}
                         {showAddUser && (
                             <div className="modal-overlay">
-                                <div className="modal-content">
                                     <AddSuperUser onSubmit={handleSubmit} onCancel={handleClose} />
-                                </div>
                             </div>
                         )}
 
