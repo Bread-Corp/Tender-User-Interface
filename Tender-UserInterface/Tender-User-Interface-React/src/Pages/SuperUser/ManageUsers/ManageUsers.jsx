@@ -152,7 +152,7 @@ const ManageUsers = () => {
                                 <td>{new Date(user.dateAppended).toLocaleDateString()}</td>
                                 <td className="action-cells">
                                     <button
-                                        onClick={() => handleDelete(user.id)}
+                                        onClick={() => handleDelete(user.userID)}
                                         className="icon-btn delete-btn"
                                         disabled={user.role === 'SuperUser'}>
                                         <FaTrash />

@@ -26,6 +26,32 @@ type TenderCardProps = {
     onDeleteSuccess?: (tenderID: string, tenderTitle: string) => void;
 };
 
+const formatDateAccordingToPref = (date: Date | null | undefined): string => {
+    // return "N/A" if the date is null, undefined, or invalid
+    if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
+        return "N/A";
+    }
+
+    // get the saved format, defaulting to 'dd/mm/yyyy'
+    const format = localStorage.getItem('userDateFormat') || 'dd/mm/yyyy';
+
+    // get date parts
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // +1 because getMonth() is 0-indexed
+    const year = date.getFullYear();
+
+    // return formatted string based on the preference
+    switch (format) {
+        case 'mm/dd/yyyy':
+            return `${month}/${day}/${year}`;
+        case 'yyyy-mm-dd':
+            return `${year}-${month}-${day}`;
+        case 'dd/mm/yyyy':
+        default:
+            return `${day}/${month}/${year}`;
+    }
+};
+
 const MAX_TITLE_LENGTH = 100;
 const apiURL = import.meta.env.VITE_API_URL;
 
@@ -146,9 +172,7 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, onNewNotif,
 
             <p className="tender-closing">
                 <FaRegClock /> Closing:{" "}
-                {tender.closingDate
-                    ? tender.closingDate.toLocaleDateString()
-                    : "N/A"}{" "}
+                {formatDateAccordingToPref(tender.closingDate)}{" "}
                 {tender.isClosed() ? "(Closed)" : "(Open)"}
             </p>
 
@@ -184,12 +208,12 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, onNewNotif,
 
                     <div className="tender-info-row">
                         <span className="tender-info-label">Published:</span>
-                        <span className="tender-info-value">{tender.publishedDate?.toDateString()}</span>
+                        <span className="tender-info-value">{formatDateAccordingToPref(tender.publishedDate)}</span>
                     </div>
 
                     <div className="tender-info-row">
                         <span className="tender-info-label">Closing Date:</span>
-                        <span className="tender-info-value">{tender.closingDate?.toDateString()}</span>
+                        <span className="tender-info-value">{formatDateAccordingToPref(tender.closingDate)}</span>
                     </div>
 
                     <div className="tender-info-row">
