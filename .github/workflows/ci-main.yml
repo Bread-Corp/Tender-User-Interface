@@ -5,9 +5,11 @@ on:
   push:
     branches:
       - main                   # Also run automatically on merge to main
+  pull_request:
+    types: [opened, synchronize, reopened] # Added for Sonar PR analysis
 
 jobs:
-  build:
+  build-and-scan:
     runs-on: ubuntu-latest
 
     env:
@@ -16,11 +18,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Required for SonarCloud
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: './Tender-UserInterface/Tender-User-Interface-React/package-lock.json'
 
       - name: Install dependencies
         run: npm install
@@ -29,8 +35,10 @@ jobs:
       - name: Build React app
         run: npm run build
         working-directory: ./Tender-UserInterface/Tender-User-Interface-React
-
-      # Uncomment below to run React tests
-      # - name: Run React tests
-      #   run: npm test -- --watchAll=false
-      #   working-directory: ./Tender-UserInterface/Tender-User-Interface-React
+      
+      - name: SonarCloud Scan
+        continue-on-error: true
+        uses: SonarSource/sonarcloud-github-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
