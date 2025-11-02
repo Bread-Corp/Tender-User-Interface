@@ -53,12 +53,12 @@ const Home = () => {
                     <div className="feature-card">
                         <FaCalendarCheck size={40} className="feature-icon" />
                         <h3>Up-to-date</h3>
-                        <p>We scrape and deliver current IT tenders every day.</p>
+                        <p>We scrape and deliver tenders of all categories regularly.</p>
                     </div>
                     <div className="feature-card">
                         <FaSearch size={40} className="feature-icon" />
                         <h3>Smart Search</h3>
-                        <p>Filter tenders by category, province and closing date.</p>
+                        <p>Filter by category, source or date. Our purposeful AI usage assists you with refining your search.</p>
                     </div>
                     <div className="feature-card">
                         <FaRegBookmark size={40} className="feature-icon" />

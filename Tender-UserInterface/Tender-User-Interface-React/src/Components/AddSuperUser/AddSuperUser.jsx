@@ -178,7 +178,7 @@ const AddSuperUser = ({ onCancel }) => {
                         <button type="button" className="cancel-btn" onClick={onCancel}>
                             Cancel
                         </button>
-                        <button type="submit" className="submit-btn">
+                        <button type="submit" className="edit-profile-btn">
                             Submit
                         </button>
                     </div>

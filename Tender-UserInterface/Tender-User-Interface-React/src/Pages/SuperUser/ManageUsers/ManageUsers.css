@@ -23,7 +23,7 @@
 
     .page-header h1 {
         font-size: 28px;
-        color: #2c3e50;
+        color: var(--heading-color);
     }
 
 .add-user-btn {
@@ -45,10 +45,9 @@
 /* TABLE */
 .user-table-wrapper {
     overflow-x: auto;
-    background: white;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-    border: 1px solid #e0e0e0; 
+    border: 1px solid var(--tag-border); 
 }
 
 table {
@@ -75,7 +74,7 @@ th {
 th, td {
     padding: 16px 15px;
     text-align: left;
-    border-bottom: 1px solid #f1f1f1;
+    border-bottom: 1px solid var(--tag-border);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -113,7 +112,7 @@ th, td {
     }
 
 tbody tr:hover {
-    background-color: #f9fbfd;
+    background-color: rgba(255,255,255,0.3);
     cursor: pointer; 
 }
 

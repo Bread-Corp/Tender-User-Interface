@@ -48,7 +48,7 @@
 
 .feature-icon {
     color: var(--icon-color);
-    margin-bottom: 1.2rem;
+    margin-bottom: 0.8rem;
 }
 
 .feature-cards {
@@ -63,7 +63,7 @@
     border: 1px solid var(--tender-card-border);
     padding: 2rem;
     border-radius: 15px;
-    width: 250px;
+    width: 270px;
     text-align: center;
     box-shadow: var(--card-shadow);
     color: var(--text-color);
