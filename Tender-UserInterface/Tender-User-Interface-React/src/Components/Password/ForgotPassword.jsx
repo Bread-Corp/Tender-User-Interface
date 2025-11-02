@@ -52,6 +52,10 @@ const ForgotPassword = ({ onClose }) => {
 
             {step === 1 ? (
                 <div className="forgot-password-form">
+                    <p className="form-helper-text">
+                        We'll send a verification code to this email address.
+                    </p>
+
                     <label>
                         Email:
                         <div className="info-group">
@@ -63,6 +67,7 @@ const ForgotPassword = ({ onClose }) => {
                             />
                         </div>
                     </label>
+
                     {message && <p className="forgot-message">{message}</p>}
                     <div className="forgot-buttons">
                         <button
@@ -75,7 +80,7 @@ const ForgotPassword = ({ onClose }) => {
                         </button>
                         <button
                             type="button"
-                            className="submit-btn"
+                            className="send-code-btn"
                             onClick={handleRequestReset}
                             disabled={loading}
                         >

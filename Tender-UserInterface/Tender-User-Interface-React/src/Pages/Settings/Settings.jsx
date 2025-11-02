@@ -373,9 +373,7 @@ const Settings = () => {
 
             {showPasswordModal && (
                 <div className="modal-overlay">
-                    
                         <UpdatePassword onClose={() => setShowPasswordModal(false)} />
-                    
                 </div>
             )}
         </div>

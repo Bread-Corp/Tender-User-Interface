@@ -420,12 +420,6 @@ body {
     color: white;
 }
 
-    .form-options input[type="checkbox"] {
-        transform: scale(1.1);
-        accent-color: #f1e85a;
-        margin-right: 0.5rem;
-    }
-
     .form-options a {
         color: white;
         text-decoration: none;
@@ -681,12 +675,13 @@ body {
 .forgot-link {
     background: none;
     border: none;
-    color: #3d5ea9;
+    color: rgb(147, 183, 221);
     text-decoration: underline;
     cursor: pointer;
     font-size: 0.9rem;
+    padding: 0;
 }
 
     .forgot-link:hover {
-        color: #2b3b66;
+        color: #e0e0e0;
     }

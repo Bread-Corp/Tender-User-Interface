@@ -92,7 +92,7 @@ const UpdatePassword = ({ onClose }) => {
                     </button>
                     <button
                         type="submit"
-                        className="submit-btn"
+                        className="edit-profile-btn"
                         disabled={loading}
                     >
                         {loading ? "Submitting..." : "Submit"}
