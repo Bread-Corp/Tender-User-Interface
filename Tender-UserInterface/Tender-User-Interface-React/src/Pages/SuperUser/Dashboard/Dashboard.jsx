@@ -12,7 +12,7 @@ const scraperSources = ["eTenderLambda", "EskomLambda", "TransnetLambda", "Sanra
 const pipelineSources = ["DeduplicationLambda", "AISummaryLambda", "AITaggingLambda", "DBWriterLambda", "TenderCleanupLambda"]
 
 //required url
-const apiURL = import.meta.env.VITE_LOG_API;
+const apiLogURL = import.meta.env.VITE_LOG_API;
 
 // mock data
 const placeholderLogs = {
@@ -124,6 +124,7 @@ const Dashboard = () => {
                 </div>
             </div>
         );
+    }
 
     const fetchScraperLogs = async () => {
         let coreID = null;
@@ -144,7 +145,7 @@ const Dashboard = () => {
             };
             console.log('logBody:', logBody);
 
-            const response = await axios.post(`${apiURL}`, logBody, {
+            const response = await axios.post(`${apiLogURL}`, logBody, {
                 headers: {
                     "Content-Type": "application/json"
                 }
