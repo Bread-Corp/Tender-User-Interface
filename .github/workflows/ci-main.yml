@@ -5,8 +5,6 @@ on:
   push:
     branches:
       - main                   # Also run automatically on merge to main
-  pull_request:
-    types: [opened, synchronize, reopened] # Added for Sonar PR analysis
 
 jobs:
   build-and-scan:
