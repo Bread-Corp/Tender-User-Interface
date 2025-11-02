@@ -5,8 +5,14 @@ import AddSuperUser from '../../../Components/AddSuperUser/AddSuperUser';
 import { fetchUserAttributes } from '@aws-amplify/auth';
 import LoadingSpinner from '../../../Components/LoadingSpinner/LoadingSpinner';
 import { FaExclamationTriangle } from 'react-icons/fa';
+import axios from 'axios';
 
-const scraperSources = ["Etenders", "Eskom", "SANRAL", "SARS", "Transnet"];
+const categories = ["scrapers", "pipeline"]
+const scraperSources = ["eTenderLambda", "EskomLambda", "TransnetLambda", "SanralLambda", "SarsLambda"];
+const pipelineSources = ["DeduplicationLambda", "AISummaryLambda", "AITaggingLambda", "DBWriterLambda", "TenderCleanupLambda"]
+
+//required url
+const apiURL = import.meta.env.VITE_LOG_API;
 
 // mock data
 const placeholderLogs = {
@@ -18,6 +24,10 @@ const placeholderLogs = {
 };
 
 const Dashboard = () => {
+    //states for log info
+    const [fileName, setFileName] = useState(null);
+    const [URL, setURL] = useState(null);
+    const [lastScrap, setLastScrap] = useState("Unknown");
 
     const [totalUsers, setTotalUsers] = useState(0);
     const [userLoading, setUserLoading] = useState(true);
@@ -34,14 +44,16 @@ const Dashboard = () => {
     // update state when dropdown changes
     const handleScraperChange = (event) => {
         setSelectedScraper(event.target.value);
-        // fetchScraperLogs(event.target.value);
+        fetchScraperLogs(event.target.value);
     };
 
     //add super user modal state
     const [showAddUser, setShowAddUser] = useState(false);
 
     const handleOpen = () => setShowAddUser(true);
+
     const handleClose = () => setShowAddUser(false);
+
     const handleSubmit = (data) => {
         console.log('Submitted:', data);
         setShowAddUser(false);
@@ -112,6 +124,43 @@ const Dashboard = () => {
                 </div>
             </div>
         );
+
+    const fetchScraperLogs = async () => {
+        let coreID = null;
+
+        try {
+
+            const attributes = await fetchUserAttributes();
+            coreID = attributes["custom:CoreID"];
+        } catch (attrError) {
+            console.error("Error fetching user attributes:", attrError);
+        }
+
+        try {
+            const logBody = {
+                category: 'scrapers',
+                functionName: selectedScraper,
+                userId: coreID,
+            };
+            console.log('logBody:', logBody);
+
+            const response = await axios.post(`${apiURL}`, logBody, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            const { fileName, downloadUrl } = response.data;
+
+            console.log('Logs fetched at :', Date.now());
+
+            setFileName(fileName);
+            setURL(downloadUrl);
+            setLastScrap(new Date().toLocaleString() + ' SAST');
+            return;
+        }
+        catch (error) {
+            console.error('Internal error fetching logs: ', error);
+        }
     }
 
         return (
@@ -150,8 +199,7 @@ const Dashboard = () => {
                             <div className="card-header">
                                 <h2>System Health</h2>
                             </div>
-                            <p>Last successful scrap: 2025-07-26 SAST</p>
-                            <p>Error Count (24h): 3</p>
+                            <p>Last successful log scrape: {lastScrap}</p>
                             <div className="dashboard-actions">
 
                                 <select
@@ -164,6 +212,12 @@ const Dashboard = () => {
                                         </option>
                                     ))}
                                 </select>
+
+                                {fileName && URL && (
+                                    <a className="download-link" href={URL} target="_blank" rel="noopener noreferrer">
+                                        ⬇ View: {fileName}
+                                    </a>
+                                )}
                             </div>
                         </section>
                     </div>
