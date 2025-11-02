@@ -4,7 +4,7 @@ import './Dashboard.css';
 import AddSuperUser from '../../../Components/AddSuperUser/AddSuperUser';
 import { fetchUserAttributes } from '@aws-amplify/auth';
 import LoadingSpinner from '../../../Components/LoadingSpinner/LoadingSpinner';
-import { FaExclamationTriangle } from 'react-icons/fa';
+import { FaExclamationTriangle, FaDownload } from 'react-icons/fa';
 import axios from 'axios';
 
 const categories = ["scrapers", "pipeline"]
@@ -29,22 +29,39 @@ const Dashboard = () => {
     const [URL, setURL] = useState(null);
     const [lastScrap, setLastScrap] = useState("Unknown");
 
+    const [selectedCategory, setSelectedCategory] = useState(categories[0]);
+    const [availableSources, setAvailableSources] = useState(scraperSources);
+    const [selectedSource, setSelectedSource] = useState(scraperSources[0]);
+
+    const [isLogLoading, setIsLogLoading] = useState(false);
     const [totalUsers, setTotalUsers] = useState(0);
     const [userLoading, setUserLoading] = useState(true);
     const [userError, setUserError] = useState(null);
     const navigate = useNavigate();
     const apiURL = import.meta.env.VITE_API_URL;
 
-    // chekc which scraper should be displayed
-    const [selectedScraper, setSelectedScraper] = useState(scraperSources[0]);
+    const handleCategoryChange = (event) => {
+        const newCategory = event.target.value;
+        setSelectedCategory(newCategory);
 
-    // get logs - empty array if nothing selected
-    const currentLogs = placeholderLogs[selectedScraper] || [];
+        // Clear old logs
+        setFileName(null);
+        setURL(null);
+        setIsLogLoading(false);
+    };
 
     // update state when dropdown changes
-    const handleScraperChange = (event) => {
-        setSelectedScraper(event.target.value);
-        fetchScraperLogs(event.target.value);
+    const handleSourceChange = (event) => {
+        const newSource = event.target.value;
+
+        // clear the old log link immediately
+        setFileName(null);
+        setURL(null);
+        setIsLogLoading(true);
+
+        // set the new scraper and fetch its logs
+        setSelectedSource(newSource);
+        fetchScraperLogs(selectedCategory, newSource); 
     };
 
     //add super user modal state
@@ -58,6 +75,16 @@ const Dashboard = () => {
         console.log('Submitted:', data);
         setShowAddUser(false);
     };
+
+    useEffect(() => {
+        if (selectedCategory === 'scrapers') {
+            setAvailableSources(scraperSources);
+            setSelectedSource(scraperSources[0]); // Set default source
+        } else if (selectedCategory === 'pipeline') {
+            setAvailableSources(pipelineSources);
+            setSelectedSource(pipelineSources[0]); // Set default source
+        }
+    }, [selectedCategory]);
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -126,7 +153,7 @@ const Dashboard = () => {
         );
     }
 
-    const fetchScraperLogs = async () => {
+    const fetchScraperLogs = async (categoryToFetch, sourceToFetch) => {
         let coreID = null;
 
         try {
@@ -139,8 +166,8 @@ const Dashboard = () => {
 
         try {
             const logBody = {
-                category: 'scrapers',
-                functionName: selectedScraper,
+                category: categoryToFetch,
+                functionName: sourceToFetch,
                 userId: coreID,
             };
             console.log('logBody:', logBody);
@@ -161,6 +188,8 @@ const Dashboard = () => {
         }
         catch (error) {
             console.error('Internal error fetching logs: ', error);
+        } finally {
+            setIsLogLoading(false); 
         }
     }
 
@@ -200,25 +229,30 @@ const Dashboard = () => {
                             <div className="card-header">
                                 <h2>System Health</h2>
                             </div>
-                            <p>Last successful log scrape: {lastScrap}</p>
                             <div className="dashboard-actions">
 
                                 <select
                                     className="scraper-select"
-                                    value={selectedScraper}
-                                    onChange={handleScraperChange}>
-                                    {scraperSources.map(source => (
+                                    value={selectedCategory}
+                                    onChange={handleCategoryChange}>
+                                    {categories.map(cat => (
+                                        <option key={cat} value={cat}>
+                                            {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                                        </option>
+                                    ))}
+                                </select>
+
+                                <select
+                                    className="scraper-select"
+                                    value={selectedSource}
+                                    onChange={handleSourceChange}>
+                                    {availableSources.map(source => (
                                         <option key={source} value={source}>
                                             {source} Logs
                                         </option>
                                     ))}
                                 </select>
-
-                                {fileName && URL && (
-                                    <a className="download-link" href={URL} target="_blank" rel="noopener noreferrer">
-                                        ⬇ View: {fileName}
-                                    </a>
-                                )}
+                                                               
                             </div>
                         </section>
                     </div>
@@ -226,19 +260,30 @@ const Dashboard = () => {
                     {/* scraper logs display section */}
                     <section className="dashboard-card scraper-logs-display">
                         <div className="card-header">
-                            <h2>Logs: {selectedScraper}</h2>
+                            <h2>Logs: {selectedSource}</h2>
                         </div>
-                        {currentLogs.length > 0 ? (
-                            <ul className="activity-list">
-                                {currentLogs.map((log, index) => (
-                                    <li key={index} className={log.includes("Failure") || log.includes("Error") || log.includes("CRITICAL") ? "critical" : ""}>
-                                        {log}
-                                    </li>
-                                ))}
-                            </ul>
-                        ) : (
-                            <p>No recent logs found for {selectedScraper}.</p>
+
+                        {!isLogLoading && fileName && URL && (
+                            <div className="dashboard-actions">
+                                <a className="download-link" href={URL} target="_blank" rel="noopener noreferrer">
+                                    <FaDownload style={{ marginRight: '8px' }} />
+                                     View Full Log: {fileName}
+                                </a>
+                            </div>
                         )}
+
+                        {/* Show loading text */}
+                        {isLogLoading && (
+                            <div className="dashboard-actions">
+                                <p>Fetching logs for {selectedSource}...</p>
+                            </div>
+                        )}
+
+                        {/* Show placeholder text if not loading AND no file exists */}
+                        {!isLogLoading && !fileName && (
+                            <p>Select a source to fetch its logs.</p>
+                        )}
+
                     </section>
                                        
                 </div>
