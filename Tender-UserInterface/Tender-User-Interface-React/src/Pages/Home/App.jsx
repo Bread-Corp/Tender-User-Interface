@@ -21,6 +21,7 @@ import Navbar from '../../Components/Navbar/Navbar';
 
 import { useAuth } from '../../context/AuthContext';
 import { fetchUserAttributes } from '@aws-amplify/auth';
+import { Navigate } from 'react-router-dom';
 
 function App() {
 
@@ -108,9 +109,9 @@ function App() {
                 <Route path="/settings" element={<Settings />} />/*Fix protection*/
 
                 {/* SuperUser Routes */}
-                <Route path="/superuser/dashboard" element={<Dashboard />} />
-                <Route path="/superuser/manageusers" element={<ManageUsers />} />
-                <Route path="/superuser/archive" element={<Archive />} />
+                <Route path="/superuser/dashboard" element={isAdmin ? <Dashboard /> : <Navigate to="/" />} />
+                <Route path="/superuser/manageusers" element={isAdmin ? <ManageUsers /> : <Navigate to="/" />} />
+                <Route path="/superuser/archive" element={isAdmin ? <Archive /> : <Navigate to="/" />} />
                 </Routes>
             </MainLayout>
         </ThemeProvider>
