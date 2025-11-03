@@ -88,7 +88,7 @@ const Navbar = ({ isSignedIn, onLogoutSuccess, isAdmin, isNotification, onReadNo
                 </ul>
 
                 <div className="navbar-right">
-                    {isSignedIn && (
+                    {isSignedIn && !isAdmin && (
                         <Notification
                             show={showNotifications}
                             toggle={() => setShowNotifications(prev => !prev)}
