@@ -1,35 +1,85 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './ManageUsers.css'; 
-import { FaUserEdit, FaTrash } from 'react-icons/fa';
+import { FaExclamationTriangle, FaTrash } from 'react-icons/fa';
 import AddSuperUser from '../../../Components/AddSuperUser/AddSuperUser';
-
-// MOCK DATA
-const MOCK_USERS = [
-    { id: '1', coreId: 'C1001', name: 'Alice Johnson', email: 'alice.j@corp.com', role: 'Standard', registered: '2024-01-15', lastLogin: '2025-09-28' },
-    { id: '2', coreId: 'C1002', name: 'Bob Smith', email: 'bob.s@corp.com', role: 'SuperUser', registered: '2023-11-01', lastLogin: '2025-10-24' },
-    { id: '3', coreId: 'C1003', name: 'Charlie Davis', email: 'charlie.d@corp.com', role: 'Standard', registered: '2025-05-20', lastLogin: '2025-05-20' },
-    { id: '4', coreId: 'C1004', name: 'Dana Evans', email: 'dana.e@corp.com', role: 'Standard', registered: '2024-09-01', lastLogin: '2025-10-20' },
-    { id: '5', coreId: 'C1005', name: 'Ethan Fox', email: 'ethan.f@corp.com', role: 'Standard', registered: '2025-10-23', lastLogin: 'N/A' },
-];
+import { useNavigate } from 'react-router-dom';
+import { fetchUserAttributes } from '@aws-amplify/auth'; 
+import LoadingSpinner from '../../../Components/LoadingSpinner/LoadingSpinner';
 
 const ManageUsers = () => {
-    const [users, setUsers] = useState(MOCK_USERS);
+    const [users, setUsers] = useState([]); 
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null); 
+    const navigate = useNavigate();
+    const apiURL = import.meta.env.VITE_API_URL;
 
-    // mock handlers
-    const handleEdit = (userId) => {
-        console.log(`Editing user with ID: ${userId}`);
-        // logic to open a modal or navigate to an edit form
-    };
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                setLoading(true);
+                setError(null);
 
-    const handleDelete = (userId) => {
-        if (window.confirm(`Are you sure you want to delete user ID ${userId}?`)) {
-            console.log(`Deleting user with ID: ${userId}`);
-            setUsers(users.filter(user => user.id !== userId));
-        }
-    };
+                const attributes = await fetchUserAttributes();
+                const currentAdminID = attributes['custom:CoreID'];
+
+                if (!currentAdminID) {
+                    throw new Error("Admin CoreID not found. You may not have permission to view this page.");
+                }
+
+                const response = await fetch(`${apiURL}/TenderUser/fetch/${currentAdminID}`, {
+                                        
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    if (errorData.message === 'Invalid User') {
+                        throw new Error("You do not have permission to view this page.");
+                    }
+                    throw new Error(errorData.message || 'Failed to fetch users');
+                }
+
+                const data = await response.json();
+
+                setUsers(data.allUsers);
+
+            } catch (err) {
+                if (err.name === 'NotAuthorizedException') {
+                    navigate('/login');
+                }
+                setError(err.message);
+                console.error('Error fetching users:', err);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUsers();
+    }, [navigate]);
 
     //add super user modal state
     const [showAddUser, setShowAddUser] = useState(false);
+
+    const handleDelete = async (userId) => {
+        if (window.confirm(`Are you sure you want to delete this user?`)) {
+            try {
+                const response = await fetch(`${apiURL}/TenderUser/deleteuser/${userId}`, {
+                    method: 'POST',
+                                        
+                });
+
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.message || 'Failed to delete user');
+                }
+
+                setUsers(currentUsers => currentUsers.filter(user => user.userID !== userId));
+
+            } catch (err) {
+                console.error('Error deleting user:', err);
+                alert(`Failed to delete user: ${err.message}`);
+            }
+        }
+    };
 
     const handleOpen = () => setShowAddUser(true);
     const handleClose = () => setShowAddUser(false);
@@ -37,6 +87,30 @@ const ManageUsers = () => {
         console.log('Submitted:', data);
         setShowAddUser(false);
     };
+
+    if (loading) {
+        return (
+            <div className="loading-overlay">
+                <LoadingSpinner text="Loading user data..." />
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="user-management-container">
+                <div className="analytics-state-wrapper"> 
+                    <div className="error-state-message">
+                        <span className="error-state-icon">
+                            <FaExclamationTriangle />
+                        </span>
+                        <h2>Error Loading Users</h2>
+                        <p>{error}</p>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="user-management-container">
@@ -47,9 +121,7 @@ const ManageUsers = () => {
                 {/* Modal Popup */}
                 {showAddUser && (
                     <div className="modal-overlay">
-                        <div className="modal-content">
                             <AddSuperUser onSubmit={handleSubmit} onCancel={handleClose} />
-                        </div>
                     </div>
                 )}
             </header>
@@ -58,31 +130,31 @@ const ManageUsers = () => {
                 <table>
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>CoreID</th>
+                            <th>User ID</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Role</th>
                             <th>Registered</th>
-                            <th>Last Login</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {users.map((user) => (
-                            <tr key={user.id} >
-                                <td>{user.id}</td>
-                                <td>{user.coreId}</td>
-                                <td>{user.name}</td>
+                            <tr key={user.userID} >
+                                <td>{user.userID.substring(0, 8)}...</td>
+                                <td>{user.fullName}</td>
                                 <td>{user.email}</td>
-                                <td><span className={`role-tag role-${user.role.toLowerCase()}`}>{user.role}</span></td>
-                                <td>{user.registered}</td>
-                                <td>{user.lastLogin}</td>
+                                <td>
+                                    <span className={`role-tag role-${user.role.toLowerCase()}`}>
+                                        {user.role}
+                                    </span>
+                                </td>
+                                <td>{new Date(user.dateAppended).toLocaleDateString()}</td>
                                 <td className="action-cells">
-                                    <button onClick={() => handleEdit(user.id)} className="icon-btn edit-btn">
-                                        <FaUserEdit />
-                                    </button>
-                                    <button onClick={() => handleDelete(user.id)} className="icon-btn delete-btn">
+                                    <button
+                                        onClick={() => handleDelete(user.userID)}
+                                        className="icon-btn delete-btn"
+                                        disabled={user.role === 'SuperUser'}>
                                         <FaTrash />
                                     </button>
                                 </td>

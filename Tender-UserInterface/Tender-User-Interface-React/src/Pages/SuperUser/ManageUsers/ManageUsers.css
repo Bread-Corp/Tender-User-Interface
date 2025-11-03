@@ -1,23 +1,29 @@
+
 .user-management-container {
-    padding: 20px;
+    padding: 30px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     min-height: 100vh;
     max-width: 1300px;
     margin: 0 auto;
+    padding-top: 100px;
+    box-sizing: border-box; 
 }
 
 .page-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #e0e0e0;
+    margin-bottom: 20px;
+    padding: 10px 0;
+    position: sticky;
+    top: 80px;
+    z-index: 10;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
     .page-header h1 {
         font-size: 28px;
-        color: #2c3e50;
+        color: var(--heading-color);
     }
 
 .add-user-btn {
@@ -28,47 +34,92 @@
     border-radius: 6px;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, transform 0.2s;
 }
 
     .add-user-btn:hover {
         background-color: #5571A6;
+        transform: translateY(-1px);
     }
 
-/* TABLES N STUFF */
+/* TABLE */
 .user-table-wrapper {
-    overflow-x: auto; 
-    background: white;
+    overflow-x: auto;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--tag-border); 
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
     font-size: 14px;
+    table-layout: fixed; 
 }
 
 thead {
-    background-color: #ecf0f1;
-    color: #7f8c8d;
+    color: var(--color-text-secondary);
+    background: var(--tender-card-bg);
     text-transform: uppercase;
+    font-size: 12px;
+    font-weight: 600; 
+}
+
+th {
+    padding: 16px 15px;
+    text-align: left;
+    border-bottom: 2px solid #ccc;
 }
 
 th, td {
-    padding: 12px 15px;
+    padding: 16px 15px;
     text-align: left;
-    border-bottom: 1px solid #f1f1f1;
+    border-bottom: 1px solid var(--tag-border);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
+
+    /* 1. User ID */
+    th:nth-child(1) {
+        width: 10%;
+    }
+
+    /* 2. Name */
+    th:nth-child(2) {
+        width: 15%;
+    }
+
+    /* 3. Email */
+    th:nth-child(3) {
+        width: 15%;
+    }
+
+    /* 4. Role */
+    th:nth-child(4) {
+        width: 10%;
+    }
+
+    /* 5. Registered */
+    th:nth-child(5) {
+        width: 10%;
+    }
+
+    /* 6. Actions */
+    th:nth-child(6) {
+        width: 10%;
+        text-align: center;
+    }
 
 tbody tr:hover {
-    background-color: #f9fbfd;
+    background-color: rgba(255,255,255,0.3);
+    cursor: pointer; 
 }
 
-/* STASTUS + TAGS */
+/* STSTUS */
 .role-tag {
-    padding: 4px 8px;
-    border-radius: 4px;
+    padding: 4px 10px;
+    border-radius: 12px;
     font-weight: 600;
     font-size: 12px;
 }
@@ -79,37 +130,29 @@ tbody tr:hover {
     }
 
     .role-tag.role-standard {
-    background-color: #d1d8e0; 
-    color: #353b48;
-}
+        background-color: #d1d8e0;
+        color: #353b48;
+    }
 
-.role-tag.role-basic {
-    background-color: #e6e6e6;
-    color: #4a4a4a;
-}
-
-/* BTNS */
+/* ACTION BTNS */
 .action-cells {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem; 
     white-space: nowrap;
+    width: 100%; 
 }
 
 .icon-btn {
     background: none;
     border: none;
     cursor: pointer;
-    margin: 0 5px;
     padding: 5px;
     font-size: 16px;
-    transition: color 0.2s;
+    border-radius: 4px;
+    transition: all 0.2s;
 }
-
-    .icon-btn.edit-btn {
-        color: #2980b9;
-    }
-
-        .icon-btn.edit-btn:hover {
-            color: #3498db;
-        }
 
     .icon-btn.delete-btn {
         color: #c0392b;
@@ -117,9 +160,38 @@ tbody tr:hover {
 
         .icon-btn.delete-btn:hover {
             color: #e74c3c;
+            background-color: #fceeee; 
         }
 
-/* Add Super User pop  up */
+.icon-btn:disabled {
+    color: #bdc3c7; 
+    cursor: not-allowed;
+    background-color: transparent !important; 
+}
+
+/* Modal Popup  */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes scaleUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -131,14 +203,6 @@ tbody tr:hover {
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    animation: fadeIn 0.2s ease-out;
 }
 
-.modal-content {
-    background: white;
-    border: 1px solid #33497D;
-    border-radius: 12px;
-    padding: 2rem;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-    max-width: 600px;
-    width: 90%;
-}

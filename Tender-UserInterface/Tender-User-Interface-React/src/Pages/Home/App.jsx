@@ -14,12 +14,14 @@ import Settings from "../Settings/Settings";
 import Analytics from "../Analytics/Analytics";
 import { ThemeProvider } from '../../context/ThemeContext.jsx';
 import Dashboard from '../SuperUser/Dashboard/Dashboard';
+import Archive from '../SuperUser/Archive/Archive';
 import ManageUsers from '../SuperUser/ManageUsers/ManageUsers';
 import MainLayout from '../../Components/Layout/MainLayout'; 
 import Navbar from '../../Components/Navbar/Navbar';
 
 import { useAuth } from '../../context/AuthContext';
 import { fetchUserAttributes } from '@aws-amplify/auth';
+import { Navigate } from 'react-router-dom';
 
 function App() {
 
@@ -107,8 +109,9 @@ function App() {
                 <Route path="/settings" element={<Settings />} />/*Fix protection*/
 
                 {/* SuperUser Routes */}
-                <Route path="/superuser/dashboard" element={<Dashboard />} />
-                <Route path="/superuser/manageusers" element={<ManageUsers />} />
+                <Route path="/superuser/dashboard" element={isAdmin ? <Dashboard /> : <Navigate to="/" />} />
+                <Route path="/superuser/manageusers" element={isAdmin ? <ManageUsers /> : <Navigate to="/" />} />
+                <Route path="/superuser/archive" element={isAdmin ? <Archive /> : <Navigate to="/" />} />
                 </Routes>
             </MainLayout>
         </ThemeProvider>

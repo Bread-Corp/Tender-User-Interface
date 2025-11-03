@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext'; 
-import './Login.css';
+import './ConfirmSignUp.css';
 
 const ConfirmSignUp = () => {
     const [code, setCode] = useState('');
@@ -30,11 +30,13 @@ const ConfirmSignUp = () => {
     };
 
     return (
-        <div className="login-wrapper">
-            <div className="login-container" style={{ justifyContent: 'center', width: '500px' }}>
-                <div className="login-right">
+        <div className="auth-wrapper">
+            <div className="auth-card" style={{ justifyContent: 'center', width: '500px' }}>
                     <h2>Confirm Your Account</h2>
-                    <p>A confirmation code has been sent to your email.</p>
+                    <p className="auth-subtext">
+                        A code has been sent to the email associated with
+                        {username ? <strong> {username}</strong> : " your account"}.
+                    </p>
                     <form className="login-form" onSubmit={handleSubmit}>
                         <label className="form-label">Confirmation Code</label>
                         <input
@@ -48,7 +50,6 @@ const ConfirmSignUp = () => {
                         <button type="submit" className="login-button">Confirm Account</button>
                     </form>
                 </div>
-            </div>
         </div>
     );
 };

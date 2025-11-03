@@ -3,6 +3,8 @@ import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { EskomTender } from "../../Models/EskomTender.js";
 import { ETender } from "../../Models/eTender.js";
+import { SanralTender } from "../../Models/SanralTender.js";
+import { TransnetTender } from "../../Models/TransnetTender.js";
 import { Tags } from "../../Models/Tags.js";
 import "./TenderDetails.css";
 
@@ -10,7 +12,7 @@ const apiURL = import.meta.env.VITE_API_URL;
 
 const TenderDetails: React.FC = () => {
     const { id } = useParams();
-    const [tender, setTender] = useState<EskomTender | ETender | null>(null);
+    const [tender, setTender] = useState<EskomTender | ETender | SanralTender | TransnetTender | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
 
@@ -20,14 +22,22 @@ const TenderDetails: React.FC = () => {
                 const response = await axios.get(`${apiURL}/tender/fetch/${id}`);
                 const item = response.data;
 
+                console.log("Raw tender data from API:", item);
+
                 const tagsArray: Tags[] = item.tags
                     ? item.tags.map((t: any) => new Tags(t.tagID || "", t.tagName || ""))
                     : [];
 
-                const tenderObj =
-                    item.source === "Eskom"
-                        ? new EskomTender({ ...item, tag: tagsArray })
-                        : new ETender({ ...item, tag: tagsArray });
+                let tenderObj;
+                if (item.source === "Eskom") {
+                    tenderObj = new EskomTender({ ...item, tag: tagsArray });
+                } else if (item.source === "SANRAL") {
+                    tenderObj = new SanralTender({ ...item, tag: tagsArray });
+                } else if (item.source === "Transnet") {
+                    tenderObj = new TransnetTender({ ...item, tag: tagsArray });
+                } else {
+                    tenderObj = new ETender({ ...item, tag: tagsArray });   
+                }
 
                 setTender(tenderObj);
             } catch (err) {
@@ -58,25 +68,8 @@ const TenderDetails: React.FC = () => {
         return <p className="tender-details-error">Tender not found.</p>;
     }
 
-    const extraDetails = [
-        { label: "Tender Number", value: (tender as any).tenderNumber },
-        { label: "Reference", value: (tender as any).reference || "N/A" },
-        { label: "Audience", value: (tender as any).audience },
-        { label: "Office Location", value: (tender as any).officeLocation },
-        { label: "Email", value: (tender as any).email || "N/A" },
-        { label: "Address", value: (tender as any).address },
-        { label: "Province", value: (tender as any).province },
-    ];
-
     return (
         <div className="tender-details-container">
-
-            {/* Return button */}
-            {/*<div className="return-home-wrapper">*/}
-            {/*    <Link to="/discover" className="return-home-btn">*/}
-            {/*        Back to Discover*/}
-            {/*    </Link>*/}
-            {/*</div>*/}
 
             <h1>{tender.title}</h1>
 
@@ -109,23 +102,71 @@ const TenderDetails: React.FC = () => {
                 </div>
             )}
 
-            {/* Extra Details */}
-            {"tenderNumber" in tender && (
+            {/* DYNAMIC CONTENT */}
+
+            {/* SANRAL Full Text Notice Card */}
+            {tender instanceof SanralTender && tender.fullTextNotice && (
+                <div className="tender-detail-card ">
+                    <h2>Full Text Notice</h2>
+                    <p>{tender.fullTextNotice}</p>
+                </div>
+            )}
+
+            {/* Eskom Extra Details Card */}
+            {tender instanceof EskomTender && (
                 <div className="tender-detail-card ">
                     <h2>Extra Details</h2>
-                    {extraDetails.map((field) => (
-                        <p key={field.label}>
-                            <strong>{field.label}:</strong> {field.value}
-                        </p>
-                    ))}
+                    <p><strong>Tender Number:</strong> {tender.tenderNumber}</p>
+                    <p><strong>Reference:</strong> {tender.reference || "N/A"}</p>
+                    <p><strong>Audience:</strong> {tender.audience}</p>
+                    <p><strong>Office Location:</strong> {tender.officeLocation}</p>
+                    <p><strong>Email:</strong> {tender.email || "N/A"}</p>
+                    <p><strong>Address:</strong> {tender.address || "N/A"}</p>
+                    <p><strong>Province:</strong> {tender.province}</p>
                 </div>
+            )}
+
+            {/* SANRAL Extra Details Card */}
+            {tender instanceof SanralTender && (
+                <div className="tender-detail-card ">
+                    <h2>Extra Details</h2>
+                    <p><strong>Tender Number:</strong> {tender.tenderNumber}</p>
+                    <p><strong>Category:</strong> {tender.category}</p>
+                    <p><strong>Location:</strong> {tender.location}</p>
+                    <p><strong>Email:</strong> {tender.email || "N/A"}</p>
+                </div>
+            )}
+
+            {tender instanceof ETender && (
+                <div className="tender-detail-card ">
+                    <h2>Extra Details</h2>
+                    <p><strong>Tender Number:</strong> {tender.tenderNumber}</p>
+                    <p><strong>Audience:</strong> {tender.audience}</p>
+                    <p><strong>Office Location:</strong> {tender.officeLocation}</p>
+                    <p><strong>Email:</strong> {tender.email || "N/A"}</p>
+                    <p><strong>Address:</strong> {tender.address || "N/A"}</p>
+                    <p><strong>Province:</strong> {tender.province}</p>
+                </div>
+            )}
+
+            {tender instanceof TransnetTender && (
+                <div className="tender-detail-card ">
+                    <h2>Extra Details</h2>
+                    <p><strong>Tender Number:</strong> {tender.tenderNumber}</p>
+                    <p><strong>Category:</strong> {tender.category}</p>
+                    <p><strong>Region:</strong> {tender.region}</p>
+                    <p><strong>Institution:</strong> {tender.institution}</p>
+                    <p><strong>Tender Type:</strong> {tender.tenderType}</p>
+                    <p><strong>Contact Person:</strong> {tender.contactPerson}</p>
+                    <p><strong>Email:</strong> {tender.email || "N/A"}</p>
+                    </div>
             )}
 
             {/* Supporting Docs */}
             {Array.isArray(tender.supportingDocs) && tender.supportingDocs.length > 0 && (
                 <div className="tender-detail-card ">
                     <h2 style={{ marginBottom: '1.8rem' }}>Supporting Documents</h2>
-                    {/* --- Map over the array --- */}
+                    {/* Map over the array */}
                     {tender.supportingDocs.map((doc) => (
                         // Use doc.supportingDocID or doc.url as the key
                         <a

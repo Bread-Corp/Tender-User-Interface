@@ -6,7 +6,8 @@
 }
 
 .add-superuser-form {
-    background: var(--tender-card-bg, white);
+    background: var(--tender-card-bg);
+    border: 1px solid var(--tender-card-border);
     padding: 3rem;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -42,15 +43,6 @@
     display: flex;
     justify-content: space-between;
     margin-top: 1rem;
-}
-
-.cancel-btn {
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    padding: 0.6rem 1.2rem;
-    border-radius: 6px;
-    cursor: pointer;
 }
 
 .submit-btn {

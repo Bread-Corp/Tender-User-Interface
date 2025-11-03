@@ -1,26 +1,25 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { fetchUserAttributes } from '@aws-amplify/auth';
-import "./Discover.css";
-import TenderCard from "../../Components/TenderCard/tendercard.js";
-import { FaSearch, FaFilter } from "react-icons/fa";
-import ErrorBoundary from "../../Components/ErrorBoundary.js";
-import FilterOverlay from "../../Components/FilterOverlay/FilterOverlay.js";
-import { EskomTender } from "../../Models/EskomTender.js";
-import { ETender } from "../../Models/eTender.js";
-import { TransnetTender } from "../../Models/TransnetTender.js";
-import { SanralTender } from "../../Models/SanralTender.js";
-import { BaseTender } from "../../Models/BaseTender.js";
-import { Tags } from "../../Models/Tags.js";
-import Modal from "../../Components/Modal/Modal.jsx";
-import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner.jsx";
+import { Link } from "react-router-dom"; // Added Link
+import "./Archive.css";
+import { FaSearch, FaFilter } from "react-icons/fa"; // Added FaTrash
+import ErrorBoundary from "../../../Components/ErrorBoundary.js";
+import FilterOverlay from "../../../Components/FilterOverlay/FilterOverlay.js";
+import TenderCard from "../../../Components/TenderCard/tendercard.js";
+import { EskomTender } from "../../../Models/EskomTender.js";
+import { ETender } from "../../../Models/eTender.js";
+import { TransnetTender } from "../../../Models/TransnetTender.js";
+import { SanralTender } from "../../../Models/SanralTender.js";
+import { BaseTender } from "../../../Models/BaseTender.js";
+import { Tags } from "../../../Models/Tags.js";
+import LoadingSpinner from "../../../Components/LoadingSpinner/LoadingSpinner.jsx";
 
 const apiURL = import.meta.env.VITE_API_URL;
-
-const max_visible_filters = 4;
 const pageSize = 10;
- 
-const Discover = ({ onNewNotif }) => {
+const max_visible_filters = 4;
+
+// Removed onNewNotif prop
+const Archive = ({ onNewNotif }) => {
     const [showFilterOverlay, setShowFilterOverlay] = useState(false);
     const [filters, setFilters] = useState<string[]>([]);
     const [showAllFilters, setShowAllFilters] = useState(false);
@@ -33,11 +32,8 @@ const Discover = ({ onNewNotif }) => {
     const [isLoading, setIsLoading] = useState(true);
 
     const [tenders, setTenders] = useState<(EskomTender | ETender | SanralTender | TransnetTender)[]>([]);
-    const [watchlist, setWatchlist] = useState<WatchlistItem[]>([]);
 
     const [toastMessage, setToastMessage] = useState<string | null>(null);
-    const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("userToken"));
-    const [loginModalOpen, setLoginModalOpen] = useState(false);
 
     // overlay filter state
     const [overlayFilters, setOverlayFilters] = useState<{
@@ -65,90 +61,21 @@ const Discover = ({ onNewNotif }) => {
         onNewNotif();
     }
 
-    // Apply dark mode from localStorage
-    useEffect(() => {
-        const storedMode = localStorage.getItem("darkMode");
-        document.body.classList.toggle("dark-mode", storedMode === "true");
-    }, []);
-
-    // fetch the watchlist when the user logs in
-    useEffect(() => {
-        console.log("Fetching watchlist:", isLoggedIn);
-        if (!isLoggedIn) {
-            setWatchlist([]); // clear watchlist if user logs out
-            setFilters([]);
+    const handleTenderDeleted = async (tenderID: string, tenderTitle: string) => {
+        if (!window.confirm(`Are you sure you want to delete "${tenderTitle}"?`)) {
             return;
         }
+        try {
+            await axios.post(`${apiURL}/tender/deletetender/${tenderID}`);
+            setTenders(prevTenders => prevTenders.filter(t => t.tenderID !== tenderID));
+            // Show a success message
+            showToast(`'${tenderTitle}' has been deleted.`, 3000);
 
-        const fetchUserData = async () => {
-            try {
-                const attributes = await fetchUserAttributes();
-                const coreID = attributes["custom:CoreID"];
-
-                if (coreID) {
-                    // run calls in parallel
-                    const [watchlistResult, tagsResult] = await Promise.allSettled([
-                        axios.get(`${apiURL}/watchlist/${coreID}`),
-                        axios.get(`${apiURL}/tenderuser/fetchtags/${coreID}`)
-                    ]);
-
-                    if (watchlistResult.status === 'fulfilled') {
-                        const watchlistResponse = watchlistResult.value;
-                        const watchlistResultData = watchlistResponse.data.watchlist;
-                        const watchlistData = Array.isArray(watchlistResultData) ? watchlistResultData : watchlistResultData.data || [];
-                        console.log("Watchlist data:", watchlistData);
-                        setWatchlist(watchlistData);
-                    } else {
-                        console.error("Failed to fetch watchlist:", watchlistResult.reason);
-                        setWatchlist([]); // Clear watchlist on error
-                    }
-
-                    if (tagsResult.status === 'fulfilled') {
-                        const tagsResponse = tagsResult.value;
-                        console.log("--- 1. RAW TAGS RESPONSE ---", JSON.stringify(tagsResponse.data, null, 2));
-
-                        const userTagList = tagsResponse.data.tags;
-                        console.log("--- 2. 'userTagList' ---", userTagList);
-
-                        const userTagObjects = (Array.isArray(userTagList) && userTagList.length > 0)
-                            ? userTagList[0]
-                            : [];
-                        console.log("--- Extracted 'userTagObjects' ---", userTagObjects);
-
-                        const userTags = (Array.isArray(userTagObjects) && userTagObjects.length > 0)
-                            ? userTagObjects.map(tagObject => tagObject.tagName)
-                            : [];
-                        console.log("--- 3. Final 'userTags' ---", userTags);
-
-                        if (userTags.length > 0) {
-                            console.log("Setting user tags as filters:", userTags);
-                            setFilters(userTags);
-                            
-                        } else {
-                            console.log("No user tags found, applying no filters.");
-                            setFilters([]);
-                        }
-                    } else {
-                        console.error("Failed to fetch user tags:", tagsResult.reason);
-                        setFilters([]);
-                    }
-
-                } else {
-                    // no coreID found
-                    console.log("No coreID found, clearing filters.");
-                    setFilters([]);
-                    setWatchlist([]);
-                }
-            } catch (error) {
-                console.error("Failed to fetch user attributes:", error);
-                setFilters([]);
-                setWatchlist([]);
-            }
-        };
-
-        fetchUserData();
-        // run whenever the login state changes
-    }, [isLoggedIn, apiURL]);
+        } catch (err) {
+            console.error("Failed to delete tender:", err);
+            showToast(`Failed to delete '${tenderTitle}'.`, 3000);
+        }
+    };
 
     useEffect(() => {
         const fetchTenders = async () => {
@@ -210,7 +137,7 @@ const Discover = ({ onNewNotif }) => {
         };
 
         fetchTenders();
-    }, [page, searchTerm, sortOption, filters, overlayFilters]); 
+    }, [page, searchTerm, sortOption, filters, overlayFilters]);
 
     const removeFilter = (index: number) => {
         setFilters(prev => prev.filter((_, i) => i !== index));
@@ -230,20 +157,10 @@ const Discover = ({ onNewNotif }) => {
                 </div>
             )}
 
-            {/* Login Modal */}
-            {loginModalOpen && (
-                <Modal
-                    isOpen={loginModalOpen}
-                    onClose={() => setLoginModalOpen(false)}
-                    title="Login Required"
-                    message="Please log in to bookmark tenders."
-                />
-            )}
-
             <section className="discovery-header">
                 <div className="discovery-context">
-                    <h1>Discover</h1>
-                    <p>Search for public sector tenders in South Africa</p>
+                    <h1>Archive</h1>
+                    <p>Collection of all tenders on Tender Tool, for admin usage</p>
 
                     {/* Filters */}
                     <div className="filter-tags">
@@ -270,7 +187,7 @@ const Discover = ({ onNewNotif }) => {
                                 className="search-input"
                                 placeholder="Search..."
                                 value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}/>
+                                onChange={(e) => setSearchTerm(e.target.value)} />
                         </div>
 
                         <button className="filter-button" onClick={() => setShowFilterOverlay(true)}>
@@ -289,7 +206,7 @@ const Discover = ({ onNewNotif }) => {
                             />
                         )}
                     </div>
-                </div> 
+                </div>
             </section>
 
             {/* white section for sorting and cards */}
@@ -317,30 +234,20 @@ const Discover = ({ onNewNotif }) => {
                             tenders.map((tender) => (
                                 <TenderCard
                                     key={tender.tenderID}
+                                    isAdminView={true}
+                                    onDeleteSuccess={handleTenderDeleted}
                                     tender={tender}
-                                    isLoggedIn={isLoggedIn}
-                                    onNewNotif={helpNewNotif}
-                                    watchlistArray={watchlist}
-                                    onRequireLogin={() => setLoginModalOpen(true)}
-                                    onBookmarkSuccess={(tenderTitle, isAdded) => {
-                                        if (isAdded) {
-                                            showToast(`'${tenderTitle}' added to watchlist!`, 3000);
-                                        } else {
-                                            // Assuming you handle removal too
-                                            showToast(`'${tenderTitle}' removed from watchlist.`, 3000);
-                                        }
-                                    }}
                                 />
                             ))
                         ) : (
-                                    <div className="empty-state-message">
-                                        <span className="empty-state-icon">
-                                            <FaSearch /> 
-                                        </span>
+                            <div className="empty-state-message">
+                                <span className="empty-state-icon">
+                                    <FaSearch />
+                                </span>
 
-                                        <h2>No Results Found</h2>
-                                        <p>We couldn't find any tenders matching your current filters or search term. Try adjusting your criteria.</p>
-                                    </div>
+                                <h2>No Results Found</h2>
+                                <p>We couldn't find any tenders matching your current filters or search term. Try adjusting your criteria.</p>
+                            </div>
                         )}
 
                         {/* only show pagination when there are tenders */}
@@ -399,4 +306,4 @@ const Discover = ({ onNewNotif }) => {
     );
 };
 
-export default Discover;
+export default Archive;

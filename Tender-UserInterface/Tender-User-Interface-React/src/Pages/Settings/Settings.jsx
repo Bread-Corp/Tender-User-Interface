@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../Components/LoadingSpinner/LoadingSpinner";
 import { deleteUser, editUser } from '../../context/CoreLogicContext.js';
 import { useTheme } from '../../context/ThemeContext.jsx';
+import UpdatePassword from '../../Components/Password/UpdatePassword'
 
 const Settings = () => {
     // profile states
@@ -20,6 +21,12 @@ const Settings = () => {
     const [hasChanges, setHasChanges] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
 
+    const dateFormatOptions = [
+        { value: "dd/mm/yyyy", label: "dd/mm/yyyy" },
+        { value: "mm/dd/yyyy", label: "mm/dd/yyyy" },
+        { value: "yyyy-mm-dd", label: "yyyy-mm-dd" },
+    ];
+
     // combined state
     const [loading, setLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(false); // source to check if user is valid
@@ -27,7 +34,16 @@ const Settings = () => {
     // state for the toggle
     const [activeView, setActiveView] = useState('settings'); // profile or settings
 
+    const [dateFormat, setDateFormat] = useState(() => {
+        const savedFormat = localStorage.getItem('userDateFormat');
+        return savedFormat || "dd/mm/yyyy"; // Use saved or default
+    });
+
     const { darkMode, toggleDarkMode } = useTheme(); // get dark mode state + toggle function from global context
+
+    // update password 
+    const [showPasswordModal, setShowPasswordModal] = useState(false);
+
     const { deleteCognitoUser } = useAuth();
     const navigate = useNavigate();
 
@@ -157,6 +173,14 @@ const Settings = () => {
         }
     };
 
+    const handleDateFormatChange = (e) => {
+        const newFormat = e.target.value;
+        // update the state so the UI changes
+        setDateFormat(newFormat);
+        // save the new format to localStorage
+        localStorage.setItem('userDateFormat', newFormat);
+    };
+
     const deleteAccount = async () => {
 
         const confirmed = window.confirm(
@@ -280,23 +304,20 @@ const Settings = () => {
                                 <h2>Settings</h2>
                                 <div className="settings-card">
                                     <h3 className="settings-heading">Preferences</h3>
-                                    <div className="setting-row">
-                                        <label>Language</label>
-                                        <select className="settings-dropdown">
-                                            <option>English</option>
-                                            <option>Afrikaans</option>
-                                            <option>Zulu</option>
-                                        </select>
-                                    </div>
+                                        <div className="setting-row">
+                                            <label>Date Format</label>
+                                            <select
+                                                className="settings-dropdown"
+                                                value={dateFormat}
+                                                onChange={handleDateFormatChange}>
+                                                {dateFormatOptions.map(option => (
+                                                    <option key={option.value} value={option.value}>
+                                                        {option.label}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
                                  
-                                    <div className="setting-row">
-                                        <label>Default View</label>
-                                        <select className="settings-dropdown">
-                                            <option>Dashboard</option>
-                                            <option>Discovery</option>
-                                            <option>Tracking</option>
-                                        </select>
-                                    </div>
                                     <h3 className="settings-heading">Appearance</h3>
                                     <div className="setting-row">
                                         <label>Theme</label>
@@ -309,15 +330,9 @@ const Settings = () => {
                                             <h3 className="settings-heading">Account</h3>
                                             <div className="setting-row">
                                                 <label>Change Password</label>
-                                                <button className="edit-profile-btn">Update</button>
+                                                    <button className="edit-profile-btn" onClick={() => setShowPasswordModal(true)}>Update</button>
                                             </div>
-                                            <div className="setting-row">
-                                                <label>Notifications</label>
-                                                <div className="toggle-group">
-                                                    <label><input type="checkbox" /> Email</label>
-                                                    <label><input type="checkbox" /> SMS</label>
-                                                </div>
-                                            </div>
+                                            
                                             <div className="setting-row delete-row">
                                                 <label>Delete Account</label>
                                                 <button className="cancel-btn" onClick={deleteAccount}>Delete</button>
@@ -337,29 +352,19 @@ const Settings = () => {
                         <div className="settings-card">
                             <h3 className="settings-heading">Preferences</h3>
                             <div className="setting-row">
-                                <label>Language</label>
-                                <select className="settings-dropdown">
-                                    <option>English</option>
-                                    <option>Afrikaans</option>
-                                    <option>Zulu</option>
-                                </select>
-                            </div>
-                            <div className="setting-row">
                                 <label>Date Format</label>
-                                <select className="settings-dropdown">
-                                    <option value="dd/mm/yyyy">dd/mm/yyyy</option>
-                                    <option value="mm/dd/yyyy">mm/dd/yyyy</option>
-                                    <option value="yyyy-mm-dd">yyyy-mm-dd</option>
+                                <select
+                                    className="settings-dropdown"
+                                    value={dateFormat}
+                                    onChange={handleDateFormatChange}>
+                                    {dateFormatOptions.map(option => (
+                                        <option key={option.value} value={option.value}>
+                                            {option.label}
+                                        </option>
+                                    ))}
                                 </select>
                             </div>
-                            <div className="setting-row">
-                                <label>Default View</label>
-                                <select className="settings-dropdown">
-                                    <option>Dashboard</option>
-                                    <option>Discovery</option>
-                                    <option>Tracking</option>
-                                </select>
-                            </div>
+                            
                             <h3 className="settings-heading">Appearance</h3>
                             <div className="setting-row">
                                 <label>Theme</label>
@@ -371,6 +376,12 @@ const Settings = () => {
                     </section>
                 )}
             </div>
+
+            {showPasswordModal && (
+                <div className="modal-overlay">
+                        <UpdatePassword onClose={() => setShowPasswordModal(false)} />
+                </div>
+            )}
         </div>
     );
 };

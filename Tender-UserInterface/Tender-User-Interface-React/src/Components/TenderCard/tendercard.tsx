@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { fetchUserAttributes } from '@aws-amplify/auth';
 import { useNavigate } from 'react-router-dom';
-import { FaMapMarkerAlt, FaRegClock, FaRegBookmark, FaBookmark, FaBinoculars } from "react-icons/fa";
+import { FaMapMarkerAlt, FaRegClock, FaRegBookmark, FaBookmark, FaBinoculars, FaTrash } from "react-icons/fa";
 import "./TenderCard.css";
 import { BaseTender } from "../../Models/BaseTender.js";
 import { Tags } from "../../Models/Tags.js";
 import { Link } from "react-router-dom";
+import ReactMarkdown from 'react-markdown';
 
 type WatchlistItem = {
     tenderID: string;
@@ -20,12 +21,42 @@ type TenderCardProps = {
     watchlistArray: WatchlistItem[];
     onRequireLogin: () => void;
     onBookmarkSuccess: (tenderTitle: string, isAdded: boolean) => void;
+
+    isAdminView?: boolean;
+    onDeleteSuccess?: (tenderID: string, tenderTitle: string) => void;
+};
+
+const formatDateAccordingToPref = (date: Date | null | undefined): string => {
+    // return "N/A" if the date is null, undefined, or invalid
+    if (!date || !(date instanceof Date) || isNaN(date.getTime())) {
+        return "N/A";
+    }
+
+    // get the saved format, defaulting to 'dd/mm/yyyy'
+    const format = localStorage.getItem('userDateFormat') || 'dd/mm/yyyy';
+
+    // get date parts
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, '0'); // +1 because getMonth() is 0-indexed
+    const year = date.getFullYear();
+
+    // return formatted string based on the preference
+    switch (format) {
+        case 'mm/dd/yyyy':
+            return `${month}/${day}/${year}`;
+        case 'yyyy-mm-dd':
+            return `${year}-${month}-${day}`;
+        case 'dd/mm/yyyy':
+        default:
+            return `${day}/${month}/${year}`;
+    }
 };
 
 const MAX_TITLE_LENGTH = 100;
 const apiURL = import.meta.env.VITE_API_URL;
 
-const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, onNewNotif, watchlistArray, onRequireLogin, onBookmarkSuccess }) => {
+const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, onNewNotif, watchlistArray, onRequireLogin,
+    onBookmarkSuccess, isAdminView = false, onDeleteSuccess }) => {
     const navigate = useNavigate();
     const [expanded, setExpanded] = useState(false);
 
@@ -58,6 +89,15 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, onNewNotif,
         // this effect runs only when the props change, not when the local state changes
     }, [isLoggedIn, watchlistArray, tender.tenderID]);
 
+    const handleDeleteClick = async (e) => {
+        e.stopPropagation(); // Stop navigation click
+        if (!tender) return;
+
+        // confirmation logic is in discover, so just call the onDeleteSuccess callback
+        if (onDeleteSuccess) {
+            onDeleteSuccess(tender.tenderID, tender.title);
+        }
+    };
 
     const handleBookmarkClick = async () => {
         //get coreID from auth context
@@ -132,9 +172,7 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, onNewNotif,
 
             <p className="tender-closing">
                 <FaRegClock /> Closing:{" "}
-                {tender.closingDate
-                    ? tender.closingDate.toLocaleDateString()
-                    : "N/A"}{" "}
+                {formatDateAccordingToPref(tender.closingDate)}{" "}
                 {tender.isClosed() ? "(Closed)" : "(Open)"}
             </p>
 
@@ -170,17 +208,23 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, onNewNotif,
 
                     <div className="tender-info-row">
                         <span className="tender-info-label">Published:</span>
-                        <span className="tender-info-value">{tender.publishedDate?.toDateString()}</span>
+                        <span className="tender-info-value">{formatDateAccordingToPref(tender.publishedDate)}</span>
                     </div>
 
                     <div className="tender-info-row">
                         <span className="tender-info-label">Closing Date:</span>
-                        <span className="tender-info-value">{tender.closingDate?.toDateString()}</span>
+                        <span className="tender-info-value">{formatDateAccordingToPref(tender.closingDate)}</span>
                     </div>
 
                     <div className="tender-info-row">
-                        <span className="tender-info-label">AI Summary:</span>
-                        <span className="tender-info-value">{tender.aiSummary || "N/A"}</span>
+                        <span className="tender-info-label ai-summary-label">AI Summary:</span>
+                        <div className="tender-info-value markdown-summary"> {/* Changed to div */}
+                            {tender.aiSummary ? (
+                                <ReactMarkdown>{tender.aiSummary}</ReactMarkdown>
+                            ) : (
+                                "N/A"
+                            )}
+                        </div>
                     </div>
 
                     <Link to={`/tender/${tender.tenderID}`} className="see-more-btn">
@@ -195,10 +239,34 @@ const TenderCard: React.FC<TenderCardProps> = ({ tender, isLoggedIn, onNewNotif,
                 <FaBinoculars className={`icon binoculars ${expanded ? "rotated" : ""}`}
                     onClick={() => { const newState = !expanded; setExpanded(newState); setTitleExpanded(newState); }} // expand and collapse details + title if cut off
                     style={{ cursor: "pointer" }} />
-                {bookmarked
-                    ? <FaBookmark className="icon bookmarked" onClick={handleBookmarkClick} style={{ cursor: "pointer" }} />
-                    : <FaRegBookmark className="icon" onClick={handleBookmarkClick} style={{ cursor: "pointer" }} />
-                }
+                {isAdminView ? (
+                    // IF admin, show Delete button
+                    <FaTrash
+                        className="icon icon-delete" 
+                        onClick={handleDeleteClick}
+                        style={{ cursor: "pointer" }}/>
+                ) : (
+                    // ELSE, show Bookmark button
+                    bookmarked
+                        ? <FaBookmark
+                            className="icon bookmarked"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleBookmarkClick();
+                            }}
+                            style={{ cursor: "pointer" }}/>
+                        : <FaRegBookmark
+                            className="icon"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                if (isLoggedIn) {
+                                    handleBookmarkClick();
+                                } else if (onRequireLogin) {
+                                    onRequireLogin();
+                                }
+                            }}
+                            style={{ cursor: "pointer" }}/>
+                )}
             </div>
         </div>
     );

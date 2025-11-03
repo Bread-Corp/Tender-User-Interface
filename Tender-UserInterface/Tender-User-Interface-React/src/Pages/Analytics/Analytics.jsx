@@ -80,7 +80,7 @@ const Analytics = () => {
                 }
 
                 // all users have this base endpoint
-                const endpoint = `https://vaon5sbbdk.execute-api.us-east-1.amazonaws.com/analytics`;
+                const endpoint = import.meta.env.VITE_ANALYTICS_API_URL;
 
                 const headers = {
                     'Content-Type': 'application/json',

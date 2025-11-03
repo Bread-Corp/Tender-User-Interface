@@ -9,6 +9,7 @@ import { fetchUserAttributes } from '@aws-amplify/auth';
 import { register, deleteUser } from '../../context/CoreLogicContext.js';
 import PasswordInput from '../../Components/PasswordInput';
 import ErrorMessage from '../../Components/ErrorMessage.jsx';
+import ForgotPassword from "../../Components/Password/ForgotPassword";
 
 const Login = ({ onLoginSuccess, onAdminSuccess }) => {
     const [activeForm, setActiveForm] = useState('login');
@@ -19,7 +20,8 @@ const Login = ({ onLoginSuccess, onAdminSuccess }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const [showPassword, setShowPassword] = useState(false); // toggle the password to text feature
-    const [selectedTags, setSelectedTags] = useState([]);
+    const [selectedTags, setSelectedTags] = useState([])
+    const [showForgotPassword, setShowForgotPassword] = useState(false);
 
     // state for form inputs and errors
     const [id] = useState('');
@@ -103,10 +105,13 @@ const Login = ({ onLoginSuccess, onAdminSuccess }) => {
             if (role === 'SuperUser') {
                 onAdminSuccess();
                 console.log("Validated admin.");
+                // redirect admin to dashboard
+                navigate('/superuser/dashboard');
+            } else {
+                // redirect standard users to home
+                onLoginSuccess();
+                navigate('/');
             }
-                        
-            onLoginSuccess();
-            navigate('/');
         } catch (err) {
             setError(err.message);
         }
@@ -463,12 +468,22 @@ const Login = ({ onLoginSuccess, onAdminSuccess }) => {
                             <ErrorMessage message={error} />
 
                             <div className="form-options">
-                                <a href="#">Forgot password?</a>
+                                    <button type="button" className="forgot-link" onClick={() => setShowForgotPassword(true)} >
+                                        Forgot password?
+                                    </button>
                             </div>
 
                             <div className="form-navigation">
                                 <button type="submit">Login</button>
-                            </div>
+                                </div>
+
+                                {showForgotPassword && (
+                                    <div className="modal-overlay">
+                                      
+                                            <ForgotPassword onClose={() => setShowForgotPassword(false)} />
+                                        
+                                    </div>
+                                )}
 
                         </form>
                     ) : (
@@ -494,9 +509,9 @@ const Login = ({ onLoginSuccess, onAdminSuccess }) => {
                                 )}
 
                                     {registerPage < totalRegisterPages ? (
-                                    <button type="button" onClick={() => setRegisterPage(registerPage + 1)}>Continue</button>
+                                    <button type="button" className="btn-register-primary" onClick={() => setRegisterPage(registerPage + 1)}>Continue</button>
                                 ) : (
-                                    <button type="submit">Complete</button>
+                                    <button type="submit" className="btn-register-primary" >Complete</button>
                                     )}
 
                                 </div>
@@ -505,7 +520,7 @@ const Login = ({ onLoginSuccess, onAdminSuccess }) => {
                     )}
                 </div>
              </div>
-          </div>
+            </div>
        </div>
     );
 };

@@ -64,7 +64,14 @@ const FilterOverlay: React.FC<FilterOverlayProps> = ({ onClose, onApply, showToa
     };
 
     useEffect(() => {
-        setTags(availableTags); // set the initial checked state based on passed-in tags
+        // filter the incoming tags to find which ones are sources
+        const initialSources = availableTags.filter(tag => sourceOptions.includes(tag));
+        setSelectedSources(initialSources);
+
+        // filter the incoming tags to find which ones are industry tags
+        const initialIndustryTags = availableTags.filter(tag => industryTags.includes(tag));
+        setTags(initialIndustryTags);
+
     }, [availableTags]);
 
     // effect to actually call onClose() after the closing animation
@@ -98,19 +105,7 @@ const FilterOverlay: React.FC<FilterOverlayProps> = ({ onClose, onApply, showToa
                     </button>
                 </div>
 
-                {/* date filters */}
-                <div className="filter-section">
-                    <h3>Date</h3>
-                    <label>
-                        <input
-                            type="radio"
-                            name="date"
-                            checked={date === "Closing Soon"}
-                            onChange={() => setDate(date === "Closing Soon" ? null : "Closing Soon")}
-                        />
-                        Closing Soon
-                    </label>
-                </div>
+                <div className="filter-content-scrollable">             
 
                 <div className="filter-section">
                     <h3>Industry Tags</h3> 
@@ -137,6 +132,20 @@ const FilterOverlay: React.FC<FilterOverlayProps> = ({ onClose, onApply, showToa
                             </label>
                         ))}
                     </div>
+                </div>
+
+                {/* date filters */}
+                <div className="filter-section">
+                    <h3>Date</h3>
+                    <label>
+                        <input
+                            type="radio"
+                            name="date"
+                            checked={date === "Closing Soon"}
+                            onChange={() => setDate(date === "Closing Soon" ? null : "Closing Soon")}
+                        />
+                        Closing Soon
+                    </label>
                 </div>
 
                 {/* alphanetical filters */}
@@ -198,7 +207,7 @@ const FilterOverlay: React.FC<FilterOverlayProps> = ({ onClose, onApply, showToa
                         </label>
                     ))}
                 </div>
-
+            </div>
                 {/* Action Buttons */}
                 <div className="filter-actions">
                     {/* clear button resets selections but keeps overlay open */}
