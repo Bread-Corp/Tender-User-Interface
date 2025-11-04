@@ -53,16 +53,24 @@ const Dashboard = () => {
     // update state when dropdown changes
     const handleSourceChange = (event) => {
         const newSource = event.target.value;
+        setSelectedSource(newSource);
 
-        // clear the old log link immediately
         setFileName(null);
         setURL(null);
-        setIsLogLoading(true);
-
-        // set the new scraper and fetch its logs
-        setSelectedSource(newSource);
-        fetchScraperLogs(selectedCategory, newSource); 
+        setIsLogLoading(false);
     };
+
+    const handleLogSearchSubmit = (e) => {
+        e.preventDefault(); // stop the form from reloading the page
+
+        setIsLogLoading(true); 
+        setFileName(null);
+        setURL(null);
+
+        console.log(`Searching for logs: ${selectedCategory} / ${selectedSource}`);
+        fetchScraperLogs(selectedCategory, selectedSource);
+    };
+
 
     //add super user modal state
     const [showAddUser, setShowAddUser] = useState(false);
@@ -229,7 +237,8 @@ const Dashboard = () => {
                             <div className="card-header">
                                 <h2>System Health</h2>
                             </div>
-                            <div className="dashboard-actions">
+                            <p>Last successful log scrape: {lastScrap}</p>
+                            <form className="dashboard-actions" onSubmit={handleLogSearchSubmit}>
 
                                 <select
                                     className="scraper-select"
@@ -252,8 +261,15 @@ const Dashboard = () => {
                                         </option>
                                     ))}
                                 </select>
-                                                               
-                            </div>
+
+                                <button
+                                    type="submit"
+                                    className="manage-btn" 
+                                    disabled={isLogLoading}>
+                                    {isLogLoading ? "Searching..." : "Search"}
+                                </button>
+
+                            </form>
                         </section>
                     </div>
 
